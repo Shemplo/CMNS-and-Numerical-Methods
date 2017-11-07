@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Label?>
+
+<BorderPane 
+	xmlns:fx="http://javafx.com/fxml/1">
+	<left>
+		<Canvas
+			fx:id="canvas">
+			<BorderPane.margin>
+				<Insets
+					top="10"
+					right="10"
+					bottom="10"
+					left="10"/>
+			</BorderPane.margin>
+		</Canvas>
+	</left>
+	
+	<right>
+		<VBox>
+			<Label
+				text="Scale:">
+				<VBox.margin>
+					<Insets
+						top="10"
+						right="10"
+						bottom="10"
+						left="10"/>
+				</VBox.margin>
+			</Label>
+			<Slider
+				fx:id="slider_scale">
+				<VBox.margin>
+					<Insets
+						top="10"
+						right="10"
+						bottom="10"
+						left="10"/>
+				</VBox.margin>
+			</Slider>
+			
+			<Label
+				text="Parts:">
+				<VBox.margin>
+					<Insets
+						top="10"
+						right="10"
+						bottom="10"
+						left="10"/>
+				</VBox.margin>
+			</Label>
+			<Slider
+				fx:id="slider_parts">
+				<VBox.margin>
+					<Insets
+						top="10"
+						right="10"
+						bottom="10"
+						left="10"/>
+				</VBox.margin>
+			</Slider>
+		</VBox>
+	</right>
+</BorderPane>
+
