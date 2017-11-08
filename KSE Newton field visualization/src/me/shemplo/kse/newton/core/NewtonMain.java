@@ -19,7 +19,9 @@ import javafx.stage.Stage;
 
 public class NewtonMain extends Application {
 	
-	private GraphicsContext context;
+	private GraphicsContext context,
+							contextArea;
+	private double startX, startY;
 	
 	private double cs; // Cell size
 	
@@ -55,7 +57,7 @@ public class NewtonMain extends Application {
 		
 		Slider sliderParts = (Slider) scene.lookup ("#slider_parts");
 		sliderParts.setMinWidth (300);
-		sliderParts.setMin (100);
+		sliderParts.setMin (10);
 		sliderParts.setMax (1000);
 		sliderParts.setValue (750);
 		sliderParts.setShowTickLabels (true);
@@ -83,17 +85,17 @@ public class NewtonMain extends Application {
 		//context.clearRect (0, 0, WIDTH, HEIGHT);
 		context.setStroke (Color.BLACK);
 		
-		context.strokeLine (WIDTH / 2 - 10, 0, WIDTH / 2 - 10, HEIGHT - 20);
-		context.strokeLine (0, HEIGHT / 2 - 10, WIDTH - 20, HEIGHT / 2 - 10);
-		context.strokeOval (WIDTH / 2 - 10 - cs, HEIGHT / 2 - 10 - cs, cs * 2, cs * 2);
+		context.strokeLine (WIDTH / 2, 0, WIDTH / 2, HEIGHT);
+		context.strokeLine (0, HEIGHT / 2, WIDTH, HEIGHT / 2);
+		context.strokeOval (WIDTH / 2 - cs, HEIGHT / 2 - cs, cs * 2, cs * 2);
 	}
 	
 	public void drawComplex (Color color, Complex number) {
 		context.setStroke (color);
 		context.setFill (color);
 		
-		double sa = number.a * cs + WIDTH / 2 - 10;
-		double sb = -number.b * cs + HEIGHT / 2 - 10;
+		double sa = number.a * cs + WIDTH / 2;
+		double sb = -number.b * cs + HEIGHT / 2;
 		
 		//context.strokeLine (sa, sb, sa, sb);
 		
@@ -105,10 +107,10 @@ public class NewtonMain extends Application {
 		context.setStroke (color);
 		context.setFill (color);
 		
-		double saa = a.a * cs + WIDTH / 2 - 10;
-		double sab = -a.b * cs + HEIGHT / 2 - 10;
-		double sba = b.a * cs + WIDTH / 2 - 10;
-		double sbb = -b.b * cs + HEIGHT / 2 - 10;
+		double saa = a.a * cs + WIDTH / 2;
+		double sab = -a.b * cs + HEIGHT / 2;
+		double sba = b.a * cs + WIDTH / 2;
+		double sbb = -b.b * cs + HEIGHT / 2;
 		
 		context.strokeLine (saa, sab, sba, sbb);
 	}
@@ -150,6 +152,12 @@ public class NewtonMain extends Application {
 				
 				rend = trace.get (0);
 				drawComplex (color, rend);
+				if (PARTS < 50) {
+					for (int t = 1; t < trace.size (); t ++) {
+						drawComplex (color, trace.get (t));
+						drawComplexTrace (color, trace.get (t), trace.get (t - 1));
+					}
+				}
 			}
 		}
 	}
