@@ -11,7 +11,7 @@ public class MatrixGenerator {
 	}
 	
 	//private static final int MULT = 4000000;
-	private static final int MULT = 40000;
+	private static final int MULT = 4000;
 	
 	public static double [][] generate (int size, MatrixType type) {
 		Objects.requireNonNull (type, "Matrix type must be non NULL");
