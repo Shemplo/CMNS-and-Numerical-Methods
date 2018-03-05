@@ -10,7 +10,7 @@ public interface MatrixMethod {
 	 * @return Array of roots of current system
 	 * 
 	 */
-	public double [] solve (double [][] matrix, double [] value);
+	public double [] solve (double [][] matrix, double [] value) throws IllegalStateException;
 	
 	/**
 	 * This methods finds the solution for system of linear equations.
@@ -20,6 +20,6 @@ public interface MatrixMethod {
 	 * @return Array of roots of current system
 	 * 
 	 */
-	public double [] solve (double [][] matrix, double [][] value);
+	public double [] solve (double [][] matrix, double [][] value) throws IllegalStateException;
 	
 }
