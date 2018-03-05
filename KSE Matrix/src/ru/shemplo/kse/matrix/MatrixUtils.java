@@ -5,6 +5,8 @@ import java.util.List;
 
 import ru.shemplo.kse.matrix.MatrixGenerator.MatrixType;
 
+import static java.util.Arrays.fill;
+
 public class MatrixUtils {
 
 	public static double [][] clone (double [][] matrix) {
@@ -109,6 +111,32 @@ public class MatrixUtils {
 			
 		}
 		
+		return roots;
+	}
+
+	public static double [] solveBySaidel (double [][] matrix, double [][] result, final double eps) {
+		final int n = matrix.length;
+		double [] roots = new double [n];
+		fill(roots, 0);
+
+		boolean converge = false;
+		while (!converge) {
+			double[] currentRoots = roots.clone();
+
+			for (int i = 0; i < n; i++) {
+				double s1 = 0, s2 = 0;
+				for (int j = 0; j < i; j++) s1 += matrix[i][j] * currentRoots[j];
+				for (int j = i + 1; j < n; j++) s2 += matrix[i][j] * roots[j];
+
+				currentRoots[i] = (result[i][0] - s1 - s2) / matrix[i][i];
+			}
+
+			double s = 0;
+			for (int i = 0; i < n; i++) s += Math.pow((currentRoots[i] - roots[i]), 2);
+			converge = Math.sqrt(s) <= eps;
+			roots = currentRoots;
+		}
+
 		return roots;
 	}
 	

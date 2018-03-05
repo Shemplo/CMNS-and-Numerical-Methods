@@ -9,7 +9,7 @@ public class MatrixMain {
 	@SuppressWarnings ("unused")
 	public static void main (String... args) {
 		double [][] matrix = MatrixGenerator
-								.generate (ROOTS_NUMBER, MatrixType.RANDOM);
+								.generate (ROOTS_NUMBER, MatrixType.DIAGONAL_PRIORITY);
 		System.out.println (">> Original matrix:");
 		//printMatrix (matrix);
 		
@@ -106,6 +106,27 @@ public class MatrixMain {
 		} catch (IllegalStateException ise) {
 			System.out.println ("Bad idea to use Cramer for this matrix: " 
 								+ ise.getMessage ());
+		}
+
+		System.out.println (">> Saidel solution:");
+		try {
+			long start = System.currentTimeMillis (); // time //
+			double [] rootsSaidel = MatrixUtils.solveBySaidel (matrix, result, 1e-15);
+			long end = System.currentTimeMillis ();   // time //
+			double [][] rootSaidelMatrix = new double [][] {rootsSaidel};
+
+			System.out.println (">> Roots:");
+			printMatrix (rootSaidelMatrix);
+
+			System.out.println (">> Roots (transposed):");
+			//printMatrix (MatrixUtils.transpose (rootsCramerMatrix));
+
+			System.out.println ("Execution time: " + (end - start) + "ms  for " + ROOTS_NUMBER + " equations");
+			System.out.println ("Is correct: " + MatrixUtils.checkCorrectness (matrix, result, rootsSaidel));
+			System.out.println ();
+		} catch (IllegalStateException ise) {
+			System.out.println ("Bad idea to use Cramer for this matrix: "
+					+ ise.getMessage ());
 		}
 	}
 	
