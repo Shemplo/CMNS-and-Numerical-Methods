@@ -113,7 +113,7 @@ public class MatrixUtils {
 		return roots;
 	}
 
-    public static boolean checkDominant(double[][] matrix) {
+    public static boolean checkDominant(double [][] matrix) {
         int n = matrix.length;
 
         for (int i = 0; i < n; i++) {
@@ -123,8 +123,8 @@ public class MatrixUtils {
                 sum += Math.abs(matrix[i][j]);
             }
 
-            if (Math.abs(matrix[i][i]) < sum) {
-                System.out.println("In row " + i + ": " + matrix[i][i] + " < " + sum);
+            if (Math.abs(matrix [i][i]) < sum) {
+                System.out.println("In row " + i + ": " + matrix [i][i] + " < " + sum);
                 return false;
             }
         }
@@ -132,9 +132,63 @@ public class MatrixUtils {
         return true;
     }
 
-	public static double [] solveBySaidel (double [][] matrix, double [][] result, final double eps) {
+    private static List <double [][]> transformToDominant(double [][] M, double [][] res, int r, boolean [] V, int [] R) {
+        int n = M.length;
+        if (r == n) {
+            double [][] TM = new double [n][n];
+            double [][] TRes = new double [n][1];
+
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++)
+                    TM [i][j] = M [R [i]][j];
+                TRes [i][0] = res [R [i]][0];
+            }
+
+            List <double [][]> matrixes = new ArrayList <> ();
+            matrixes.add (TM); matrixes.add (TRes);
+
+            return matrixes;
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (V[i]) continue;
+
+            double sum = 0;
+            for (int j = 0; j < n; j++)
+                sum += Math.abs(M[i][j]);
+
+            if (2 * Math.abs(M[i][r]) > sum) {
+                V[i] = true;
+                R[r] = i;
+
+                List <double [][]> t = transformToDominant(M, res, r + 1, V, R);
+
+                V[i] = false;
+                return t;
+            }
+        }
+
+        return null;
+    }
+
+    public static  List <double [][]> makeDominant(double [][] matrix, double [][] result) {
+        boolean [] visited = new boolean [matrix.length];
+        int [] rows = new int [matrix.length];
+        Arrays.fill(visited, false);
+
+        return transformToDominant(matrix, result, 0, visited, rows);
+    }
+
+    public static double [] solveBySaidel (double [][] matrix, double [][] result, final double eps) {
         if (!checkDominant(matrix)) {
-        	throw new IllegalStateException("Matrix isn't diagonally dominant");
+            List <double [][]> dominated = makeDominant(matrix, result);
+            if (dominated != null) {
+                System.out.println("Matrix isn't diagonally dominant, but was successfully converted.");
+                matrix = dominated.get(0);
+                result = dominated.get(1);
+            } else {
+                throw new IllegalStateException("Matrix isn't diagonally dominant");
+            }
         }
 
         final int n = matrix.length;
@@ -143,18 +197,18 @@ public class MatrixUtils {
 
 		boolean converge = false;
 		while (!converge) {
-			double[] currentRoots = roots.clone();
+			double [] currentRoots = roots.clone();
 
 			for (int i = 0; i < n; i++) {
 				double s1 = 0, s2 = 0;
-				for (int j = 0; j < i; j++) s1 += matrix[i][j] * currentRoots[j];
-				for (int j = i + 1; j < n; j++) s2 += matrix[i][j] * roots[j];
+				for (int j = 0; j < i; j++) s1 += matrix [i][j] * currentRoots [j];
+				for (int j = i + 1; j < n; j++) s2 += matrix [i][j] * roots [j];
 
-				currentRoots[i] = (result[i][0] - s1 - s2) / matrix[i][i];
+				currentRoots [i] = (result [i][0] - s1 - s2) / matrix [i][i];
 			}
 
 			double s = 0;
-			for (int i = 0; i < n; i++) s += Math.pow((currentRoots[i] - roots[i]), 2);
+			for (int i = 0; i < n; i++) s += Math.pow((currentRoots [i] - roots [i]), 2);
 			converge = Math.sqrt(s) <= eps;
 			roots = currentRoots;
 		}
@@ -234,8 +288,8 @@ public class MatrixUtils {
 			double outrageDeterminant = determinant (clone);
 			roots [i] = outrageDeterminant / determinant;
 		}
-		
+
 		return roots;
 	}
-	
+
 }
