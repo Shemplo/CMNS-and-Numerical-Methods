@@ -5,4 +5,6 @@ public interface MatrixMethod {
 
 	public double [] solve (double [][] matrix, double [] value);
 	
+	public double [] solve (double [][] matrix, double [][] value);
+	
 }

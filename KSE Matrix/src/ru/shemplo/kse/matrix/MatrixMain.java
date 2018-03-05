@@ -4,7 +4,9 @@ import ru.shemplo.kse.matrix.MatrixGenerator.MatrixType;
 
 public class MatrixMain {
 
-	private static final int ROOTS_NUMBER = 250;
+	public static final double ACCURACY = 0.0000001;
+	public static final int MAX_ITERATIONS = 1000;
+	public static final int ROOTS_NUMBER = 250;
 	
 	@SuppressWarnings ("unused")
 	public static void main (String... args) {
