@@ -243,7 +243,7 @@ public class MatrixUtils {
 				summ += matrix [i][j] * roots [j];
 			}
 
-			if (Math.abs (result [i][0] - summ) > 0.000000001) {
+			if (Math.abs (result [i][0] - summ) > 0.0000001) {
 				System.out.println ("In line " + i + " result: " + summ
 									+ " (expected: " + result [i][0] + ")");
 				wasError = true;
@@ -309,6 +309,37 @@ public class MatrixUtils {
 		}
 
 		return roots;
+	}
+	
+	public static double scalar (double [] a, double [] b) {
+		int size = Math.min (a.length, b.length);
+		double scalar = 0;
+		
+		for (int i = 0; i < size; i++) {
+			scalar += a [i] * b [i];
+		}
+		
+		return scalar;
+	}
+	
+	public static double [] multiply (double [][] matrix, double [] vector) {
+		final double [] result = new double [vector.length];
+		for (int i = 0; i < vector.length; i++) {
+			for (int j = 0; j < matrix [i].length; j++) {
+				result [i] += matrix [i][j] * vector [j];
+			}
+		}
+		
+		return result;
+	}
+	
+	public static boolean checkPositiveDefiniteness (double [][] matrix) {
+		final double [][] diagonalize = diagonalize (matrix);
+		for (int i = 0; i < diagonalize.length; i ++) {
+			if (diagonalize [i][i] < 0) { return false; }
+		}
+		
+		return true;
 	}
 
 }
