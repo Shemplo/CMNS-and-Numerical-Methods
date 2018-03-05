@@ -11,7 +11,6 @@ public class MatrixUtils {
 	public static void printMatrix (double [][] matrix) {
 		for (int i = 0; i < matrix.length; i ++) {
 			for (int j = 0; j < matrix [i].length; j ++) {
-				//System.out.print (String.format ("%+16.4f", matrix [i][j]));
 				System.out.print (String.format ("%+8.4f", matrix [i][j]));
 				if (j < matrix [i].length - 1) {
 					System.out.print (" ");
@@ -108,6 +107,7 @@ public class MatrixUtils {
 		return max;
 	}
 
+	@Deprecated
 	public static double [] solveByGauss (double [][] matrix, double [][] result) {
 		List <double [][]> gauss = runGauss (matrix, result, true);
 		double [][] resultVector = gauss.get (1);
@@ -126,7 +126,8 @@ public class MatrixUtils {
 
 		return roots;
 	}
-
+	
+	@Deprecated
     public static boolean checkDominant(double [][] matrix) {
         int n = matrix.length;
 
@@ -146,6 +147,7 @@ public class MatrixUtils {
         return true;
     }
 
+	@Deprecated
     private static List <double [][]> transformToDominant(double [][] M, double [][] res, int r, boolean [] V, int [] R) {
         int n = M.length;
         if (r == n) {
@@ -185,6 +187,7 @@ public class MatrixUtils {
         return null;
     }
 
+    @Deprecated
     public static  List <double [][]> makeDominant(double [][] matrix, double [][] result) {
         boolean [] visited = new boolean [matrix.length];
         int [] rows = new int [matrix.length];
@@ -193,6 +196,7 @@ public class MatrixUtils {
         return transformToDominant(matrix, result, 0, visited, rows);
     }
 
+    @Deprecated
     public static double [] solveBySaidel (double [][] matrix, double [][] result, final double eps) {
         if (!checkDominant(matrix)) {
             List <double [][]> dominated = makeDominant(matrix, result);
@@ -280,6 +284,7 @@ public class MatrixUtils {
 		return determinant;
 	}
 
+	@Deprecated
 	public static double [] solveByCramer (double [][] matrix, double [][] result) {
 		double determinant = determinant (matrix);
 		if (determinant == 0) {

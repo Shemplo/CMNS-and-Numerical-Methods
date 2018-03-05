@@ -46,15 +46,15 @@ public class MatrixMain {
 			final double [][] reversed = MatrixUtils.reverse (matrix);
 			
 			final double normOriginal = MatrixUtils.normOfMatrix (matrix);
-			final String strOriginal = String.format ("%12.2f", normOriginal);
+			final String strOriginal = String.format ("%12.4f", normOriginal);
 			System.out.println (".. Norm of original matrix : " + strOriginal);
 			
 			final double normReversed = MatrixUtils.normOfMatrix (reversed);
-			final String strReversed = String.format ("%12.2f", normReversed);
+			final String strReversed = String.format ("%12.4f", normReversed);
 			System.out.println (".. Norm of reversed matrix : " + strReversed);
 			
 			final double conditionality = normOriginal * normReversed;
-			final String strConditionality = String.format ("%12.2f", conditionality);
+			final String strConditionality = String.format ("%12.4f", conditionality);
 			System.out.println (".. Conditionality of matrix: " + strConditionality);
 			System.out.println ();
 		} catch (IllegalStateException ise) {

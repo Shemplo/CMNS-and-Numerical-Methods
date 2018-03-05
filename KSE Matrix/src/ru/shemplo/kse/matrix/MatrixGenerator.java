@@ -61,17 +61,10 @@ public class MatrixGenerator {
 	}
 	
 	private static double [][] generateRandom (int size) {
-		double [][] matrix = new double [size][size];
-		Random random = new Random ();
+		double [][] matrix = new double [size][];
 		
 		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j ++) {
-				int base = random.nextInt (Integer.MAX_VALUE / (size * MULT));
-				double sign = random.nextBoolean () ? 1 : -1;
-				double mod = random.nextDouble ();
-				
-				matrix [i][j] = sign * mod * ((double) base);
-			}
+			matrix [i] = vector (size);
 		}
 		
 		return matrix;
