@@ -20,7 +20,7 @@ public class MatrixUtils {
 			System.out.println ();
 		}
 	}
-	
+
 	public static double [][] clone (double [][] matrix) {
 		double [][] clone = new double [matrix.length][];
 		for (int i = 0; i < clone.length; i++) {
@@ -126,7 +126,7 @@ public class MatrixUtils {
 
 		return roots;
 	}
-	
+
 	@Deprecated
     public static boolean checkDominant(double [][] matrix) {
         int n = matrix.length;
@@ -243,7 +243,7 @@ public class MatrixUtils {
 				summ += matrix [i][j] * roots [j];
 			}
 
-			if (Math.abs (result [i][0] - summ) > 0.000000001) {
+			if (Math.abs (result [i][0] - summ) > MatrixMain.ACCURACY) {
 				System.out.println ("In line " + i + " result: " + summ
 									+ " (expected: " + result [i][0] + ")");
 				wasError = true;

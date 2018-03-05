@@ -1,6 +1,7 @@
 package ru.shemplo.kse.matrix.methods;
 
 
+import ru.shemplo.kse.matrix.MatrixMain;
 import ru.shemplo.kse.matrix.MatrixUtils;
 
 import java.util.ArrayList;
@@ -8,8 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SaidelMethod extends AbsMatrixMethod {
-	public static final double EPS = 1e-11;
-
 	private boolean checkDominant(double [][] matrix) {
 		int n = matrix.length;
 
@@ -90,11 +89,12 @@ public class SaidelMethod extends AbsMatrixMethod {
 		}
 
 		final int n = matrix.length;
+		int iteration = 0;
 		double [] roots = new double [n];
 		Arrays.fill(roots, 0);
 
 		boolean converge = false;
-		while (!converge) {
+		while (!converge && iteration++ < MatrixMain.MAX_ITERATIONS) {
 			double [] currentRoots = roots.clone();
 
 			for (int i = 0; i < n; i++) {
@@ -106,12 +106,24 @@ public class SaidelMethod extends AbsMatrixMethod {
 			}
 
 			double s = 0;
-			for (int i = 0; i < n; i++) s += Math.pow((currentRoots [i] - roots [i]), 2);
-			converge = Math.sqrt(s) <= EPS;
+
+			//for (int i = 0; i < n; i++) s += (currentRoots [i] - roots [i]) * (currentRoots [i] - roots [i]);
+
+			for (int i = 0; i < n; i++) {
+				double part = 0;
+				for (int j = 0; j < n; j++) {
+					part += matrix[i][j] * currentRoots[j];
+				}
+				part -= value[i][0];
+				s += part * part;
+			}
+
+			converge = Math.sqrt(s) < MatrixMain.ACCURACY;
 			roots = currentRoots;
 		}
 
-
+		iteration--;
+		System.out.println("~~ ITERATIONS: " + iteration);
 		return roots;
 	}
 
