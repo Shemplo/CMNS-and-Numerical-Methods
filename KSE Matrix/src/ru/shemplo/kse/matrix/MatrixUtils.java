@@ -8,6 +8,20 @@ import ru.shemplo.kse.matrix.MatrixGenerator.MatrixType;
 
 public class MatrixUtils {
 
+	public static void printMatrix (double [][] matrix) {
+		for (int i = 0; i < matrix.length; i ++) {
+			for (int j = 0; j < matrix [i].length; j ++) {
+				//System.out.print (String.format ("%+16.4f", matrix [i][j]));
+				System.out.print (String.format ("%+8.4f", matrix [i][j]));
+				if (j < matrix [i].length - 1) {
+					System.out.print (" ");
+				}
+			}
+
+			System.out.println ();
+		}
+	}
+	
 	public static double [][] clone (double [][] matrix) {
 		double [][] clone = new double [matrix.length][];
 		for (int i = 0; i < clone.length; i++) {
