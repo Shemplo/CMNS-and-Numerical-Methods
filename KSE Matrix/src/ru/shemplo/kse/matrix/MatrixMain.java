@@ -4,7 +4,7 @@ import ru.shemplo.kse.matrix.MatrixGenerator.MatrixType;
 
 public class MatrixMain {
 
-	private static final int ROOTS_NUMBER = 25;
+	private static final int ROOTS_NUMBER = 250;
 	
 	@SuppressWarnings ("unused")
 	public static void main (String... args) {
@@ -69,6 +69,7 @@ public class MatrixMain {
 		} catch (IllegalStateException ise) {
 			System.out.println ("Bad idea to use Gauss for this matrix: " 
 								+ ise.getMessage ());
+			System.out.println ();
 		}
 		
 		try {
@@ -106,6 +107,7 @@ public class MatrixMain {
 		} catch (IllegalStateException ise) {
 			System.out.println ("Bad idea to use Cramer for this matrix: " 
 								+ ise.getMessage ());
+			System.out.println ();
 		}
 
 		System.out.println (">> Saidel solution:");
@@ -127,6 +129,7 @@ public class MatrixMain {
 		} catch (IllegalStateException ise) {
 			System.out.println ("Bad idea to use Saidel for this matrix: "
 					+ ise.getMessage ());
+			System.out.println ();
 		}
 	}
 	

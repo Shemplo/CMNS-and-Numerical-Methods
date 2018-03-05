@@ -1,12 +1,10 @@
 package ru.shemplo.kse.matrix;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import javafx.util.Pair;
 import ru.shemplo.kse.matrix.MatrixGenerator.MatrixType;
-
-import static java.util.Arrays.fill;
 
 public class MatrixUtils {
 
@@ -135,12 +133,13 @@ public class MatrixUtils {
     }
 
 	public static double [] solveBySaidel (double [][] matrix, double [][] result, final double eps) {
-        if (!checkDominant(matrix))
-            throw new IllegalStateException("Matrix isn't diagonally dominant");
+        if (!checkDominant(matrix)) {
+        	throw new IllegalStateException("Matrix isn't diagonally dominant");
+        }
 
         final int n = matrix.length;
 		double [] roots = new double [n];
-		fill(roots, 0);
+		Arrays.fill(roots, 0);
 
 		boolean converge = false;
 		while (!converge) {
