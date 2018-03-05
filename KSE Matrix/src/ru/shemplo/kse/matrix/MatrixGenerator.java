@@ -31,7 +31,11 @@ public class MatrixGenerator {
 				}
 				
 				if (matrix [i][i] < summ) {
-					matrix [i][i] += summ * Math.signum (matrix [i][i]);
+					double sign =  Math.signum (matrix [i][i]);
+                    if (sign != 0)
+                        matrix [i][i] += summ * sign;
+                    else
+                        matrix [i][i] += summ;
 				}
 			}
 		}

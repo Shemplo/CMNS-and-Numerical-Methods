@@ -96,7 +96,7 @@ public class MatrixMain {
 			
 			System.out.println (">> Roots:");
 			printMatrix (rootsCramerMatrix);
-			
+
 			System.out.println (">> Roots (transposed):");
 			//printMatrix (MatrixUtils.transpose (rootsCramerMatrix));
 			
@@ -111,7 +111,7 @@ public class MatrixMain {
 		System.out.println (">> Saidel solution:");
 		try {
 			long start = System.currentTimeMillis (); // time //
-			double [] rootsSaidel = MatrixUtils.solveBySaidel (matrix, result, 1e-15);
+			double [] rootsSaidel = MatrixUtils.solveBySaidel (matrix, result, 1e-11);
 			long end = System.currentTimeMillis ();   // time //
 			double [][] rootSaidelMatrix = new double [][] {rootsSaidel};
 
@@ -125,7 +125,7 @@ public class MatrixMain {
 			System.out.println ("Is correct: " + MatrixUtils.checkCorrectness (matrix, result, rootsSaidel));
 			System.out.println ();
 		} catch (IllegalStateException ise) {
-			System.out.println ("Bad idea to use Cramer for this matrix: "
+			System.out.println ("Bad idea to use Saidel for this matrix: "
 					+ ise.getMessage ());
 		}
 	}
@@ -139,7 +139,7 @@ public class MatrixMain {
 					System.out.print (" ");
 				}
 			}
-			
+
 			System.out.println ();
 		}
 	}
