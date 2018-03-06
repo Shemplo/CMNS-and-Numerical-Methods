@@ -51,7 +51,7 @@ public class MatrixUtils {
 
 	public static double [][] reverse (double [][] matrix) {
 		int size = matrix.length;
-		double [][] identity = MatrixGenerator.generate (size, MatrixType.IDENITY);
+		double [][] identity = MatrixGenerator.generate (size, MatrixType.IDENTITY);
 		List <double [][]> matrixes = runGauss (matrix, identity, true);
 		return matrixes.get (1);
 	}
@@ -268,7 +268,7 @@ public class MatrixUtils {
 
 	public static double [][] diagonalize (double [][] matrix) {
 		int size = matrix.length;
-		double [][] identity = MatrixGenerator.generate (size, MatrixType.IDENITY);
+		double [][] identity = MatrixGenerator.generate (size, MatrixType.IDENTITY);
 		List <double [][]> matrixes = runGauss (matrix, identity, false);
 		return matrixes.get (0);
 	}

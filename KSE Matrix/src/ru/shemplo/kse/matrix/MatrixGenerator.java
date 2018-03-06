@@ -6,8 +6,10 @@ import java.util.Random;
 public class MatrixGenerator {
 
 	public static enum MatrixType {
-		DIAGONAL_PRIORITY, RANDOM, GILBERT,
-		IDENITY
+		DIAGONAL_PRIORITY,
+		RANDOM,
+		GILBERT,
+		IDENTITY
 	}
 	
 	//private static final int MULT = 4000000;
@@ -17,7 +19,7 @@ public class MatrixGenerator {
 		Objects.requireNonNull (type, "Matrix type must be non NULL");
 		if (type.equals (MatrixType.GILBERT)) {
 			return generateGilbert (size);
-		} else if (type.equals (MatrixType.IDENITY)) {
+		} else if (type.equals (MatrixType.IDENTITY)) {
 			return generateIdentity (size);
 		}
 		
@@ -84,5 +86,5 @@ public class MatrixGenerator {
 		
 		return vector;
 	}
-	
+
 }

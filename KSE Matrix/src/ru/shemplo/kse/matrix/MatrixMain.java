@@ -3,7 +3,7 @@ package ru.shemplo.kse.matrix;
 import ru.shemplo.kse.matrix.MatrixGenerator.MatrixType;
 import ru.shemplo.kse.matrix.methods.ConjugateGradientMethod;
 import ru.shemplo.kse.matrix.methods.GaussMethod;
-import ru.shemplo.kse.matrix.methods.JacobianMethod;
+import ru.shemplo.kse.matrix.methods.JacobiMethod;
 import ru.shemplo.kse.matrix.methods.MatrixMethod;
 import ru.shemplo.kse.matrix.methods.SaidelMethod;
 import ru.shemplo.kse.matrix.methods.SaidelRelaxedMethod;
@@ -19,7 +19,7 @@ public class MatrixMain {
 	static {
 		METHODS = new MatrixMethod [] {
 			new GaussMethod (),
-			new JacobianMethod (),
+			new JacobiMethod(),
 			new SaidelMethod (),
 			new SaidelRelaxedMethod (),
 			new ConjugateGradientMethod ()
