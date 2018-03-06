@@ -118,7 +118,7 @@ public class MatrixUtils {
 				summ += matrix [i][j] * roots [j];
 			}
       
-			if (Math.abs (result [i][0] - summ) > 0.000001) {
+			if (Math.abs (result [i][0] - summ) > 0.00005) {
 				if (errors < 5) {
 					System.out.println ("?? In line " + i + " result: " + summ
 											+ " (expected: " + result [i][0] + ")");
@@ -166,33 +166,6 @@ public class MatrixUtils {
 		}
 
 		return determinant;
-	}
-
-	@Deprecated
-	public static double [] solveByCramer (double [][] matrix, double [][] result) {
-		double determinant = determinant (matrix);
-		if (determinant == 0) {
-			String message = "Determinant of given matrix is 0";
-			throw new IllegalStateException (message);
-		}
-
-		int columns = 0;
-		for (int i = 0; i < matrix.length; i++) {
-			columns = Math.max (columns, matrix [i].length);
-		}
-
-		double [] roots = new double [columns];
-		for (int i = 0; i < columns; i++) {
-			double [][] clone = clone (matrix);
-			for (int j = 0; j < matrix.length; j ++) {
-				clone [j][i] = result [j][0];
-			}
-
-			double outrageDeterminant = determinant (clone);
-			roots [i] = outrageDeterminant / determinant;
-		}
-
-		return roots;
 	}
 	
 	public static double scalar (double [] a, double [] b) {
