@@ -11,10 +11,6 @@ public class JacobiMethod extends AbsMatrixMethod {
 
     @Override
     public double[] solve(double[][] A, double[] b) {
-        if (MatrixUtils.checkDominant(A)) {
-            throw new IllegalStateException("Matrix isn't diagonally dominant");
-        }
-
         final int SIZE = A.length;
         double[] X = new double[SIZE];     // x_i^(k)
         double[] tempX = new double[SIZE]; // x_i^(k+1)
@@ -43,7 +39,6 @@ public class JacobiMethod extends AbsMatrixMethod {
         } while (norm > MatrixMain.ACCURACY);
 
         System.out.println("~~ ITERATIONS: " + iteration + (norm > MatrixMain.ACCURACY ? '+' : ' '));
-
         return X;
     }
 
