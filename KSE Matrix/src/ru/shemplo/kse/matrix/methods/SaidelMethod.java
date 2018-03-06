@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SaidelMethod extends AbsMatrixMethod {
-	private boolean checkDominant(double [][] matrix) {
+	boolean checkDominant(double[][] matrix) {
 		int n = matrix.length;
 
 		for (int i = 0; i < n; i++) {
@@ -28,15 +28,14 @@ public class SaidelMethod extends AbsMatrixMethod {
 		return true;
 	}
 
-	private List <double [][]> transformToDominant(double [][] M, double [][] res, int r, boolean [] V, int [] R) {
+	private List <double [][]> transformToDominant(double[][] M, double[][] res, int r, boolean[] V, int[] R) {
 		int n = M.length;
 		if (r == n) {
 			double [][] TM = new double [n][n];
 			double [][] TRes = new double [n][1];
 
 			for (int i = 0; i < n; i++) {
-				for (int j = 0; j < n; j++)
-					TM [i][j] = M [R [i]][j];
+				System.arraycopy(M[R[i]], 0, TM[i], 0, n);
 				TRes [i][0] = res [R [i]][0];
 			}
 
@@ -67,7 +66,7 @@ public class SaidelMethod extends AbsMatrixMethod {
 		return null;
 	}
 
-	private List <double [][]> makeDominant(double [][] matrix, double [][] result) {
+	List <double [][]> makeDominant(double[][] matrix, double[][] result) {
 		boolean [] visited = new boolean [matrix.length];
 		int [] rows = new int [matrix.length];
 		Arrays.fill(visited, false);
