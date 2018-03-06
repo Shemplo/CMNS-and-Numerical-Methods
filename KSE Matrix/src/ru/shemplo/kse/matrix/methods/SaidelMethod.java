@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SaidelMethod extends AbsMatrixMethod {
-
 	@Override
 	public double [] solve (double [][] matrix, double [][] value) {
 		if (!MatrixUtils.checkDominant(matrix)) {
