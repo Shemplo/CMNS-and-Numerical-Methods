@@ -57,8 +57,6 @@ public class ConjugateGradientMethod extends AbsMatrixMethod {
 			for (int i = 0; i < value.length; i++) {
 				zk [i] = rk [i] + beta * zk [i];
 			}
-			
-			System.out.println (spr1 / norm + " " + acc);
 		} while (spr1 / norm > acc && iteration < MAX_ITERATIONS);
 		
 		System.out.println ("~~ ITERATIONS: " + iteration);

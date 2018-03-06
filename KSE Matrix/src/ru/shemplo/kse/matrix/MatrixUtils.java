@@ -1,7 +1,6 @@
 package ru.shemplo.kse.matrix;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ru.shemplo.kse.matrix.MatrixGenerator.MatrixType;
@@ -56,7 +55,8 @@ public class MatrixUtils {
 		return matrixes.get (1);
 	}
 
-	public static List <double [][]> runGauss (double [][] oMatrix, double [][] oDocked, boolean normalize) {
+	public static List <double [][]> runGauss (double [][] oMatrix, double [][] oDocked, 
+												boolean normalize) {
 		double [][] matrix = clone (oMatrix), docked = clone (oDocked);
 		for (int i = 0; i < matrix.length; i++) {
 			if (matrix [i][i] == 0) {
@@ -107,133 +107,6 @@ public class MatrixUtils {
 		return max;
 	}
 
-	@Deprecated
-	public static double [] solveByGauss (double [][] matrix, double [][] result) {
-		List <double [][]> gauss = runGauss (matrix, result, true);
-		double [][] resultVector = gauss.get (1);
-		double [][] diagonal = gauss.get (0);
-
-		double [] roots = new double [matrix.length];
-		for (int i = matrix.length - 1; i >= 0; i--) {
-			double summOfPrev = 0;
-			for (int j = i + 1; j < roots.length; j ++) {
-				summOfPrev += diagonal [i][j] * roots [j];
-			}
-
-			roots [i] = resultVector [i][0] / diagonal [i][i] - summOfPrev;
-
-		}
-
-		return roots;
-	}
-
-	@Deprecated
-    public static boolean checkDominant(double [][] matrix) {
-        int n = matrix.length;
-
-        for (int i = 0; i < n; i++) {
-            double sum = 0;
-            for (int j = 0; j < n; j++) {
-                if (i == j) continue;;
-                sum += Math.abs(matrix[i][j]);
-            }
-
-            if (Math.abs(matrix [i][i]) < sum) {
-                System.out.println("In row " + i + ": " + matrix [i][i] + " < " + sum);
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-	@Deprecated
-    private static List <double [][]> transformToDominant(double [][] M, double [][] res, int r, boolean [] V, int [] R) {
-        int n = M.length;
-        if (r == n) {
-            double [][] TM = new double [n][n];
-            double [][] TRes = new double [n][1];
-
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++)
-                    TM [i][j] = M [R [i]][j];
-                TRes [i][0] = res [R [i]][0];
-            }
-
-            List <double [][]> matrixes = new ArrayList <> ();
-            matrixes.add (TM); matrixes.add (TRes);
-
-            return matrixes;
-        }
-
-        for (int i = 0; i < n; i++) {
-            if (V[i]) continue;
-
-            double sum = 0;
-            for (int j = 0; j < n; j++)
-                sum += Math.abs(M[i][j]);
-
-            if (2 * Math.abs(M[i][r]) > sum) {
-                V[i] = true;
-                R[r] = i;
-
-                List <double [][]> t = transformToDominant(M, res, r + 1, V, R);
-
-                V[i] = false;
-                return t;
-            }
-        }
-
-        return null;
-    }
-
-    @Deprecated
-    public static  List <double [][]> makeDominant(double [][] matrix, double [][] result) {
-        boolean [] visited = new boolean [matrix.length];
-        int [] rows = new int [matrix.length];
-        Arrays.fill(visited, false);
-
-        return transformToDominant(matrix, result, 0, visited, rows);
-    }
-
-    @Deprecated
-    public static double [] solveBySaidel (double [][] matrix, double [][] result, final double eps) {
-        if (!checkDominant(matrix)) {
-            List <double [][]> dominated = makeDominant(matrix, result);
-            if (dominated != null) {
-                System.out.println("Matrix isn't diagonally dominant, but was successfully converted.");
-                matrix = dominated.get(0);
-                result = dominated.get(1);
-            } else {
-                throw new IllegalStateException("Matrix isn't diagonally dominant");
-            }
-        }
-
-        final int n = matrix.length;
-		double [] roots = new double [n];
-		Arrays.fill(roots, 0);
-
-		boolean converge = false;
-		while (!converge) {
-			double [] currentRoots = roots.clone();
-
-			for (int i = 0; i < n; i++) {
-				double s1 = 0, s2 = 0;
-				for (int j = 0; j < i; j++) s1 += matrix [i][j] * currentRoots [j];
-				for (int j = i + 1; j < n; j++) s2 += matrix [i][j] * roots [j];
-
-				currentRoots [i] = (result [i][0] - s1 - s2) / matrix [i][i];
-			}
-
-			double s = 0;
-			for (int i = 0; i < n; i++) s += Math.pow((currentRoots [i] - roots [i]), 2);
-			converge = Math.sqrt(s) <= eps;
-			roots = currentRoots;
-		}
-
-		return roots;
-	}
-
 	public static boolean checkCorrectness (double [][] matrix, double [][] result,
 											double [] roots) {
 		boolean wasError = false;
@@ -243,7 +116,7 @@ public class MatrixUtils {
 				summ += matrix [i][j] * roots [j];
 			}
       
-			if (Math.abs (result [i][0] - summ) > 0.0000001) {
+			if (Math.abs (result [i][0] - summ) > 0.000001) {
 				System.out.println ("In line " + i + " result: " + summ
 									+ " (expected: " + result [i][0] + ")");
 				wasError = true;
@@ -327,6 +200,27 @@ public class MatrixUtils {
 		for (int i = 0; i < vector.length; i++) {
 			for (int j = 0; j < matrix [i].length; j++) {
 				result [i] += matrix [i][j] * vector [j];
+			}
+		}
+		
+		return result;
+	}
+	
+	public static double [][] multiply (double [][] a, double [][] b) {
+		int boundsA = 0;
+		for (int i = 0; i < a.length; i++) {
+			boundsA = Math.max (boundsA, a [i].length);
+		}
+		
+		double [][] result = new double [boundsA][b.length];
+		for (int i = 0; i < a.length; i++) {
+			for (int k = 0; k < b [i].length; k ++) {
+				double summ = 0;
+				for (int j = 0; j < a [i].length; j++) {
+					summ += a [i][j] * b [j][k];
+				}
+				
+				result [i][k] = summ;
 			}
 		}
 		
