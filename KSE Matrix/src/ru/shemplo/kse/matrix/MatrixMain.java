@@ -32,7 +32,7 @@ public class MatrixMain {
 		
 		System.out.println (".. Preparations before running methods");
 		
-		MatrixType type = MatrixType.DIAGONAL_PRIORITY;
+		MatrixType type = MatrixType.POSITIVE_DEFINED;
 		System.out.println (".. Generated type of matrix: " + type.name ());
 		System.out.println (".. Generating original matrix (" + ROOTS_NUMBER 
 								+ "x" + ROOTS_NUMBER + ")");

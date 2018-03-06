@@ -9,7 +9,8 @@ public class MatrixGenerator {
 		DIAGONAL_PRIORITY,
 		RANDOM,
 		GILBERT,
-		IDENTITY
+		IDENTITY,
+		POSITIVE_DEFINED
 	}
 	
 	//private static final int MULT = 4000000;
@@ -37,6 +38,9 @@ public class MatrixGenerator {
 					matrix [i][i] = sign == 0 ? summ : summ * sign;
 				}
 			}
+		} else if (type.equals (MatrixType.POSITIVE_DEFINED)) {
+			final double [][] transpose = MatrixUtils.transpose (matrix);
+			matrix = MatrixUtils.multiply (matrix, transpose);
 		}
 		
 		return matrix;
