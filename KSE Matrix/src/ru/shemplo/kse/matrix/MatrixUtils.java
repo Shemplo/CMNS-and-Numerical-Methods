@@ -110,6 +110,8 @@ public class MatrixUtils {
 	public static boolean checkCorrectness (double [][] matrix, double [][] result,
 											double [] roots) {
 		boolean wasError = false;
+		int errors = 0;
+		
 		for (int i = 0; i < matrix.length; i++) {
 			double summ = 0;
 			for (int j = 0; j < matrix [i].length; j++) {
@@ -117,10 +119,19 @@ public class MatrixUtils {
 			}
       
 			if (Math.abs (result [i][0] - summ) > 0.000001) {
-				System.out.println ("In line " + i + " result: " + summ
-									+ " (expected: " + result [i][0] + ")");
+				if (errors < 5) {
+					System.out.println ("?? In line " + i + " result: " + summ
+											+ " (expected: " + result [i][0] + ")");
+				}
+				
 				wasError = true;
+				errors ++;
 			}
+		}
+		
+		if (errors > 5) {
+			System.out.println ("?? And " + (errors - 5) 
+									+ " more mistakes...");
 		}
 
 		return !wasError;
