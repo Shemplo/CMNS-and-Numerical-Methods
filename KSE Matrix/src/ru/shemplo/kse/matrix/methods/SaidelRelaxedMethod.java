@@ -1,6 +1,7 @@
 package ru.shemplo.kse.matrix.methods;
 
 import ru.shemplo.kse.matrix.MatrixMain;
+import ru.shemplo.kse.matrix.MatrixUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,8 +11,8 @@ public class SaidelRelaxedMethod extends SaidelMethod {
 
     @Override
     public double[] solve(double[][] matrix, double[][] value) {
-        if (!checkDominant(matrix)) {
-            List<double[][]> dominated = makeDominant(matrix, value);
+        if (!MatrixUtils.checkDominant(matrix)) {
+            List<double[][]> dominated = MatrixUtils.makeDominant(matrix, value);
             if (dominated != null) {
                 System.out.println("Matrix isn't diagonally dominant, but was successfully converted.");
                 matrix = dominated.get(0);

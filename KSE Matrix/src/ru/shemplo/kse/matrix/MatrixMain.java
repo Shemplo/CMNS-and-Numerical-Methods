@@ -11,7 +11,7 @@ import ru.shemplo.kse.matrix.methods.SaidelRelaxedMethod;
 
 public class MatrixMain {
 
-	public static final double ACCURACY = 1E-12;
+	public static final double ACCURACY = 1E-11;
 	
 	public static final int MAX_ITERATIONS = 1000;
 	public static final int ROOTS_NUMBER = 35;
