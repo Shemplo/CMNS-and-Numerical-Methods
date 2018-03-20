@@ -18,7 +18,8 @@ public class SaidelRelaxedMethod extends SaidelMethod {
                 matrix = dominated.get(0);
                 value = dominated.get(1);
             } else {
-                throw new IllegalStateException("Matrix isn't diagonally dominant");
+                //throw new IllegalStateException("Matrix isn't diagonally dominant");
+            	System.out.println ("?? Matrix is not diagonally dominant, but we tried...");
             }
         }
 

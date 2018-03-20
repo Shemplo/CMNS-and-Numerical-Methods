@@ -1,5 +1,7 @@
 package ru.shemplo.kse.matrix.methods;
 
+import java.util.Arrays;
+
 import ru.shemplo.kse.matrix.MatrixMain;
 import ru.shemplo.kse.matrix.MatrixUtils;
 
@@ -11,8 +13,19 @@ public class JacobiMethod extends AbsMatrixMethod {
 
     @Override
     public double[] solve(double[][] A, double[] b) {
+    	for (int i = 0; i < A.length; i ++) {
+    		if (A [i][i] == 0) {
+    			throw new IllegalStateException ("Zero on diagonal");
+    		}
+    	}
+    	
+    	if (!MatrixUtils.checkDominant (A)) {
+    		System.out.println ("?? Matrix is not diagonally dominant, but we tried...");
+    	}
+    	
         final int SIZE = A.length;
         double[] X = new double[SIZE];     // x_i^(k)
+        Arrays.fill (X, 1);
         double[] tempX = new double[SIZE]; // x_i^(k+1)
         double norm; // max_i |X[i] - tempX[i]|
 
