@@ -11,8 +11,12 @@ public class ConjugateGradientMethod extends AbsMatrixMethod {
 	@Override
 	public double [] solve (double [][] matrix, double [] value) {
 		if (!MatrixUtils.checkPositiveDefiniteness (matrix)) {
-			String message = "Matrix is not positive definet";
-			throw new IllegalStateException (message);
+			//String message = "Matrix is not positive definet";
+			//throw new IllegalStateException (message);
+			double [][] trans = MatrixUtils.transpose (matrix);
+			matrix = MatrixUtils.multiply (matrix, trans);
+			
+			value = MatrixUtils.multiply (trans, value);
 		}
 		
 		final double norm = MatrixUtils.scalar (value, value);
