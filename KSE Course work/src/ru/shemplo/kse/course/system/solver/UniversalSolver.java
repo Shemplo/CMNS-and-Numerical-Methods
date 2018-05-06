@@ -2,6 +2,7 @@ package ru.shemplo.kse.course.system.solver;
 
 import java.util.Objects;
 
+import ru.shemplo.kse.course.Gradient;
 import ru.shemplo.kse.course.Run;
 import ru.shemplo.kse.course.matrix.method.GaussMethod;
 import ru.shemplo.kse.course.matrix.method.MatrixMethod;
@@ -25,7 +26,8 @@ public class UniversalSolver implements EquationSystemSolver {
 		}
 		
 		for (int i = 0; i < size; i++) {
-			double [] dx = findGradient (system, result);
+			double [] dx = Gradient.findGradient (system, result, 
+						   MATRIX_METHOD);
 			double min = localMin (system, dx, result);
 			for (int j = 0; j < size; j++) {
 				result [i] += min * dx [i];
@@ -71,23 +73,9 @@ public class UniversalSolver implements EquationSystemSolver {
 			mis = Math.min (mis, dr);
 		} while (dr <= mis);
 		
-		// TODO: ... 
-		
-		return 0;
-	}
-	
-	private double [] findGradient (EquationSystem system, double [] input) {
-		int size = system.getSize ();
-		double [] result = new double [size];
-		double [][] matrix = new double [size][];
-		
-		for (int i = 0; i < size; i++) {
-			Equation equation = system.getEquation (i);
-			result [i] = -equation.evaluate (input);
-			matrix [i] = equation.gradient (input);
-		}
-		
-		return MATRIX_METHOD.solve (matrix, result);
+		Equation eq = (vector) -> 
+			vectorMismatch (system, input, gradient, vector [0]);
+		return Gradient.findDescend (eq, 1, 0.5, Run.PRECISION);
 	}
 	
 }
