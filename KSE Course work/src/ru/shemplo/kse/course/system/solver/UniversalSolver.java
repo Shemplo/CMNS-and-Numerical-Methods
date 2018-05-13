@@ -10,7 +10,7 @@ import ru.shemplo.kse.course.system.Equation;
 import ru.shemplo.kse.course.system.EquationSystem;
 
 public class UniversalSolver implements EquationSystemSolver {
-
+	
 	private final MatrixMethod MATRIX_METHOD = new GaussMethod ();
 	
 	public double [] solve (EquationSystem system) throws IllegalArgumentException {
