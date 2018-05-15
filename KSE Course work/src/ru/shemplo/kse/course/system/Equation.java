@@ -4,7 +4,7 @@ import ru.shemplo.kse.course.Run;
 
 public interface Equation {
 
-	public final double EPS = Run.PRECISION;
+	public final double EPS = Run.PRECISION * 1e4;
 	
 	public double evaluate (double... input);
 	

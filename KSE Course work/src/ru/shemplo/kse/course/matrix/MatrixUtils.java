@@ -11,7 +11,7 @@ public class MatrixUtils {
 	public static void printMatrix (double [][] matrix) {
 		for (int i = 0; i < matrix.length; i ++) {
 			for (int j = 0; j < matrix [i].length; j ++) {
-				System.out.print (String.format ("%+8.4f", matrix [i][j]));
+				System.out.print (String.format ("%+8.8f", matrix [i][j]));
 				if (j < matrix [i].length - 1) {
 					System.out.print (" ");
 				}
@@ -98,6 +98,52 @@ public class MatrixUtils {
 		List <double [][]> matrixes = new ArrayList <> ();
 		matrixes.add (matrix); matrixes.add (docked);
 		return matrixes;
+	}
+	
+	public static double [][] runGaussWithPivots (double [][] oMatrix, 
+								double [][] oDocked, boolean normalize) {
+		double [][] matrix = clone (oMatrix);
+		int [] order = new int [matrix.length];
+		for (int i = 0; i < order.length; i++) {
+			order [i] = i;
+		}
+		
+		for (int p = 0; p < matrix.length; p++) {
+			double maxValue = Double.MIN_VALUE;
+			int maxRow = p, maxCol = p;
+			
+			for (int i = p; i < matrix.length; i++) {
+				for (int j = 0; j < matrix [i].length; j++) {
+					if (Math.abs (matrix [i][j]) > maxValue) {
+						maxValue = Math.abs (matrix [i][j]);
+						maxRow = i; maxCol = j;
+					}
+				}
+			}
+			
+			double [] temp  = matrix [p];
+			matrix [p] = matrix [maxRow];
+			matrix [maxRow] = temp;
+			
+			for (int i = 0; i < matrix.length; i++) {
+				double value = matrix [i][maxCol];
+				matrix [i][maxCol] = matrix [i][p];
+				matrix [i][p] = value;
+			}
+			
+			int tmp = order [maxCol];
+			order [maxCol] = order [p];
+			order [p] = tmp;
+			
+			for (int i = p + 1; i < matrix.length; i++) {
+				double norma = matrix [i][p] / matrix [p][p];
+				for (int j = p; j < matrix [i].length; j++) {
+					matrix [i][j] -= norma * matrix [p][j];
+				}
+			}
+		}
+		
+		return matrix;
 	}
 
 	public static double normOfMatrix (double [][] matrix) {

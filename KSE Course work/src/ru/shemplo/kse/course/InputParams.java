@@ -1,5 +1,6 @@
 package ru.shemplo.kse.course;
 
+import static ru.shemplo.kse.course.Run.*;
 import static java.lang.Math.*;
 
 import java.io.BufferedReader;
@@ -17,13 +18,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.StringTokenizer;
+import java.util.function.Function;
 
 public class InputParams {
 
+	private static final Map <String, Function <Double, Double>> 
+		TEMPERATURE_CONSTANTS;
 	private static final Map <String, List <String>> DATA;
-	private static final Map <String, Double> DENSITIES;
+	private static final Map <String, Double> DENSITIES, 
+											  PRESSURES;
 	private static final List <String> PARAMETRS;
 	static {
+		TEMPERATURE_CONSTANTS = new HashMap <> ();
+		TEMPERATURE_CONSTANTS.put ("2HCl+2Al=2AlCl+H2", T -> {
+			double c1 = getGibbson ("HCl", T), c2 = getGibbson ("Al", T),
+				   c3 = getGibbson ("AlCl", T), c4 = getGibbson ("H2", T);
+			return exp (-2 * (c1 + c2 - c3 - c4 / 2) / (R * T)) 
+				   / ATMOSPHERE_PRESSURE;
+		});
+		TEMPERATURE_CONSTANTS.put ("2HCl+Al=AlCl2+H2", T -> {
+			double c1 = getGibbson ("HCl", T), c2 = getGibbson ("Al", T),
+				   c3 = getGibbson ("AlCl2", T), c4 = getGibbson ("H2", T);
+			return exp (-(2 * c1 + c2 - c3 - c4) / (R * T));
+		});
+		TEMPERATURE_CONSTANTS.put ("6HCl+2Al=2AlCl3+3H2", T -> {
+			double c1 = getGibbson ("HCl", T), c2 = getGibbson ("Al", T),
+				   c3 = getGibbson ("AlCl3", T), c4 = getGibbson ("H2", T);
+			return exp (-2 * (3 * c1 + c2 - c3 - 3 * c4 / 2) / (R * T)) 
+				   / ATMOSPHERE_PRESSURE;
+		});
+		
 		PARAMETRS = new ArrayList<> ();
 		DATA = new HashMap <> ();
 		
@@ -32,6 +56,17 @@ public class InputParams {
 		DENSITIES.put ("Ga",  5900.0);
 		DENSITIES.put ("AlN", 3200.0);
 		DENSITIES.put ("GaN", 6150.0);
+		
+		PRESSURES = new HashMap <> ();
+		PRESSURES.put ("HCl",   10000.0);
+		PRESSURES.put ("N2",    90000.0);
+		PRESSURES.put ("AlCl",  0.0);
+		PRESSURES.put ("AlCl2", 0.0);
+		PRESSURES.put ("AlCl3", 0.0);
+		PRESSURES.put ("GaCl",  0.0);
+		PRESSURES.put ("GaCl2", 0.0);
+		PRESSURES.put ("GaCl3", 0.0);
+		PRESSURES.put ("H2",    0.0);
 	}
 	
 	public static void loadParams () throws IOException {
@@ -108,7 +143,7 @@ public class InputParams {
 		double omega   = 1.074 * pow (T / epsilon, -0.1604);
 		double mu      = 2 * muI * muN2 / (muI + muN2);
 		
-		double press = Run.ATMOSPHERE_PRESSURE;
+		double press = ATMOSPHERE_PRESSURE;
 		return 0.02628 * pow (T, 1.5) 
 			   / (press * sigma * omega * sqrt (mu));
 	}
@@ -132,6 +167,24 @@ public class InputParams {
 			   s7 = fs [6] * x * x * x;
 		
 		return h298 - T * (s1 + s2 + s3 + s4 + s5 + s6 + s7);
+	}
+	
+	public static double getTempConstants (String reaction, double T) {
+		if (TEMPERATURE_CONSTANTS.containsKey (reaction)) {
+			return TEMPERATURE_CONSTANTS.get (reaction).apply (T);
+		}
+		
+		System.err.println ("Reactoin `" + reaction + "` is not found");
+		return 0;
+	}
+	
+	public static double getPressure (String agent) {
+		if (PRESSURES.containsKey (agent)) {
+			return PRESSURES.get (agent);
+		}
+		
+		System.err.println ("Pressure `" + agent + "` is not found");
+		return 0;
 	}
  	
 }
