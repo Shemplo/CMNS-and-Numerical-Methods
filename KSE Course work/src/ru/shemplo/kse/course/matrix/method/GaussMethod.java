@@ -1,20 +1,24 @@
 package ru.shemplo.kse.course.matrix.method;
 
-import java.util.List;
-
-import ru.shemplo.kse.course.matrix.MatrixUtils;
+import ru.shemplo.kse.course.matrix.Matrix;
 
 public class GaussMethod extends AbsMatrixMethod {
 
 	@Override
 	public double [] solve (double [][] matrix, double [] value) {
+		Matrix m = new Matrix (matrix);
+		return m.gaussMethod (value);
+		/*
 		double [][] valueMatrix = new double [][] {value};
 		valueMatrix = MatrixUtils.transpose (valueMatrix);
 		return this.solve (matrix, valueMatrix);
+		*/
 	}
 	
 	@Override
-	public double [] solve (double [] [] matrix, double [][] value) {
+	public double [] solve (double [][] matrix, double [][] value) {
+		return null;
+		/*
 		List <double [][]> gauss = MatrixUtils.runGauss (matrix, value, true);
 		double [][] resultVector = gauss.get (1);
 		double [][] diagonal = gauss.get (0);
@@ -27,10 +31,10 @@ public class GaussMethod extends AbsMatrixMethod {
 			}
 
 			roots [i] = resultVector [i][0] / diagonal [i][i] - summOfPrev;
-
 		}
-
+		
 		return roots;
+		*/
 	}
 
 }

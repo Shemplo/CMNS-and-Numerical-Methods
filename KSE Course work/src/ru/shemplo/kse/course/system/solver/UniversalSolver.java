@@ -21,16 +21,16 @@ public class UniversalSolver implements EquationSystemSolver {
 		
 		int size = system.getSize ();
 		double [] result = new double [size];
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < result.length; i++) {
 			result [i] = Run.RANDOM.nextDouble ();
 		}
 		
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < 10000; i++) {
 			double [] dx = Gradient.findGradient (system, result, 
 						   MATRIX_METHOD);
-			double min = localMin (system, dx, result);
+			double min = localMin (system, result, dx);
 			for (int j = 0; j < size; j++) {
-				result [i] += min * dx [i];
+				result [j] += min * dx [j];
 			}
 			
 			if (majorValue (dx) < Run.PRECISION) {
