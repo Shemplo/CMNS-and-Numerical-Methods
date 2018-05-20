@@ -47,6 +47,23 @@ public class InputParams {
 			return exp (-2 * (3 * c1 + c2 - c3 - 3 * c4 / 2) / (R * T)) 
 				   / ATMOSPHERE_PRESSURE;
 		});
+		TEMPERATURE_CONSTANTS.put ("2HCl+2Ga=2GaCl+H2", T -> {
+			double c1 = getGibbson ("HCl", T), c2 = getGibbson ("Ga", T),
+				   c3 = getGibbson ("GaCl", T), c4 = getGibbson ("H2", T);
+			return exp (-2 * (c1 + c2 - c3 - c4 / 2) / (R * T)) 
+				   / ATMOSPHERE_PRESSURE;
+		});
+		TEMPERATURE_CONSTANTS.put ("2HCl+Ga=GaCl2+H2", T -> {
+			double c1 = getGibbson ("HCl", T), c2 = getGibbson ("Ga", T),
+				   c3 = getGibbson ("GaCl2", T), c4 = getGibbson ("H2", T);
+			return exp (-(2 * c1 + c2 - c3 - c4) / (R * T));
+		});
+		TEMPERATURE_CONSTANTS.put ("6HCl+2Ga=2GaCl3+3H2", T -> {
+			double c1 = getGibbson ("HCl", T), c2 = getGibbson ("Ga", T),
+				   c3 = getGibbson ("GaCl3", T), c4 = getGibbson ("H2", T);
+			return exp (-2 * (3 * c1 + c2 - c3 - 3 * c4 / 2) / (R * T)) 
+				   / ATMOSPHERE_PRESSURE;
+		});
 		
 		PARAMETRS = new ArrayList<> ();
 		DATA = new HashMap <> ();
@@ -184,6 +201,15 @@ public class InputParams {
 		}
 		
 		System.err.println ("Pressure `" + agent + "` is not found");
+		return 0;
+	}
+	
+	public static double getDensity (String agent) {
+		if (DENSITIES.containsKey (agent)) {
+			return DENSITIES.get (agent);
+		}
+		
+		System.err.println ("Density `" + agent + "` is not found");
 		return 0;
 	}
  	

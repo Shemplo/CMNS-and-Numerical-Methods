@@ -2,7 +2,10 @@ package ru.shemplo.kse.course.task;
 
 import static ru.shemplo.kse.course.InputParams.*;
 
-import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import ru.shemplo.kse.course.Run;
 import ru.shemplo.kse.course.system.Equation;
@@ -14,15 +17,18 @@ import ru.shemplo.kse.course.system.solver.UniversalSolver;
 public class TaskSolveAlClx implements WorkTask {
 
 	@Override
-	public void run (PrintWriter pw) {
+	public List <Map <String, Double>> run () {
+		List <Map <String, Double>> maps = new ArrayList <> ();
 		for (int i = 35; i < 65; i++) {
 			double T = 10 * i + 273;
-			singleStep (T, 0.01, pw);
+			maps.add (singleStep (T, 0.01));
 		}
+		
+		return maps;
 	}
 
 	@Override
-	public void singleStep (double T, double delta, PrintWriter pw) {
+	public Map <String, Double> singleStep (double T, double delta) {
 		String [] agents = {"HCl", "AlCl", "AlCl2", "AlCl3", "H2"},
 				  reactios = {"2HCl+2Al=2AlCl+H2", "2HCl+Al=AlCl2+H2", 
 						  	  "6HCl+2Al=2AlCl3+3H2"};
@@ -83,11 +89,39 @@ public class TaskSolveAlClx implements WorkTask {
 			if (isAccurate) { break; }
 		}
 		
+		Map <String, Double> map = new HashMap <> ();
 		System.out.println ("T = " + T);
+		map.put ("T", T);
+		
 		for (int i = 0; i < agents.length; i++) {
-			System.out.println ("Pe(" + agents [i] + ") = "
-								+ vector [i]);
+			String key = "Pe(" + agents [i] + ")";
+			if (Run.DEBUG) {
+				System.out.println (key + " = " + vector [i]);
+			}
+			
+			map.put (key, vector [i]);
 		}
+		
+		for (int i = 0; i < agents.length; i++) {
+			double g = ds [i] * (press [i] - vector [i]) 
+					   / (8314 * T * delta);
+			String key = "G(" + agents [i] + ")";
+			if (Run.DEBUG) {
+				System.out.println (key + " = " + g);
+			}
+			
+			map.put (key, g);
+		}
+		
+		double V = (map.get ("G(AlCl)") + map.get ("G(AlCl2)") + map.get ("G(AlCl3)"))
+				   * (getDoubleParam ("Al", "mu") / getDensity ("Al")) * Math.pow (10, 9);
+		String key = "Ve(Al)";
+		if (Run.DEBUG) {
+			System.out.println (key + " = " + V);
+		}
+		
+		map.put (key, V);
+		return map;
 	}
 
 }
