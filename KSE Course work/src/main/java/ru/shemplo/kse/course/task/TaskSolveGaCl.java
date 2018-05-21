@@ -15,11 +15,20 @@ import ru.shemplo.kse.course.system.solver.EquationSystemSolver;
 import ru.shemplo.kse.course.system.solver.UniversalSolver;
 
 public class TaskSolveGaCl implements WorkTask {
-
+	
+	private static final String [] KEYS = {
+		"G(GaCl)", "G(GaCl2)", "G(GaCl3)", "Ve(Ga)"
+	};
+	
+	@Override
+	public String [] saveKeys () {
+		return KEYS;
+	}
+	
 	@Override
 	public List <Map <String, Double>> run () {
 		List <Map <String, Double>> maps = new ArrayList <> ();
-		for (int i = 35; i < 65; i++) {
+		for (int i = 65; i < 95; i++) {
 			double T = 10 * i + 273;
 			maps.add (singleStep (T, 0.01));
 		}
@@ -33,7 +42,7 @@ public class TaskSolveGaCl implements WorkTask {
 				  reactios = {"2HCl+2Ga=2GaCl+H2", "2HCl+Ga=GaCl2+H2", 
 						  	  "6HCl+2Ga=2GaCl3+3H2"};
 		
-		double [] coefs = new double [3],
+		double [] coefs = new double [reactios.length],
 				  press = new double [agents.length],
 				  ds    = new double [agents.length];
 		for (int i = 0; i < coefs.length; i++) {

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ru.shemplo.kse.course.InputParams;
 import ru.shemplo.kse.course.Run;
 import ru.shemplo.kse.course.system.Equation;
 import ru.shemplo.kse.course.system.EquationSystem;
@@ -14,10 +15,10 @@ import ru.shemplo.kse.course.system.UniversalSystem;
 import ru.shemplo.kse.course.system.solver.EquationSystemSolver;
 import ru.shemplo.kse.course.system.solver.UniversalSolver;
 
-public class TaskSolveAlClx implements WorkTask {
+public class TaskSolveAlGaN implements WorkTask {
 
 	private static final String [] KEYS = {
-		"G(AlCl)", "G(AlCl2)", "G(AlCl3)", "Ve(Al)"
+		"G(AlCl3)", "G(GaCl)", "Vg(AlGaN)", "x"
 	};
 	
 	@Override
@@ -28,9 +29,11 @@ public class TaskSolveAlClx implements WorkTask {
 	@Override
 	public List <Map <String, Double>> run () {
 		List <Map <String, Double>> maps = new ArrayList <> ();
-		for (int i = 35; i < 65; i++) {
-			double T = 10 * i + 273;
-			maps.add (singleStep (T, 0.01));
+		for (int i = 0; i < 31; i++) {
+			InputParams.setPressure ("GaCl", (30 - i));
+			InputParams.setPressure ("AlCl3", i);
+			
+			maps.add (singleStep (1100 + 273, 0.01));
 		}
 		
 		return maps;
@@ -38,9 +41,8 @@ public class TaskSolveAlClx implements WorkTask {
 
 	@Override
 	public Map <String, Double> singleStep (double T, double delta) {
-		String [] agents = {"HCl", "AlCl", "AlCl2", "AlCl3", "H2"},
-				  reactios = {"2HCl+2Al=2AlCl+H2", "2HCl+Al=AlCl2+H2", 
-						  	  "6HCl+2Al=2AlCl3+3H2"};
+		String [] agents = {"HCl", "GaCl", "NH3", "AlCl3", "H2"},
+				  reactios = {"AlCl3+NH3=AlN+3HCl", "GaCl+NH3=GaN+HCl+H2"};
 		
 		double [] coefs = new double [reactios.length],
 				  press = new double [agents.length],
@@ -54,34 +56,33 @@ public class TaskSolveAlClx implements WorkTask {
 		}
 		
 		Equation [] equations = {
-			// 2 HCl + 2 Al = 2 AlCl + H2
-			// Pe(HCl)^2 = K1 * Pe(AlCl)^2 * Pe(H2)
-			v -> v [0] * v [0] - coefs [0] * v [1] * v [1] * v [4],
+			// AlCl3 + NH3 = AlN + 3 HCl
+		    // Pe(AlCl3) * Pe(NH3) = K9 * x * Pe(HCl)^3
+			v -> v [3] * v [2] - coefs [0] * v [5] * Math.pow (v [0], 3),
 			
-			// 2 HCl + Al = AlCl2 + H2
-			// Pe(HCl) ^ 2 = K2 * Pe(AlCl2) * Pe(H2)
-			v -> v [0] * v [0] - coefs [1] * v [2] * v [4],
+			// GaCl + NH3 = GaN + HCl + H2
+	        // Pe(GaCl) * Pe(NH3) = K10 * (1 - x) * Pe(HCl) * Pe(H2)
+			v -> v [1] * v [2] - coefs [1] * (1 - v [5]) * v [0] * v [4],
 			
-			// 6 HCl + 2 Al = 2 AlCl3 + 3 H2
-			// Pe(HCl)^6 = K3 * Pe(AlCl3)^2 * Pe(H2)^3
-			v -> Math.pow (v [0], 6) - coefs [2] * v [3] * v [3] * Math.pow (v [4], 3),
+			// G(H) = G(HCl) + 2 * G(H2) + 3 * G(NH3) = 0
+	        // D(HCl) * (Pg(HCl) - Pe(HCl)) + 2 * D(H2) * (Pg(H2) - Pe(H2)) + 3 * D(NH3) * (Pg(NH3) - Pe(NH3))
+			v -> ds [0] * (press [0] - v [0]) + 2 * ds [4] * (press [4] - v [4])
+					+ 3 * ds [2] * (press [2] - v [2]),
 			
-			// G(Cl) = G(HCl) + G(AlCl) + 2 * G(AlCl2) + 3 * G(AlCl3) = 0
-			// D(HCl) * (Pg(HCl) - Pe(HCl)) + D(AlCl) * (Pg(AlCl) - Pe(AlCl)) + 2 * D(AlCl2) 
-			// ... * (Pg(AlCl2) - Pe(AlCl2)) + 3 * D(AlCl3) * (Pg(AlCl3) - Pe(AlCl3)) = 0
-			v -> ds [0] * (press [0] - v [0]) + 2 * ds [4] * (press [4] - v [4]),
+			// G(Cl) = 3 * G(AlCl3) + G(GaCl) + G(HCl) = 0
+			// 3 * D(AlCl3) * (Pg(AlCl3) - Pe(AlCl3)) + D(GaCl) * (Pg(GaCl) - Pe(GaCl)) + D(HCl) * (Pg(HCl) - Pe(HCl)) = 0
+			v -> 3 * ds [3] * (press [3] - v [3]) + ds [1] * (press [1] - v [1])
+					+ ds [0] * (press [0] - v [0]),
 			
-			// G(Cl) = G(HCl) + G(AlCl) + 2 * G(AlCl2) + 3 * G(AlCl3) = 0
-			// D(HCl) * (Pg(HCl) - Pe(HCl)) + D(AlCl) * (Pg(AlCl) - Pe(AlCl)) + 2 * D(AlCl2)
-			// ... * (Pg(AlCl2) - Pe(AlCl2)) + 3 * D(AlCl3) * (Pg(AlCl3) - Pe(AlCl3)) = 0
-			v -> {
-				double result = ds [0] * (press [0] - v [0]);
-				for (int i = 1; i < 4; i++) {
-					result += i * ds [i] * (press [i] - v [i]);
-				}
-				
-				return result;
-			}
+			// G(Al) + G(Ga) = G(AlCl3) + G(GaCl) = G(NH3) = G(N)
+			// D(AlCl3) * (Pg(AlCl3) - Pe(AlCl3)) + D(GaCl) * (Pg(GaCl) - Pe(GaCl)) = D(NH3) * (Pg(NH3) - Pe(NH3))
+			v -> ds [3] * (press [3] - v [3]) + ds [1] * (press [1] - v [1])
+					- ds [2] * (press [2] - v [2]),
+					
+			// G(AlCl3) = x * (G(AlCl3) + G(GaCl))
+			// D(AlCl3) * (Pg(AlCl3) - Pe(AlCl3)) = x * (D(AlCl3) * (Pg(AlCl3) - Pe(AlCl3)) + D(GaCl) * (Pg(GaCl) - Pe(GaCl)))
+			v -> ds [3] * (press [3] - v [3]) - v [5] * (ds [1] * (press [1] - v [1])
+					+ ds [3] * (press [3] - v [3]))
 		};
 		
 		EquationSystem system = new UniversalSystem (equations);
@@ -95,14 +96,17 @@ public class TaskSolveAlClx implements WorkTask {
 								&& vector [i] >= -1000;
 			}
 			
+			isAccurate &= vector [5] >= 0 && vector [5] <= 1;
 			if (isAccurate) { break; }
 		}
 		
 		Map <String, Double> map = new HashMap <> ();
 		if (Run.DEBUG) {
-			System.out.println ("T = " + T);
+			System.out.println ("Pg(AlCl3) = " + getPressure ("AlCl3"));
+			System.out.println ("x = " + vector [5]);
 		}
-		map.put ("T", T);
+		map.put ("Pg(AlCl3)", getPressure ("AlCl3"));
+		map.put ("x", vector [5]);
 		
 		for (int i = 0; i < agents.length; i++) {
 			String key = "Pe(" + agents [i] + ")";
@@ -112,6 +116,7 @@ public class TaskSolveAlClx implements WorkTask {
 			
 			map.put (key, vector [i]);
 		}
+		
 		
 		for (int i = 0; i < agents.length; i++) {
 			double g = ds [i] * (press [i] - vector [i]) 
@@ -124,9 +129,10 @@ public class TaskSolveAlClx implements WorkTask {
 			map.put (key, g);
 		}
 		
-		double V = (map.get ("G(AlCl)") + map.get ("G(AlCl2)") + map.get ("G(AlCl3)"))
-				   * (getDoubleParam ("Al", "mu") / getDensity ("Al")) * Math.pow (10, 9);
-		String key = "Ve(Al)";
+		double V = (map.get ("G(AlCl3)") * (getDoubleParam ("Al", "mu") / getDensity ("Al")) 
+					+ map.get ("G(GaCl)") * (getDoubleParam ("Ga", "mu") / getDensity ("Ga"))) 
+					* Math.pow (10, 9);
+		String key = "Vg(AlGaN)";
 		if (Run.DEBUG) {
 			System.out.println (key + " = " + V);
 		}
