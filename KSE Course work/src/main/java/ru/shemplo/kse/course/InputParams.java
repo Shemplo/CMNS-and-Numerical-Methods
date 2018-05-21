@@ -45,8 +45,9 @@ public class InputParams {
 			double c1 = getGibbson ("HCl", T), c2 = getGibbson ("Al", T),
 				   c3 = getGibbson ("AlCl3", T), c4 = getGibbson ("H2", T);
 			return exp (-2 * (3 * c1 + c2 - c3 - 3 * c4 / 2) / (R * T)) 
-				   / ATMOSPHERE_PRESSURE;
+				   * ATMOSPHERE_PRESSURE;
 		});
+		
 		TEMPERATURE_CONSTANTS.put ("2HCl+2Ga=2GaCl+H2", T -> {
 			double c1 = getGibbson ("HCl", T), c2 = getGibbson ("Ga", T),
 				   c3 = getGibbson ("GaCl", T), c4 = getGibbson ("H2", T);
@@ -62,7 +63,20 @@ public class InputParams {
 			double c1 = getGibbson ("HCl", T), c2 = getGibbson ("Ga", T),
 				   c3 = getGibbson ("GaCl3", T), c4 = getGibbson ("H2", T);
 			return exp (-2 * (3 * c1 + c2 - c3 - 3 * c4 / 2) / (R * T)) 
+				   * ATMOSPHERE_PRESSURE;
+		});
+		
+		TEMPERATURE_CONSTANTS.put ("AlCl3+NH3=AlN+3HCl", T -> {
+			double c1 = getGibbson ("AlCl3", T), c2 = getGibbson ("NH3", T),
+				   c3 = getGibbson ("AlN", T), c4 = getGibbson ("HCl", T);
+			return exp (-(c1 + c2 - c3 - 3 * c4) / (R * T))
 				   / ATMOSPHERE_PRESSURE;
+		});
+		TEMPERATURE_CONSTANTS.put ("GaCl+NH3=GaN+HCl+H2", T -> {
+			double c1 = getGibbson ("GaCl", T), c2 = getGibbson ("NH3", T),
+				   c3 = getGibbson ("GaN", T), c4 = getGibbson ("HCl", T),
+				   c5 = getGibbson ("H2", T);
+			return exp (-(c1 + c2 - c3 - c4 - c5) / (R * T));
 		});
 		
 		PARAMETRS = new ArrayList<> ();
@@ -77,6 +91,7 @@ public class InputParams {
 		PRESSURES = new HashMap <> ();
 		PRESSURES.put ("HCl",   10000.0);
 		PRESSURES.put ("N2",    90000.0);
+		PRESSURES.put ("NH3",   1500.0);
 		PRESSURES.put ("AlCl",  0.0);
 		PRESSURES.put ("AlCl2", 0.0);
 		PRESSURES.put ("AlCl3", 0.0);
@@ -193,6 +208,12 @@ public class InputParams {
 		
 		System.err.println ("Reactoin `" + reaction + "` is not found");
 		return 0;
+	}
+	
+	public static double setPressure (String agent, double value) {
+		double previous = getPressure (agent);
+		PRESSURES.put (agent, value);
+		return previous;
 	}
 	
 	public static double getPressure (String agent) {

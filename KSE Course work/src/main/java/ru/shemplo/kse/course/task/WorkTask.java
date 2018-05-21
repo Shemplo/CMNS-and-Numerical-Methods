@@ -9,4 +9,6 @@ public interface WorkTask {
 	
 	public Map <String, Double> singleStep (double T, double delta);
 	
+	public String [] saveKeys ();
+	
 }

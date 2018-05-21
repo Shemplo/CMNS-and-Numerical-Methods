@@ -1,5 +1,6 @@
 package ru.shemplo.kse.course;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 import ru.shemplo.kse.course.task.TaskSolveAlClx;
+import ru.shemplo.kse.course.task.TaskSolveAlGaN;
 import ru.shemplo.kse.course.task.TaskSolveGaCl;
 import ru.shemplo.kse.course.task.WorkTask;
 
@@ -18,7 +20,12 @@ public class Run {
 	public static final Random RANDOM;
 	public static final double R;
 	
-	public static final boolean DEBUG = true;
+	public static final Locale L = new Locale ("EN");
+	public static final boolean DEBUG = !true;
+	
+	private static final WorkTask [] PREPARE_TASKS = {
+		new TaskSolveAlClx (), new TaskSolveGaCl ()
+	};
 	
 	static { // Static constructor
 		ATMOSPHERE_PRESSURE = 100000;
@@ -29,23 +36,82 @@ public class Run {
 	
 	public static void main (String... args) throws IOException {
 		InputParams.loadParams ();
-		Locale l = new Locale ("EN");
 		
-		WorkTask task = new TaskSolveAlClx ();
-		List <Map <String, Double>> maps = task.run ();
-		PrintWriter pw = new PrintWriter ("plot.txt");
-		for (int i = 0; i < maps.size (); i++) {
-			Map <String, Double> map = maps.get (i);
-			double V = Math.log (Math.abs (map.get ("G(AlCl)")));
-			double T = map.get ("T");
+		int index = 1;
+		for (WorkTask task : PREPARE_TASKS) {
+			String name = task.getClass ().getSimpleName ();
+			System.out.println ("Running task " + index + ": " + name);
+			long start = System.currentTimeMillis ();
 			
-			pw.println (String.format (l, "%f, %f", 1 / T, V));
+			System.out.println (" Solving equation system");
+			List <Map <String, Double>> maps = task.run ();
+			if (maps.size () == 0) {
+				System.err.println (" No success tasks in run: " + name);
+				continue;
+			}
+			
+			saveMap (name, maps, task.saveKeys ());
+			long end = System.currentTimeMillis ();
+			System.out.println (String.format ("Done by %d ms", end - start));
+			
+			index += 1;
 		}
 		
-		task = new TaskSolveGaCl ();
+		InputParams.setPressure ("N2", 98470d);
+		InputParams.setPressure ("HCl", 0);
+		InputParams.setPressure ("H2", 0d);
+		System.out.println ("Running task 3: N2 only (pure)");
+		long start = System.currentTimeMillis ();
+		WorkTask task = new TaskSolveAlGaN ();
+		System.out.println (" Solving equation system");
+		List <Map <String, Double>> maps = task.run ();
+		
+		saveMap (task.getClass ().getSimpleName () + ".pureN2", maps, task.saveKeys ());
+		long end = System.currentTimeMillis ();
+		System.out.println (String.format ("Done by %d ms", end - start));
+		
+		InputParams.setPressure ("N2", 88623d);
+		InputParams.setPressure ("H2", 9847d);
+		System.out.println ("Running task 4: N2 + H2 (mixed)");
+		start = System.currentTimeMillis ();
+		System.out.println (" Solving equation system");
 		maps = task.run ();
 		
-		pw.close ();
+		saveMap (task.getClass ().getSimpleName () + ".mixedN2H2", maps, task.saveKeys ());
+		end = System.currentTimeMillis ();
+		System.out.println (String.format ("Done by %d ms", end - start));
+	}
+	
+	private static void saveMap (String task, List <Map <String, Double>> maps,
+									String [] keys) throws IOException {
+		System.out.println (" Saving data to files");
+		File dir = new File (task);
+		if (!dir.mkdir () && !dir.isDirectory ()) {
+			System.err.println (" Failed to save results: " + task);
+			return;
+		}
+		
+		for (String key : keys) {
+			File file = new File (dir, key +".seq");
+			try (
+				PrintWriter pw = new PrintWriter (file);
+			) {
+				for (int i = 0; i < maps.size (); i++) {
+					Map <String, Double> map = maps.get (i);
+					if (map.containsKey ("T")) {
+						double V = Math.log (Math.abs (map.get (key)));
+						double T = map.get ("T");
+						
+						pw.println (String.format (L, "%f, %f", 1 / T, V));
+					} else {
+						double P = map.get ("Pg(AlCl3)");
+						double V = map.get (key);
+						
+						pw.println (String.format (L, "%f, %f", P / 30, V));
+					}
+				}
+			}
+		}
 	}
 	
 }
