@@ -77,6 +77,7 @@ public class InputParams {
 		PRESSURES = new HashMap <> ();
 		PRESSURES.put ("HCl",   10000.0);
 		PRESSURES.put ("N2",    90000.0);
+		PRESSURES.put ("NH3",   1500.0);
 		PRESSURES.put ("AlCl",  0.0);
 		PRESSURES.put ("AlCl2", 0.0);
 		PRESSURES.put ("AlCl3", 0.0);
@@ -193,6 +194,12 @@ public class InputParams {
 		
 		System.err.println ("Reactoin `" + reaction + "` is not found");
 		return 0;
+	}
+	
+	public static double setPressure (String agent, double value) {
+		double previous = getPressure (agent);
+		PRESSURES.put (agent, value);
+		return previous;
 	}
 	
 	public static double getPressure (String agent) {
