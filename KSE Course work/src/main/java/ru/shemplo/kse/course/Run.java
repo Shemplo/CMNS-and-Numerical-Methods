@@ -1,12 +1,17 @@
 package ru.shemplo.kse.course;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import ru.shemplo.kse.course.task.TaskSolveAlClx;
 import ru.shemplo.kse.course.task.TaskSolveAlGaN;
@@ -92,24 +97,36 @@ public class Run {
 		}
 		
 		for (String key : keys) {
-			File file = new File (dir, key +".seq");
+			File file = new File (dir, key +".xlsx");
+			if (file.exists ()) {
+				file.delete ();
+			}
+			
 			try (
-				PrintWriter pw = new PrintWriter (file);
+				OutputStream os = new FileOutputStream (file);
+				XSSFWorkbook wb = new XSSFWorkbook ();
 			) {
+				XSSFSheet sheet = wb.createSheet (key);
 				for (int i = 0; i < maps.size (); i++) {
 					Map <String, Double> map = maps.get (i);
+					Row row = sheet.createRow (i);
+					
 					if (map.containsKey ("T")) {
 						double V = Math.log (Math.abs (map.get (key)));
 						double T = map.get ("T");
 						
-						pw.println (String.format (L, "%f, %f", 1 / T, V));
+						row.createCell (0).setCellValue (1 / T);
+						row.createCell (1).setCellValue (V);
 					} else {
 						double P = map.get ("Pg(AlCl3)");
 						double V = map.get (key);
 						
-						pw.println (String.format (L, "%f, %f", P / 30, V));
+						row.createCell (0).setCellValue (P / 30);
+						row.createCell (1).setCellValue (V);
 					}
 				}
+				
+				wb.write (os);
 			}
 		}
 	}
