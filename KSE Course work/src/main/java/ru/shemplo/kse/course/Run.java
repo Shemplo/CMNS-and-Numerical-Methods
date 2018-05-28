@@ -35,7 +35,7 @@ public class Run {
 	static { // Static constructor
 		ATMOSPHERE_PRESSURE = 100000;
 		RANDOM = new Random ();
-		PRECISION = 1e-10;
+		PRECISION = 1e-9;
 		R = 8.314; // Gaze constant
 	}
 	

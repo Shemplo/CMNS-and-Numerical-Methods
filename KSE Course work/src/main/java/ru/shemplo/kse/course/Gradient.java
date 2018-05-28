@@ -35,16 +35,20 @@ public class Gradient {
 	
 	public static double [] findGradient (EquationSystem system, 
 							double [] input, MatrixMethod method) {
+		// This is method of Newton
 		int size = system.getSize ();
 		double [] result = new double [size];
 		double [][] matrix = new double [size][];
 		
 		for (int i = 0; i < size; i++) {
 			Equation equation = system.getEquation (i);
+			// Find the value of function on current approximation
 			result [i] = -equation.evaluate (input);
+			// Find the gradient of #i equation (#i function)
 			matrix [i] = equation.gradient (input);
 		}
 		
+		// Solving matrix Jacobi with Gauss's method
 		return method.solve (matrix, result);
 	}
 	

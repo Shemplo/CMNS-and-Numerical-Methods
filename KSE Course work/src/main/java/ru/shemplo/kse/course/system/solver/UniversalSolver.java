@@ -25,7 +25,7 @@ public class UniversalSolver implements EquationSystemSolver {
 			result [i] = Run.RANDOM.nextDouble ();
 		}
 		
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 100000; i++) {
 			double [] dx = Gradient.findGradient (system, result, 
 						   MATRIX_METHOD);
 			double min = localMin (system, result, dx);
