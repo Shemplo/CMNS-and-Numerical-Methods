@@ -15,7 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import ru.shemplo.kse.course.task.TaskSolveAlClx;
 import ru.shemplo.kse.course.task.TaskSolveAlGaN;
-import ru.shemplo.kse.course.task.TaskSolveGaCl;
+import ru.shemplo.kse.course.task.TaskSolveGaClx;
 import ru.shemplo.kse.course.task.WorkTask;
 
 public class Run {
@@ -29,7 +29,7 @@ public class Run {
 	public static final boolean DEBUG = !true;
 	
 	private static final WorkTask [] PREPARE_TASKS = {
-		new TaskSolveAlClx (), new TaskSolveGaCl ()
+		new TaskSolveAlClx (), new TaskSolveGaClx ()
 	};
 	
 	static { // Static constructor

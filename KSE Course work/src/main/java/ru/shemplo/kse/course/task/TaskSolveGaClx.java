@@ -14,7 +14,7 @@ import ru.shemplo.kse.course.system.UniversalSystem;
 import ru.shemplo.kse.course.system.solver.EquationSystemSolver;
 import ru.shemplo.kse.course.system.solver.UniversalSolver;
 
-public class TaskSolveGaCl implements WorkTask {
+public class TaskSolveGaClx implements WorkTask {
 	
 	private static final String [] KEYS = {
 		"G(GaCl)", "G(GaCl2)", "G(GaCl3)", "Ve(Ga)"

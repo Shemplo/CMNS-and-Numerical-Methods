@@ -63,18 +63,7 @@ public class UniversalSolver implements EquationSystemSolver {
 	}
 	
 	private double localMin (EquationSystem system, double [] input, double [] gradient) {
-		double mis = vectorMismatch (system, input);
-		mis = Math.min (mis, vectorMismatch (system, input, gradient, 1));
-		
-		double rad = 1, dr;
-		do {
-			rad *= 2;
-			dr = vectorMismatch (system, input, gradient, rad);
-			mis = Math.min (mis, dr);
-		} while (dr <= mis);
-		
-		Equation eq = (vector) -> 
-			vectorMismatch (system, input, gradient, vector [0]);
+		Equation eq = (vector) -> vectorMismatch (system, input, gradient, vector [0]);
 		return Gradient.findDescend (eq, 1, 0.5, Run.PRECISION);
 	}
 	
