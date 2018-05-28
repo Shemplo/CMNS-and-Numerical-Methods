@@ -60,6 +60,6 @@ _условий приближённого термодинмического р
 Тогда, для **G<sub>AlCl</sub>**, **G<sub>AlCl<sub>2</sub></sub>** и **G<sub>AlCl<sub>3</sub></sub>** 
 диаргаммы Аррениуса будут выглядеть
 
-![PlotG(AlClx)](/plots/AlClx.png)
+![PlotG(AlClx)](plots/AlClx.png)
 
 Из чего можно делать вывод, что преобладающим Al-содержащим компонентом является **AlCl<sub>3</sub>**
