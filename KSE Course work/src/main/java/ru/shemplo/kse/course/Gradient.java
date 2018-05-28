@@ -35,7 +35,6 @@ public class Gradient {
 	
 	public static double [] findGradient (EquationSystem system, 
 							double [] input, MatrixMethod method) {
-		// This is method of Newton
 		int size = system.getSize ();
 		double [] result = new double [size];
 		double [][] matrix = new double [size][];
