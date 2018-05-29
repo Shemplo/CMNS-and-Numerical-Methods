@@ -101,11 +101,13 @@ public class TaskSolveAlGaN implements WorkTask {
 		}
 		
 		Map <String, Double> map = new HashMap <> ();
+		double PAlCl3 = getPressure ("AlCl3");
+		
 		if (Run.DEBUG) {
-			System.out.println ("Pg(AlCl3) = " + getPressure ("AlCl3"));
+			System.out.println ("Pg(AlCl3) = " + PAlCl3);
 			System.out.println ("x = " + vector [5]);
 		}
-		map.put ("Pg(AlCl3)", getPressure ("AlCl3"));
+		map.put ("Pg(AlCl3)", PAlCl3);
 		map.put ("x", vector [5]);
 		
 		for (int i = 0; i < agents.length; i++) {
