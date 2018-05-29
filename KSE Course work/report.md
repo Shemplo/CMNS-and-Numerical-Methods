@@ -135,3 +135,18 @@ _несущий газ - N<sub>2</sub>_ и _несущий газ - смесь N
 (20) **V<sub>AlGaN</sub><sup>g</sup> = \[G<sub>AlCl<sub>3</sub></sub>(μ<sub>AlN</sub> / ρ<sub>AlN</sub>) + G<sub>GaCl</sub>(μ<sub>GaN</sub> / ρ<sub>GaN</sub>)\] * 10<sup>9</sup>**
 
 находится скорость роста слоя алгана.
+
+В первом случае, график скорости роста слоя алгана будет выглядеть 
+(график скорости роста слоя **V<sub>AlGaN</sub><sup>g</sup>**, 
+в зависимости от давления **P<sub>AlCl<sub>3</sub></sub>**):
+
+![AlGaN.pureN2](plots/AlGaN.pureN2.png)
+
+Во втором случае давления N<sub>2</sub> и H<sub>2</sub> будут иметь соотношение 
+**P<sub>H<sub>2</sub></sub><sup>g</sup> / P<sub>N<sub>2</sub></sub><sup>g</sup> = 1 / 9**, 
+
+откуда 
+**P<sub>H<sub>2</sub></sub><sup>g</sup> = 9847 Па** и **P<sub>N<sub>2</sub></sub><sup>g</sup> = 88623 Па**,
+а график роста слоя алгана примет вид:
+
+![AlGaN.mixedN2H2](plots/AlGaN.mixedN2H2.png)
