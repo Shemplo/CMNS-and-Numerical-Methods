@@ -110,7 +110,7 @@
 испарения источника алюминия V<sub>Al</sub><sup>e</sup>
 от обратной температуры:
 
-![PlotG(AlClx)](plots/AlClx.VAl.png)
+![PlotG(AlClx).VAl](plots/AlClx.VAl.png)
 
 ### Решение задачи о конверсии хлороводорода (HCl) в хлориды галия (GaCl<sub>n</sub>)
 
@@ -155,7 +155,7 @@
 V<sub>Ga</sub><sup>e</sup>
 от обратной температуры:
 
-![PlotG(GaClx)](plots/GaClx.VGa.png)
+![PlotG(GaClx).VGa](plots/GaClx.VGa.png)
 
 ### Моделирование роста твердого раствора algan (Al<sub>x</sub>Ga<sub>1-x</sub>N)
 
@@ -200,7 +200,7 @@ _несущий газ - N<sub>2</sub>_ и _несущий газ - смесь N
 
 На графике показаны межфазовые потоки AlCl<sub>3</sub> и GaCl на поверхности растущего алгана:
 
-![AlGaN.pureN2](plots/AlGaN.rel.pureN2.png)
+![AlGaN.rel.pureN2](plots/AlGaN.rel.pureN2.png)
 
 Во втором случае давления N<sub>2</sub> и H<sub>2</sub> будут иметь соотношение 
 **P<sub>H<sub>2</sub></sub><sup>g</sup> / P<sub>N<sub>2</sub></sub><sup>g</sup> = 1 / 9**, 
@@ -212,7 +212,12 @@ _несущий газ - N<sub>2</sub>_ и _несущий газ - смесь N
 ![AlGaN.mixedN2H2](plots/AlGaN.mixedN2H2.png)
 
 На графике показаны межфазовые потоки AlCl<sub>3</sub> и GaCl на поверхности растущего алгана:
-![AlGaN.mixedN2H2](plots/AlGaN.rel.mixedN2H2.png)
+
+![AlGaN.rel.mixedN2H2](plots/AlGaN.rel.mixedN2H2.png)
+
+Диаграмма вхождения Al в кристалл:
+
+![AlGaN.xs](plots/AlGaN.xs.png)
 
 Эффект, наблюдаемый при добавлении H<sub>2</sub>, объясняется объясняется свойствами химических реакций (R7) и (R8) получения AlN и
 GaN. 
