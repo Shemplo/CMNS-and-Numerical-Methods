@@ -24,10 +24,14 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-    input.cpp
+    input.cpp \
+    systemsolver.cpp \
+    expliciteulersolver.cpp
 
 HEADERS += \
-    input.h
+    input.h \
+    systemsolver.h \
+    expliciteulersolver.h
 
 FORMS += \
     input.ui
