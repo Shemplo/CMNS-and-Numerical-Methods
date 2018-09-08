@@ -6,9 +6,11 @@
 class ExplicitEulerSolver : public SystemSolver
 {
     public:
-        ExplicitEulerSolver();
+        ExplicitEulerSolver(double, double, double, double, double, double, double);
+        ~ExplicitEulerSolver();
 
-        int *solve ();
+        std::vector<double> *solve (double time);
+
 };
 
 #endif // EXPLICITEULERSOLVER_H

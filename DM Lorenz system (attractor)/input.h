@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "expliciteulersolver.h"
+
 namespace Ui {
     class Run;
 }
