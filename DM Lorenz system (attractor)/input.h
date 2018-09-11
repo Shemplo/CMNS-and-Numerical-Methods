@@ -21,6 +21,8 @@ class Input : public QMainWindow
     private slots:
         void slotButtonSolve ();
 
+        void resetDefault();
+
     private:
         Ui::Run *ui;
 

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets
+QT       += core gui widgets charts datavisualization
 
 TARGET = Lorenz_system
 TEMPLATE = app
