@@ -240,7 +240,28 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="choose_way"/>
+       <widget class="QComboBox" name="solve_method">
+        <item>
+         <property name="text">
+          <string>Explicit Euler</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Implicit Euler</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Runge-Kutta</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Adams</string>
+         </property>
+        </item>
+       </widget>
       </item>
      </layout>
     </item>
@@ -265,7 +286,7 @@
       <item>
        <widget class="QPushButton" name="restore">
         <property name="text">
-         <string>Значения по умолачнию</string>
+         <string>Значения по умолчанию</string>
         </property>
        </widget>
       </item>
