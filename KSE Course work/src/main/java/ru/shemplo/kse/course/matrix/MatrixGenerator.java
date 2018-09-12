@@ -1,4 +1,4 @@
-package ru.shemplo.kse.matrix;
+package ru.shemplo.kse.course.matrix;
 
 import java.util.Objects;
 import java.util.Random;

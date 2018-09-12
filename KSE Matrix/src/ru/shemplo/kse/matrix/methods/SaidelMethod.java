@@ -9,82 +9,17 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SaidelMethod extends AbsMatrixMethod {
-	private boolean checkDominant(double [][] matrix) {
-		int n = matrix.length;
-
-		for (int i = 0; i < n; i++) {
-			double sum = 0;
-			for (int j = 0; j < n; j++) {
-				if (i == j) continue;;
-				sum += Math.abs(matrix[i][j]);
-			}
-
-			if (Math.abs(matrix [i][i]) < sum) {
-				System.out.println("In row " + i + ": " + matrix [i][i] + " < " + sum);
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	private List <double [][]> transformToDominant(double [][] M, double [][] res, int r, boolean [] V, int [] R) {
-		int n = M.length;
-		if (r == n) {
-			double [][] TM = new double [n][n];
-			double [][] TRes = new double [n][1];
-
-			for (int i = 0; i < n; i++) {
-				for (int j = 0; j < n; j++)
-					TM [i][j] = M [R [i]][j];
-				TRes [i][0] = res [R [i]][0];
-			}
-
-			List <double [][]> matrixes = new ArrayList<>();
-			matrixes.add (TM); matrixes.add (TRes);
-
-			return matrixes;
-		}
-
-		for (int i = 0; i < n; i++) {
-			if (V[i]) continue;
-
-			double sum = 0;
-			for (int j = 0; j < n; j++)
-				sum += Math.abs(M[i][j]);
-
-			if (2 * Math.abs(M[i][r]) > sum) {
-				V[i] = true;
-				R[r] = i;
-
-				List <double [][]> t = transformToDominant(M, res, r + 1, V, R);
-
-				V[i] = false;
-				return t;
-			}
-		}
-
-		return null;
-	}
-
-	private List <double [][]> makeDominant(double [][] matrix, double [][] result) {
-		boolean [] visited = new boolean [matrix.length];
-		int [] rows = new int [matrix.length];
-		Arrays.fill(visited, false);
-
-		return transformToDominant(matrix, result, 0, visited, rows);
-	}
-
 	@Override
 	public double [] solve (double [][] matrix, double [][] value) {
-		if (!checkDominant(matrix)) {
-			List<double [][]> dominated = makeDominant(matrix, value);
+		if (!MatrixUtils.checkDominant(matrix)) {
+			List<double [][]> dominated = MatrixUtils.makeDominant(matrix, value);
 			if (dominated != null) {
 				System.out.println("Matrix isn't diagonally dominant, but was successfully converted.");
 				matrix = dominated.get(0);
 				value = dominated.get(1);
 			} else {
-				throw new IllegalStateException("Matrix isn't diagonally dominant");
+				//throw new IllegalStateException("Matrix isn't diagonally dominant");
+				System.out.println ("?? Matrix is not diagonally dominant, but we tried...");
 			}
 		}
 

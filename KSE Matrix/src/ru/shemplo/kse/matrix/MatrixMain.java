@@ -2,26 +2,25 @@ package ru.shemplo.kse.matrix;
 
 import ru.shemplo.kse.matrix.MatrixGenerator.MatrixType;
 import ru.shemplo.kse.matrix.methods.ConjugateGradientMethod;
+import ru.shemplo.kse.matrix.methods.CramerMethod;
 import ru.shemplo.kse.matrix.methods.GaussMethod;
-import ru.shemplo.kse.matrix.methods.JacobianMethod;
 import ru.shemplo.kse.matrix.methods.MatrixMethod;
-import ru.shemplo.kse.matrix.methods.SaidelMethod;
-import ru.shemplo.kse.matrix.methods.SaidelRelaxedMethod;
 
 public class MatrixMain {
 
-	public static final double ACCURACY = 1E-12;
+	public static final double ACCURACY = 1E-11;
 	
-	public static final int MAX_ITERATIONS = 1000;
-	public static final int ROOTS_NUMBER = 250;
+	public static final int MAX_ITERATIONS = 100000;
+	public static final int ROOTS_NUMBER = 10;
 	
 	private static final MatrixMethod [] METHODS;
 	static {
 		METHODS = new MatrixMethod [] {
 			new GaussMethod (),
-			new JacobianMethod (),
-			new SaidelMethod (),
-			new SaidelRelaxedMethod (),
+			new CramerMethod (),
+			//new JacobiMethod(),
+			//new SaidelMethod (),
+			//new SaidelRelaxedMethod (),
 			new ConjugateGradientMethod ()
 		};
 	}
@@ -32,11 +31,12 @@ public class MatrixMain {
 		
 		System.out.println (".. Preparations before running methods");
 		
-		MatrixType type = MatrixType.DIAGONAL_PRIORITY;
+		MatrixType type = MatrixType.GILBERT;
 		System.out.println (".. Generated type of matrix: " + type.name ());
 		System.out.println (".. Generating original matrix (" + ROOTS_NUMBER 
 								+ "x" + ROOTS_NUMBER + ")");
 		final double [][] matrix = MatrixGenerator.generate (ROOTS_NUMBER, type);
+		MatrixUtils.printMatrix (matrix);
 		System.out.println (".. Generating right-hand vector\n");
 		final double [] value = MatrixGenerator.vector (ROOTS_NUMBER);
 		

@@ -4,17 +4,3 @@
 .settings
 .classpath
 .project
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/.qmake.stash
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/debug/expliciteulersolver.o
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/debug/input.o
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/debug/main.o
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/debug/moc_input.cpp
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/debug/moc_input.o
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/debug/moc_predefs.h
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/debug/systemsolver.o
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/debug/visualize.o
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/Makefile
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/Makefile.Debug
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/Makefile.Release
-build-Lorenz_system-Desktop_Qt_5_11_1_MinGW_32bit-Debug/ui_input.h
-DM Lorenz system (attractor)/Lorenz_system.pro.user.e8ad3bd
