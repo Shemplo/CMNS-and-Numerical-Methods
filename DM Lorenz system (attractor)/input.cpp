@@ -1,5 +1,6 @@
 #include "input.h"
 #include "ui_input.h"
+#include "visualize.h"
 #include <iostream>
 
 Input::Input(QWidget *parent) :
@@ -28,39 +29,26 @@ void Input::slotButtonSolve () {
         std::cout << "Solving system" << std::endl;
 
         SystemSolver *solver = new ExplicitEulerSolver (x0, y0, z0, sigma, r, b, dt);
-        std::vector<double> *axises = solver->solve(10);
+        std::vector<double> *axises = solver->solve(100);
         delete solver;
 
-        /*
-        QLineSeries *xseries = new QLineSeries();
-        for (unsigned int i = 0; i < axises [0].size(); i++) {
-            //std::cout << i * dt << " " << axises [0][i] << " " << axises [1][i] << " " << axises [2][i] << std::endl;
-            *xseries << QPointF (i * dt, axises [0][i]);
-        }
+        std::cout << axises->size() << std::endl;
+        std::cout << axises[0].size() << std::endl;
+        visualize(axises);
 
-        QAreaSeries *area = new QAreaSeries(xseries, xseries);
-        area->setName("x(t)");
-        QPen pen (0x059605);
-        pen.setWidth(1);
-        area->setPen(pen);
-
-        QChart *chart = new QChart();
-        chart->addSeries(area);
-        chart->createDefaultAxes();
-        chart->axisY()->setVisible(false);
-
-        ui->f0t->setChart(chart);*/
+        QString cb = ui->solve_method->currentText();
+        std::cout << cb.toStdString() << std::endl;
     }
 }
 
 void Input::resetDefault() {
-    ui->x0->setText("1");
-    ui->y0->setText("0");
-    ui->z0->setText("0");
+    ui->x0->setText("10");
+    ui->y0->setText("10");
+    ui->z0->setText("10");
     ui->sigma->setText("10");
-    ui->param_r->setText("1");
+    ui->param_r->setText("24.06");
     ui->param_b->setText(QString::number(8.0 / 3.0));
-    ui->delta_time->setText("0.0001");
+    ui->delta_time->setText("0.0075");
 }
 
 Input::~Input()
