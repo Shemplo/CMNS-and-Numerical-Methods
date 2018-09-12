@@ -4,6 +4,9 @@
 #include <QMainWindow>
 
 #include "expliciteulersolver.h"
+#include "impliciteulersolver.h"
+#include "rungekuttasolver.h"
+#include "adamssolver.h"
 
 namespace Ui {
     class Run;

@@ -13,6 +13,10 @@ class SystemSolver
         virtual ~SystemSolver ();
 
         virtual std::vector<double> *solve (double);
+        double x(double, double, double);
+        double y(double, double, double);
+        double z(double, double, double);
+
 
     protected:
         double x0, y0, z0, sigma, r, b, dt;
