@@ -20,9 +20,9 @@ std::vector<double> *ExplicitEulerSolver::solve(double time) {
     while (currtentTime < time - dt) {
         double xk = triple [0][gen], yk = triple [1][gen], zk = triple [2][gen];
 
-        triple [0].push_back(xk + dt * sigma * (yk - xk));
-        triple [1].push_back(yk + dt * (xk * (r - zk) - yk));
-        triple [2].push_back(zk + dt * (xk * yk - b * zk));
+        triple [0].push_back(xk + dt * x(xk, yk, zk));
+        triple [1].push_back(yk + dt * y(xk, yk, zk));
+        triple [2].push_back(zk + dt * z(xk, yk, zk));
 
         currtentTime += dt;
         gen += 1;

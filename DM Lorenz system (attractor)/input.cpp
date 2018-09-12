@@ -26,18 +26,35 @@ void Input::slotButtonSolve () {
            b  = ui->param_b->text().toDouble(),
            dt = ui->delta_time->text().toDouble();
     if (dt > 0) {
-        std::cout << "Solving system" << std::endl;
+        SystemSolver *solver;
+        int method = ui->solve_method->currentIndex();
+        switch(method) {
+            case 0:
+                std::cout << "Solving system via Explicit Euler method" << std::endl;
+                solver = new ExplicitEulerSolver (x0, y0, z0, sigma, r, b, dt);
+                break;
+            case 1:
+                std::cout << "Solving system via Implicit Euler method" << std::endl;
+                solver = new ImplicitEulerSolver (x0, y0, z0, sigma, r, b, dt);
+                break;
+            case 2:
+                std::cout << "Solving system via Runge-Kutta method" << std::endl;
+                solver = new RungeKuttaSolver (x0, y0, z0, sigma, r, b, dt);
+                break;
+            case 3:
+                std::cout << "Solving system via Adams method" << std::endl;
+                solver = new AdamsSolver (x0, y0, z0, sigma, r, b, dt);
+                break;
+        }
 
-        SystemSolver *solver = new ExplicitEulerSolver (x0, y0, z0, sigma, r, b, dt);
-        std::vector<double> *axises = solver->solve(100);
-        delete solver;
+        if (solver) {
+            std::vector<double> *axises = solver->solve(100);
+            delete solver;
 
-        std::cout << axises->size() << std::endl;
-        std::cout << axises[0].size() << std::endl;
-        visualize(axises);
-
-        QString cb = ui->solve_method->currentText();
-        std::cout << cb.toStdString() << std::endl;
+            if (axises) visualize(axises);
+        } else {
+            std::cout << "Unknown method" << std::endl;
+        }
     }
 }
 

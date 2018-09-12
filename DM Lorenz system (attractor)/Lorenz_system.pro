@@ -26,12 +26,20 @@ SOURCES += \
         main.cpp \
     input.cpp \
     systemsolver.cpp \
-    expliciteulersolver.cpp
+    expliciteulersolver.cpp \
+    visualize.cpp \
+    impliciteulersolver.cpp \
+    adamssolver.cpp \
+    rungekuttasolver.cpp
 
 HEADERS += \
     input.h \
     systemsolver.h \
-    expliciteulersolver.h
+    expliciteulersolver.h \
+    visualize.h \
+    impliciteulersolver.h \
+    rungekuttasolver.h \
+    adamssolver.h
 
 FORMS += \
     input.ui

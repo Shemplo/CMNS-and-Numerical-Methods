@@ -243,22 +243,22 @@
        <widget class="QComboBox" name="solve_method">
         <item>
          <property name="text">
-          <string>Explicit Euler</string>
+          <string>Явный Эйлер</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Implicit Euler</string>
+          <string>Неявный Эйлер</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Runge-Kutta</string>
+          <string>Рунге-Кутта</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Adams</string>
+          <string>Адамс</string>
          </property>
         </item>
        </widget>

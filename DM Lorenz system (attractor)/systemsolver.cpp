@@ -13,4 +13,16 @@ std::vector<double> *SystemSolver::solve (double time) {
     return nullptr;
 }
 
+double SystemSolver::x(double xk, double yk, double zk) {
+    return sigma * (yk - xk);
+}
+
+double SystemSolver::y(double xk, double yk, double zk) {
+    return (xk * (r - zk) - yk);
+}
+
+double SystemSolver::z(double xk, double yk, double zk) {
+    return (xk * yk - b * zk);
+}
+
 SystemSolver::~SystemSolver() {}
