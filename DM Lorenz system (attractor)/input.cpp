@@ -31,19 +31,19 @@ void Input::slotButtonSolve () {
         switch(method) {
             case 0:
                 std::cout << "Solving system via Explicit Euler method" << std::endl;
-                solver = new ExplicitEulerSolver (x0, y0, z0, sigma, r, b, dt, std::string("Explicit Euler"));
+                solver = new ExplicitEulerSolver (x0, y0, z0, sigma, r, b, dt, "Explicit Euler");
                 break;
             case 1:
                 std::cout << "Solving system via Implicit Euler method" << std::endl;
-                solver = new ImplicitEulerSolver (x0, y0, z0, sigma, r, b, dt, std::string("Impilicit Euler"));
+                solver = new ImplicitEulerSolver (x0, y0, z0, sigma, r, b, dt, "Impilicit Euler");
                 break;
             case 2:
                 std::cout << "Solving system via Runge-Kutta method" << std::endl;
-                solver = new RungeKuttaSolver (x0, y0, z0, sigma, r, b, dt, std::string("Runge-Kutta"));
+                solver = new RungeKuttaSolver (x0, y0, z0, sigma, r, b, dt, "Runge-Kutta");
                 break;
             case 3:
                 std::cout << "Solving system via Adams method" << std::endl;
-                solver = new AdamsSolver (x0, y0, z0, sigma, r, b, dt, std::string("Adams"));
+                solver = new AdamsSolver (x0, y0, z0, sigma, r, b, dt, "Adams");
                 break;
         }
 
