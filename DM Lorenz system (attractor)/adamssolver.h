@@ -6,7 +6,7 @@
 class AdamsSolver : public SystemSolver
 {
     public:
-        AdamsSolver(double, double, double, double, double, double, double);
+        AdamsSolver(double, double, double, double, double, double, double, std::string);
         ~AdamsSolver();
 
         std::vector<double> *solve (double time);

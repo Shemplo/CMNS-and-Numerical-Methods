@@ -1,7 +1,7 @@
 #include "rungekuttasolver.h"
 
-RungeKuttaSolver::RungeKuttaSolver(double x0, double y0, double z0, double sigma, double r, double b, double dt)
-    : SystemSolver (x0, y0, z0, sigma, r, b, dt)
+RungeKuttaSolver::RungeKuttaSolver(double x0, double y0, double z0, double sigma, double r, double b, double dt, std::string name)
+    : SystemSolver (x0, y0, z0, sigma, r, b, dt, name)
 {
 
 }
@@ -45,7 +45,6 @@ std::vector<double> *RungeKuttaSolver::solve(double time) {
         dyx = (1.0/6.0) * (k1x + 2 * k2x + 2 * k3x + k4x);
         dyy = (1.0/6.0) * (k1y + 2 * k2y + 2 * k3y + k4y);
         dyz = (1.0/6.0) * (k1z + 2 * k2z + 2 * k3z + k4z);
-        std::cout << dyx << " " << dyy << " " << dyz << std::endl;
 
         triple[0].push_back(xk + dt * dyx);
         triple[1].push_back(yk + dt * dyy);
