@@ -1,7 +1,7 @@
 #include "adamssolver.h"
 
-AdamsSolver::AdamsSolver(double x0, double y0, double z0, double sigma, double r, double b, double dt)
-    : SystemSolver (x0, y0, z0, sigma, r, b, dt)
+AdamsSolver::AdamsSolver(double x0, double y0, double z0, double sigma, double r, double b, double dt, std::string name)
+    : SystemSolver (x0, y0, z0, sigma, r, b, dt, name)
 {
 
 }

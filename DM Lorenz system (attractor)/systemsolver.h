@@ -3,13 +3,25 @@
 
 #define DIMENSION 3
 
+#include <QApplication>
+
+#include <QtDataVisualization/q3dscatter.h>
+#include <QtDataVisualization/qabstract3dseries.h>
+
+#include <QtWidgets/QWidget>
+
+#include <QRandomGenerator>
+
 #include <iostream>
 #include <vector>
+
+using namespace QtDataVisualization;
+
 
 class SystemSolver
 {
     public:
-        SystemSolver(double, double, double, double, double, double, double);
+        SystemSolver(double, double, double, double, double, double, double, std::string);
         virtual ~SystemSolver ();
 
         virtual std::vector<double> *solve (double);
@@ -17,9 +29,12 @@ class SystemSolver
         double y(double, double, double);
         double z(double, double, double);
 
+        void visualize(std::vector<double>*);
+
 
     protected:
         double x0, y0, z0, sigma, r, b, dt;
+        std::string name;
 };
 
 #endif // SYSTEMSOLVER_H

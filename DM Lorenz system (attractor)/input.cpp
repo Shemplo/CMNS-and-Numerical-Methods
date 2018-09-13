@@ -1,6 +1,6 @@
 #include "input.h"
+#include "systemsolver.h"
 #include "ui_input.h"
-#include "visualize.h"
 #include <iostream>
 
 Input::Input(QWidget *parent) :
@@ -31,27 +31,27 @@ void Input::slotButtonSolve () {
         switch(method) {
             case 0:
                 std::cout << "Solving system via Explicit Euler method" << std::endl;
-                solver = new ExplicitEulerSolver (x0, y0, z0, sigma, r, b, dt);
+                solver = new ExplicitEulerSolver (x0, y0, z0, sigma, r, b, dt, std::string("Explicit Euler"));
                 break;
             case 1:
                 std::cout << "Solving system via Implicit Euler method" << std::endl;
-                solver = new ImplicitEulerSolver (x0, y0, z0, sigma, r, b, dt);
+                solver = new ImplicitEulerSolver (x0, y0, z0, sigma, r, b, dt, std::string("Impilicit Euler"));
                 break;
             case 2:
                 std::cout << "Solving system via Runge-Kutta method" << std::endl;
-                solver = new RungeKuttaSolver (x0, y0, z0, sigma, r, b, dt);
+                solver = new RungeKuttaSolver (x0, y0, z0, sigma, r, b, dt, std::string("Runge-Kutta"));
                 break;
             case 3:
                 std::cout << "Solving system via Adams method" << std::endl;
-                solver = new AdamsSolver (x0, y0, z0, sigma, r, b, dt);
+                solver = new AdamsSolver (x0, y0, z0, sigma, r, b, dt, std::string("Adams"));
                 break;
         }
 
         if (solver) {
             std::vector<double> *axises = solver->solve(100);
-            delete solver;
 
-            if (axises) visualize(axises);
+            if (axises) solver->visualize(axises);
+            delete solver;
         } else {
             std::cout << "Unknown method" << std::endl;
         }

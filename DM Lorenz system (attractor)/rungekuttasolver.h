@@ -6,7 +6,7 @@
 class RungeKuttaSolver : public SystemSolver
 {
     public:
-        RungeKuttaSolver(double, double, double, double, double, double, double);
+        RungeKuttaSolver(double, double, double, double, double, double, double, std::string);
         ~RungeKuttaSolver();
 
         std::vector<double> *solve (double time);

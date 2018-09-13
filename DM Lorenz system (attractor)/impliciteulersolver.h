@@ -6,7 +6,7 @@
 class ImplicitEulerSolver : public SystemSolver
 {
     public:
-        ImplicitEulerSolver(double, double, double, double, double, double, double);
+        ImplicitEulerSolver(double, double, double, double, double, double, double, std::string);
         ~ImplicitEulerSolver();
 
         std::vector<double> *solve (double time);
