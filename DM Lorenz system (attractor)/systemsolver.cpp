@@ -15,7 +15,7 @@ std::vector<double> *SystemSolver::solve (double time) {
 }
 
 double SystemSolver::x(double xk, double yk, double zk) {
-    return sigma * (yk - xk);
+    return sigma * (yk - xk) + zk * 0;
 }
 
 double SystemSolver::y(double xk, double yk, double zk) {
@@ -27,10 +27,26 @@ double SystemSolver::z(double xk, double yk, double zk) {
 }
 
 void SystemSolver::visualize(std::vector<double> *answer) {
+    QWidget *window = new QWidget;
+    window->setWindowTitle(QString::fromStdString("Lorenz system - " + name));
+    window->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
+
+    QVBoxLayout *vertical = new QVBoxLayout (window);
+
     QtDataVisualization::Q3DScatter *graph = new QtDataVisualization::Q3DScatter();
     QWidget *container = QWidget::createWindowContainer(graph);
-    container->setWindowTitle(QString::fromStdString("Lorenz system - " + name));
-    container->show();
+
+    QSize screenSize = graph->screen()->size();
+    int width = screenSize.width() / 2,
+        height = static_cast<int>(screenSize.height() / 1.5);
+    container->setMinimumSize(QSize(width, height));
+    vertical->addWidget(container, 1);
+
+    QString paramStringValue = QString::asprintf(
+        "Parameters: [x0 = %.4f, y0 = %.4f, z0 = %.4f, σ = %.4f, b = %.4f, r = %.4f, Δt = %0.4f]",
+        x0, y0, z0, sigma, b, r, dt);
+    QLabel *paramsString = new QLabel(paramStringValue);
+    vertical->addWidget(paramsString, 1);
 
     //graph->activeTheme()->setType(QtDataVisualization::Q3DTheme::ThemeEbony);
     graph->scene()->activeCamera()->setCameraPreset(Q3DCamera::CameraPresetFront);
@@ -49,13 +65,14 @@ void SystemSolver::visualize(std::vector<double> *answer) {
     dataArray->resize(static_cast<int>(m_itemCount));
     QScatterDataItem *ptrToDataArray = &dataArray->first();
 
-
     for (size_t i = 0; i < m_itemCount; i++) {
         ptrToDataArray->setPosition(QVector3D(static_cast<float>(answer[0][i]), static_cast<float>(answer[1][i]), static_cast<float>(answer[2][i])));
         ptrToDataArray++;
     }
 
     graph->seriesList().at(0)->dataProxy()->resetArray(dataArray);
+
+    window->show();
 }
 
 SystemSolver::~SystemSolver() {}
