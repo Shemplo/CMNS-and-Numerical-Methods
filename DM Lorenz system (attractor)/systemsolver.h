@@ -6,8 +6,9 @@
 #include <QApplication>
 #include <QtGui/QScreen>
 
-#include <QtDataVisualization/q3dscatter.h>
 #include <QtDataVisualization/qabstract3dseries.h>
+#include <QtDataVisualization/q3dscatter.h>
+#include <QtCharts/QChartView>
 
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QWidget>

@@ -32,6 +32,16 @@ void SystemSolver::visualize(std::vector<double> *answer) {
     window->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
 
     QVBoxLayout *vertical = new QVBoxLayout (window);
+    QHBoxLayout *horizontal = new QHBoxLayout ();
+    vertical->addLayout(horizontal);
+
+    const int AXIS_NUMBER = 3;
+    QtCharts::QChartView **axisChartViews = new QtCharts::QChartView * [AXIS_NUMBER];
+    for (int i = 0; i < AXIS_NUMBER; i++) {
+        axisChartViews [i] = new QtCharts::QChartView (new QtCharts::QChart);
+        // here put common styles
+        horizontal->addWidget(axisChartViews [i]);
+    }
 
     QtDataVisualization::Q3DScatter *graph = new QtDataVisualization::Q3DScatter();
     QWidget *container = QWidget::createWindowContainer(graph);
