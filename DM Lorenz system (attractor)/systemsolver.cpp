@@ -31,16 +31,18 @@ void SystemSolver::visualize(std::vector<double> *answer) {
     window->setWindowTitle(QString::fromStdString("Lorenz system - " + name));
     window->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
 
-    QVBoxLayout *vertical = new QVBoxLayout (window);
-    QHBoxLayout *horizontal = new QHBoxLayout ();
-    vertical->addLayout(horizontal);
+    QHBoxLayout *horizontal = new QHBoxLayout (window);
+    QVBoxLayout *verticalLeft = new QVBoxLayout (),
+                *verticalRight = new QVBoxLayout ();
+    horizontal->addLayout(verticalLeft);
+    horizontal->addLayout(verticalRight);
 
     const int AXIS_NUMBER = 3;
     QtCharts::QChartView **axisChartViews = new QtCharts::QChartView * [AXIS_NUMBER];
     for (int i = 0; i < AXIS_NUMBER; i++) {
         axisChartViews [i] = new QtCharts::QChartView (new QtCharts::QChart);
         // here put common styles
-        horizontal->addWidget(axisChartViews [i]);
+        verticalRight->addWidget(axisChartViews [i]);
     }
 
     QtDataVisualization::Q3DScatter *graph = new QtDataVisualization::Q3DScatter();
@@ -50,13 +52,13 @@ void SystemSolver::visualize(std::vector<double> *answer) {
     int width = screenSize.width() / 2,
         height = static_cast<int>(screenSize.height() / 1.5);
     container->setMinimumSize(QSize(width, height));
-    vertical->addWidget(container, 1);
+    verticalLeft->addWidget(container, 1);
 
     QString paramStringValue = QString::asprintf(
         "Parameters: [x0 = %.4f, y0 = %.4f, z0 = %.4f, σ = %.4f, b = %.4f, r = %.4f, Δt = %0.4f]",
         x0, y0, z0, sigma, b, r, dt);
     QLabel *paramsString = new QLabel(paramStringValue);
-    vertical->addWidget(paramsString, 1);
+    verticalLeft->addWidget(paramsString, 1);
 
     //graph->activeTheme()->setType(QtDataVisualization::Q3DTheme::ThemeEbony);
     graph->scene()->activeCamera()->setCameraPreset(Q3DCamera::CameraPresetFront);
