@@ -4,11 +4,14 @@
 #define DIMENSION 3
 
 #include <QApplication>
+#include <QtGui/QScreen>
 
 #include <QtDataVisualization/q3dscatter.h>
 #include <QtDataVisualization/qabstract3dseries.h>
 
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QVBoxLayout>
 
 #include <QRandomGenerator>
 
