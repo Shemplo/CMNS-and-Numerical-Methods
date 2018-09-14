@@ -9,12 +9,15 @@ Input::Input(QWidget *parent) :
 {
     ui->setupUi(this);
     //ui->f0t->setRenderHint(QPainter::Antialiasing);
+    preset = 0;
     resetDefault();
 
     connect (ui->solve, &QPushButton::clicked,
              this, &Input::slotButtonSolve);
     connect (ui->restore, &QPushButton::clicked,
              this, &Input::resetDefault);
+    connect (ui->preset, &QComboBox::currentTextChanged,
+             this, &Input::loadPreset);
 }
 
 void Input::slotButtonSolve () {
@@ -59,13 +62,35 @@ void Input::slotButtonSolve () {
 }
 
 void Input::resetDefault() {
-    ui->x0->setText("10");
-    ui->y0->setText("10");
-    ui->z0->setText("10");
-    ui->sigma->setText("10");
-    ui->param_r->setText("24.06");
-    ui->param_b->setText(QString::number(8.0 / 3.0));
-    ui->delta_time->setText("0.0075");
+    QString x0 = "10", y0 = "10", z0 = "10", sigma = "10", r = "24.06", delta_time = "0.0075", b = QString::number(8.0 / 3.0);
+
+    switch(preset) {
+        case 1:
+            r = "1";
+            break;
+        case 2:
+            r = "3";
+            break;
+        case 3:
+            r = "28";
+            break;
+        case 4:
+            r = "80";
+            break;
+    }
+
+    ui->x0->setText(x0);
+    ui->y0->setText(y0);
+    ui->z0->setText(z0);
+    ui->sigma->setText(sigma);
+    ui->param_r->setText(r);
+    ui->param_b->setText(b);
+    ui->delta_time->setText(delta_time);
+}
+
+void Input::loadPreset() {
+    preset = ui->preset->currentIndex();
+    resetDefault();
 }
 
 Input::~Input()
