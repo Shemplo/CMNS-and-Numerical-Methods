@@ -26,6 +26,18 @@ double SystemSolver::z(double xk, double yk, double zk) {
     return (xk * yk - b * zk);
 }
 
+double SystemSolver::x(point3d p) {
+    return x(p.x, p.y, p.z);
+}
+
+double SystemSolver::y(point3d p) {
+    return y(p.x, p.y, p.z);
+}
+
+double SystemSolver::z(point3d p) {
+    return z(p.x, p.y, p.z);
+}
+
 void SystemSolver::visualize(std::vector<double> *answer) {
     QWidget *window = new QWidget;
     window->setWindowTitle(QString::fromStdString("Lorenz system - " + name));

@@ -19,6 +19,8 @@
 #include <iostream>
 #include <vector>
 
+#include "point3d.h"
+
 using namespace QtDataVisualization;
 
 
@@ -32,6 +34,10 @@ class SystemSolver
         double x(double, double, double);
         double y(double, double, double);
         double z(double, double, double);
+
+        double x(point3d p);
+        double y(point3d p);
+        double z(point3d p);
 
         void visualize(std::vector<double>*);
 
