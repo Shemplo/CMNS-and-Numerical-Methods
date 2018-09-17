@@ -349,12 +349,22 @@
         </item>
         <item>
          <property name="text">
+          <string>r = 15.6</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>r = 28</string>
          </property>
         </item>
         <item>
          <property name="text">
           <string>r = 80</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>r = 100</string>
          </property>
         </item>
        </widget>
