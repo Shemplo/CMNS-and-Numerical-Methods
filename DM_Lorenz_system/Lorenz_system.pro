@@ -29,7 +29,8 @@ SOURCES += \
     expliciteulersolver.cpp \
     impliciteulersolver.cpp \
     adamssolver.cpp \
-    rungekuttasolver.cpp
+    rungekuttasolver.cpp \
+    squarejacobimatrix3d.cpp
 
 HEADERS += \
     input.h \
@@ -38,7 +39,8 @@ HEADERS += \
     impliciteulersolver.h \
     rungekuttasolver.h \
     adamssolver.h \
-    point3d.h
+    vector3d.h \
+    squarejacobimatrix3d.h
 
 FORMS += \
     input.ui
