@@ -30,6 +30,7 @@ void SystemSolver::visualize(std::vector<double> *answer) {
     QWidget *window = new QWidget;
     window->setWindowTitle(QString::fromStdString("Lorenz system - " + name));
     window->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
+    window->move(0, 0);
 
     QVBoxLayout *vertical = new QVBoxLayout(window);
     QHBoxLayout *horizontal = new QHBoxLayout ();

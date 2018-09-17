@@ -72,10 +72,16 @@ void Input::resetDefault() {
             r = "3";
             break;
         case 3:
-            r = "28";
+            r = "15.6";
             break;
         case 4:
+            r = "28";
+            break;
+        case 5:
             r = "80";
+            break;
+        case 6:
+            r = "100";
             break;
     }
 
