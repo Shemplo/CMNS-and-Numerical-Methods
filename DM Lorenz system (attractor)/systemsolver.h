@@ -42,7 +42,7 @@ class SystemSolver
         double y(point3d p);
         double z(point3d p);
 
-        void visualize(std::vector<double>*);
+        void visualize(std::vector<double>*, bool);
 
     private:
         QWidget* visualize3D(std::vector<double> *);
