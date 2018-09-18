@@ -1,8 +1,8 @@
 #include "adamssolver.h"
 #include "rungekuttasolver.h"
 
-AdamsSolver::AdamsSolver(double x0, double y0, double z0, double sigma, double r, double b, double dt, std::string name)
-    : SystemSolver (x0, y0, z0, sigma, r, b, dt, name)
+AdamsSolver::AdamsSolver(InputParams input, std::string name)
+    : SystemSolver (input, name)
 {
 
 }
@@ -11,7 +11,7 @@ AdamsSolver::AdamsSolver(double x0, double y0, double z0, double sigma, double r
  * @see http://www.universityofcalicut.info/SDE/BSc_maths_numerical_methods.pdf
  */
 std::vector<double> *AdamsSolver::solve(double time) {
-    RungeKuttaSolver starterValues(x0, y0, z0, sigma, r, b, dt, "Explicit Euler");
+    RungeKuttaSolver starterValues(input, "Explicit Euler");
     std::vector<double> *triple = starterValues.solve(dt * 4 + 1); // Hacked to get exactly 4 first values
 
     std::vector<double>& xk = triple[0];
