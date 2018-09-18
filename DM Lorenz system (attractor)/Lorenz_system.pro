@@ -37,7 +37,8 @@ HEADERS += \
     expliciteulersolver.h \
     impliciteulersolver.h \
     rungekuttasolver.h \
-    adamssolver.h
+    adamssolver.h \
+    point3d.h
 
 FORMS += \
     input.ui
