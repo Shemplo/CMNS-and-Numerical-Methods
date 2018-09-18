@@ -7,10 +7,8 @@
 #include <QtGui/QScreen>
 
 #include <QtDataVisualization/qabstract3dseries.h>
-#include <QtDataVisualization/q3dscatter.h>s
+#include <QtDataVisualization/q3dscatter.h>
 #include <QtCharts/QChartView>
-#include <QtCharts/QScatterSeries>
-#include <QtCharts/QLegendMarker>
 
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QWidget>
@@ -21,7 +19,7 @@
 #include <iostream>
 #include <vector>
 
-#include "point3d.h"
+#include "vector3d.h"
 
 using namespace QtDataVisualization;
 
@@ -37,15 +35,12 @@ class SystemSolver
         double y(double, double, double);
         double z(double, double, double);
 
-        double x(point3d p);
-        double y(point3d p);
-        double z(point3d p);
+        double x(Vector3d p);
+        double y(Vector3d p);
+        double z(Vector3d p);
 
         void visualize(std::vector<double>*);
 
-    private:
-        QWidget* visualize3D(std::vector<double> *);
-        QtCharts::QChartView* visualize2D(std::vector<double>, int, int, QString);
 
     protected:
         double x0, y0, z0, sigma, r, b, dt;

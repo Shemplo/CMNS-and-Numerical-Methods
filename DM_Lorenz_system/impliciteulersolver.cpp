@@ -6,8 +6,6 @@ ImplicitEulerSolver::ImplicitEulerSolver(double x0, double y0, double z0, double
 
 }
 
-
-#include "expliciteulersolver.h"
 std::vector<double> *ImplicitEulerSolver::solve(double time) {
     std::size_t n_ticks = std::size_t(time / dt);
     static constexpr double EPS = 10 ^ (-8);
