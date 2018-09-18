@@ -40,7 +40,8 @@ HEADERS += \
     rungekuttasolver.h \
     adamssolver.h \
     vector3d.h \
-    squarejacobimatrix3d.h
+    squarejacobimatrix3d.h \
+    inputparams.h
 
 FORMS += \
     input.ui

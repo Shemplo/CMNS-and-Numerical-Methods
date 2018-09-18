@@ -7,7 +7,7 @@
 #include <QtGui/QScreen>
 
 #include <QtDataVisualization/qabstract3dseries.h>
-#include <QtDataVisualization/q3dscatter.h>s
+#include <QtDataVisualization/q3dscatter.h>
 #include <QtCharts/QChartView>
 #include <QtCharts/QScatterSeries>
 #include <QtCharts/QLegendMarker>
@@ -21,6 +21,7 @@
 #include <iostream>
 #include <vector>
 
+#include "inputparams.h"
 #include "point3d.h"
 
 using namespace QtDataVisualization;
@@ -29,7 +30,7 @@ using namespace QtDataVisualization;
 class SystemSolver
 {
     public:
-        SystemSolver(double, double, double, double, double, double, double, std::string);
+        SystemSolver(InputParams, std::string);
         virtual ~SystemSolver ();
 
         virtual std::vector<double> *solve (double);
@@ -48,7 +49,8 @@ class SystemSolver
         QtCharts::QChartView* visualize2D(std::vector<double>, int, int, QString);
 
     protected:
-        double x0, y0, z0, sigma, r, b, dt;
+        double x0, y0, z0, sigma, r, b, dt, t;
+        InputParams input;
         std::string name;
 };
 

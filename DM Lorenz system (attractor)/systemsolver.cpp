@@ -1,11 +1,17 @@
 #include "systemsolver.h"
 
-SystemSolver::SystemSolver(double x0, double y0, double z0, double sigma, double r, double b, double dt, std::string name)
+SystemSolver::SystemSolver(InputParams input, std::string name)
 {
-    this->sigma = sigma; this->r = r; this->b = b;
-    this->x0 = x0; this->y0 = y0; this->z0 = z0;
-    this->dt = dt;
-    this->name = name;
+    this->input = input;
+    this->name  = name;
+    this->x0    = input.x0;
+    this->y0    = input.y0;
+    this->z0    = input.z0;
+    this->sigma = input.sigma;
+    this->r     = input.r;
+    this->b     = input.b;
+    this->dt    = input.dt;
+    this->t     = input.t;
 }
 
 std::vector<double> *SystemSolver::solve (double time) {
@@ -62,8 +68,8 @@ void SystemSolver::visualize(std::vector<double> *answer) {
     verticalRight->addWidget(visualize2D(answer[2], width, height, "zdt"));
 
     QString paramStringValue = QString::asprintf(
-        "Parameters: [x0 = %.4f, y0 = %.4f, z0 = %.4f, σ = %.4f, b = %.4f, r = %.4f, Δt = %0.4f]",
-        x0, y0, z0, sigma, b, r, dt);
+        "Parameters: [x0 = %.4f, y0 = %.4f, z0 = %.4f, σ = %.4f, b = %.4f, r = %.4f, Δt = %0.4f, t = %.4f]",
+        x0, y0, z0, sigma, b, r, dt, t);
     QLabel *paramsString = new QLabel(paramStringValue);
     vertical->addWidget(paramsString, 1);
 
