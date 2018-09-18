@@ -9,6 +9,8 @@
 #include <QtDataVisualization/qabstract3dseries.h>
 #include <QtDataVisualization/q3dscatter.h>
 #include <QtCharts/QChartView>
+#include <QtCharts/QScatterSeries>
+#include <QtCharts/QLegendMarker>
 
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QWidget>
@@ -41,6 +43,9 @@ class SystemSolver
 
         void visualize(std::vector<double>*);
 
+    private:
+        QWidget* visualize3D(std::vector<double> *);
+        QtCharts::QChartView* visualize2D(std::vector<double>, int, int, QString);
 
     protected:
         double x0, y0, z0, sigma, r, b, dt;

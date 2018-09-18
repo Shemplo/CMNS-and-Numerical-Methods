@@ -401,6 +401,59 @@
       </property>
      </spacer>
     </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>Подобранные значения параметров</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="preset">
+        <item>
+         <property name="text">
+          <string>default</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>r = 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>r = 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>r = 15.6</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>r = 28</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>r = 80</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>r = 100</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </item>
    </layout>
   </widget>
  </widget>
