@@ -57,8 +57,9 @@ void Input::slotButtonSolve () {
 
         if (solver) {
             std::vector<double> *axises = solver->solve(t);
+            bool minimize = ui->minimize->isChecked();
 
-            if (axises) solver->visualize(axises);
+            if (axises) solver->visualize(axises, minimize);
             delete solver;
         } else {
             std::cout << "Unknown method" << std::endl;
@@ -79,7 +80,7 @@ void Input::resetDefault() {
             r = "3";
             break;
         case 3:
-            r = "15.6";
+            r = "16";
             break;
         case 4:
             r = "28";

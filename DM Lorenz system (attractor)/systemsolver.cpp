@@ -44,7 +44,7 @@ double SystemSolver::z(point3d p) {
     return z(p.x, p.y, p.z);
 }
 
-void SystemSolver::visualize(std::vector<double> *answer) {
+void SystemSolver::visualize(std::vector<double> *answer, bool minimize) {
     QWidget *window = new QWidget;
     window->setWindowTitle(QString::fromStdString("Lorenz system - " + name));
     window->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
@@ -53,19 +53,23 @@ void SystemSolver::visualize(std::vector<double> *answer) {
     QVBoxLayout *vertical = new QVBoxLayout(window);
     QHBoxLayout *horizontal = new QHBoxLayout ();
     vertical->addLayout(horizontal);
-    QVBoxLayout *verticalLeft = new QVBoxLayout (),
-                *verticalRight = new QVBoxLayout ();
+
+    QVBoxLayout *verticalLeft = new QVBoxLayout ();
     horizontal->addLayout(verticalLeft);
-    horizontal->addLayout(verticalRight);
 
     QWidget* mainGraph = visualize3D(answer);
     verticalLeft->addWidget(mainGraph, 1);
 
-    const int width = static_cast<int>(mainGraph->width() * 0.9),
-              height = static_cast<int>(mainGraph->height() / 3);
-    verticalRight->addWidget(visualize2D(answer[0], width, height, "xdt"));
-    verticalRight->addWidget(visualize2D(answer[1], width, height, "ydt"));
-    verticalRight->addWidget(visualize2D(answer[2], width, height, "zdt"));
+    if (!minimize) {
+        QVBoxLayout *verticalRight = new QVBoxLayout ();
+        horizontal->addLayout(verticalRight);
+
+        const int width = static_cast<int>(mainGraph->width() * 0.9),
+                  height = static_cast<int>(mainGraph->height() / 3);
+        verticalRight->addWidget(visualize2D(answer[0], width, height, "xdt"));
+        verticalRight->addWidget(visualize2D(answer[1], width, height, "ydt"));
+        verticalRight->addWidget(visualize2D(answer[2], width, height, "zdt"));
+    }
 
     QString paramStringValue = QString::asprintf(
         "Parameters: [x0 = %.4f, y0 = %.4f, z0 = %.4f, σ = %.4f, b = %.4f, r = %.4f, Δt = %0.4f, t = %.4f]",
@@ -82,7 +86,7 @@ QWidget* SystemSolver::visualize3D(std::vector<double> *data) {
 
     QSize screenSize = graph->screen()->size();
     int width = screenSize.width() / 2,
-        height = static_cast<int>(screenSize.height() * 0.85);
+        height = static_cast<int>(screenSize.height() * 0.8);
     container->setMinimumSize(QSize(width, height));
 
     //graph->activeTheme()->setType(QtDataVisualization::Q3DTheme::ThemeEbony);
