@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <assert.h>
+#include <ostream>
 
 struct Vector3d {
 public:
@@ -45,13 +46,20 @@ public:
         }
     }
 
-    const double& at(std::size_t id) const { //TODO: !!!
+    double at(std::size_t id) const { //TODO: !!!
         switch (id) {
             case 0: return x;
             case 1: return y;
             case 2: return z;
             default: abort(); //TODO:
         }
+    }
+
+    friend std::ostream& operator<<(std::ostream& ostr, const Vector3d& v) {
+        ostr << "(";
+        for (std::size_t i = 0; i < 3 - 1; i++) ostr << v.at(i) << ", ";
+        ostr << v.at(3 - 1) << ")\n";
+        return ostr;
     }
 
 };
