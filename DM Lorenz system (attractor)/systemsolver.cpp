@@ -32,15 +32,15 @@ double SystemSolver::z(double xk, double yk, double zk) {
     return (xk * yk - b * zk);
 }
 
-double SystemSolver::x(point3d p) {
+double SystemSolver::x(Vector3d p) {
     return x(p.x, p.y, p.z);
 }
 
-double SystemSolver::y(point3d p) {
+double SystemSolver::y(Vector3d p) {
     return y(p.x, p.y, p.z);
 }
 
-double SystemSolver::z(point3d p) {
+double SystemSolver::z(Vector3d p) {
     return z(p.x, p.y, p.z);
 }
 
@@ -66,9 +66,9 @@ void SystemSolver::visualize(std::vector<double> *answer, bool minimize) {
 
         const int width = static_cast<int>(mainGraph->width() * 0.9),
                   height = static_cast<int>(mainGraph->height() / 3);
-        verticalRight->addWidget(visualize2D(answer[0], width, height, "xdt"));
-        verticalRight->addWidget(visualize2D(answer[1], width, height, "ydt"));
-        verticalRight->addWidget(visualize2D(answer[2], width, height, "zdt"));
+        verticalRight->addWidget(visualize2D(answer[0], width, height, "x"));
+        verticalRight->addWidget(visualize2D(answer[1], width, height, "y"));
+        verticalRight->addWidget(visualize2D(answer[2], width, height, "z"));
     }
 
     QString paramStringValue = QString::asprintf(
@@ -90,16 +90,27 @@ QWidget* SystemSolver::visualize3D(std::vector<double> *data) {
     container->setMinimumSize(QSize(width, height));
 
     //graph->activeTheme()->setType(QtDataVisualization::Q3DTheme::ThemeEbony);
+    graph->setShadowQuality(QAbstract3DGraph::ShadowQualitySoftMedium);
+    graph->activeTheme()->setBackgroundEnabled(false);
+    graph->activeTheme()->setFont(QFont("Times New Roman", 30));
+    graph->activeTheme()->setLabelBackgroundEnabled(true);
+    graph->activeTheme()->setLabelTextColor(QColor(0, 0, 0));
+
     graph->scene()->activeCamera()->setCameraPreset(Q3DCamera::CameraPresetFront);
-    graph->setShadowQuality(QAbstract3DGraph::ShadowQualitySoftLow);
+    //graph->setShadowQuality(QAbstract3DGraph::ShadowQualitySoftLow);
 
     QScatter3DSeries *series = new QScatter3DSeries();
     series->setItemLabelFormat(QStringLiteral("@xTitle: @xLabel @yTitle: @yLabel @zTitle: @zLabel"));
     graph->addSeries(series);
 
     graph->axisX()->setTitle("X");
+    graph->axisX()->setTitleVisible(true);
+
     graph->axisY()->setTitle("Y");
+    graph->axisY()->setTitleVisible(true);
+
     graph->axisZ()->setTitle("Z");
+    graph->axisZ()->setTitleVisible(true);
 
     size_t m_itemCount = data->size();
     QScatterDataArray *dataArray = new QScatterDataArray;
@@ -137,7 +148,11 @@ QtCharts::QChartView* SystemSolver::visualize2D(std::vector<double> data, int wi
 
     chart->addSeries(series);
     chart->createDefaultAxes();
-    chart->setTitle(title);
+
+    chart->axisX()->setTitleText("Time");
+    chart->axisY()->setTitleText(title.toUpper());
+
+    chart->setTitle(title + "dt");
     chart->legend()->setVisible(false);
 
     return container;
