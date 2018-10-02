@@ -4,7 +4,7 @@ SquareJacobiMatrix3d::SquareJacobiMatrix3d(std::function<Vector3d (Vector3d)> f,
     double h;
     {
         double max = 1;
-        for (std::size_t i = 0; i < 3; i++) max = std::max(max, std::abs(p[i]));
+        for (std::size_t i = 0; i < 3; i++) max = std::max(max, fabs(p[i]));
         h = max * 1e-5;
     }
     Vector3d f_eval_0 = f(p), f_eval_1;
@@ -49,9 +49,9 @@ SquareJacobiMatrix3d::Row SquareJacobiMatrix3d::gauss(SquareJacobiMatrix3d::Matr
     // Хотим верхнетреугольную
     for (std::size_t j = 0; j < n; j++) {
         std::size_t pivot = j;
-        double max_entry = std::abs(R[j][j]);
+        double max_entry = fabs(R[j][j]);
         for (std::size_t i = j + 1; i < n; i++) {
-            double entry = std::abs(R[i][j]);
+            double entry = fabs(R[i][j]);
             if (entry > max_entry) {
                 max_entry = entry;
                 pivot = i;

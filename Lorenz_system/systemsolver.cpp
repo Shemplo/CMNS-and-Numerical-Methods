@@ -32,15 +32,15 @@ double SystemSolver::z(double xk, double yk, double zk) {
     return (xk * yk - b * zk);
 }
 
-double SystemSolver::x(point3d p) {
+double SystemSolver::x(Vector3d p) {
     return x(p.x, p.y, p.z);
 }
 
-double SystemSolver::y(point3d p) {
+double SystemSolver::y(Vector3d p) {
     return y(p.x, p.y, p.z);
 }
 
-double SystemSolver::z(point3d p) {
+double SystemSolver::z(Vector3d p) {
     return z(p.x, p.y, p.z);
 }
 

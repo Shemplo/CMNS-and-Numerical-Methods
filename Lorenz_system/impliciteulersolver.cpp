@@ -9,23 +9,33 @@ ImplicitEulerSolver::ImplicitEulerSolver(InputParams input, std::string name)
 
 std::vector<double> *ImplicitEulerSolver::solve(double time) {
     std::size_t n_ticks = std::size_t(time / dt);
-    static constexpr double EPS = 1e-5;
+//    static constexpr double EPS = 1e-5;
 
     std::vector<Vector3d> work_f(n_ticks + 1);
     work_f[0] = {x0, y0, z0};
 
-    std::function<Vector3d(Vector3d, Vector3d)> f = [&](Vector3d p, Vector3d p0) {
-        static const double dt_sigma = dt * sigma;
+//    std::function<Vector3d(Vector3d, Vector3d)> f = [&](Vector3d p, Vector3d p0) {
+//        static const double dt_sigma = dt * sigma;
 
-        double f1 = p0.x - p.x * (1 + dt_sigma) + dt_sigma * p.y,
-               f2 = p0.y + dt * p.x * (r - p.z) - p.y * (1 + dt),
-               f3 = p0.z + dt * p.x * p.y - p.z * (1 + dt * b);
+//        double f1 = p0.x - p.x * (1 + dt_sigma) + dt_sigma * p.y,
+//               f2 = p0.y + dt * p.x * (r - p.z) - p.y * (1 + dt),
+//               f3 = p0.z + dt * p.x * p.y - p.z * (1 + dt * b);
+//        return Vector3d{f1, f2, f3};
+//    };
+
+
+    std::function<Vector3d(Vector3d)> dfdt = [&](Vector3d p) {
+        double  f1 = ((p.y - p.x) * sigma),
+                f2 = (p.x * (r - p.z) - p.y),
+                f3 = (p.x * p.y - b * p.z);
         return Vector3d{f1, f2, f3};
     };
 
     for(std::size_t tick = 1; tick <= n_ticks; tick++) {
-        work_f[tick] = newton_method(std::bind(f, std::placeholders::_1, work_f[tick - 1]), work_f[tick - 1], EPS , 20);
-        std::cout << work_f[tick - 1]; std::cout.flush();
+        static Vector3d predict, correct;
+        predict = work_f[tick - 1] +  dfdt(work_f[tick - 1]) * dt;
+        correct = work_f[tick - 1] + (dfdt(work_f[tick - 1]) + dfdt(predict)) * 0.5 * dt;
+        work_f[tick] = std::move(correct);
     }
     return transform_result(work_f);
 }

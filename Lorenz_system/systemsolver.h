@@ -22,7 +22,7 @@
 #include <vector>
 
 #include "inputparams.h"
-#include "point3d.h"
+#include "vector3d.h"
 
 using namespace QtDataVisualization;
 
@@ -38,9 +38,9 @@ class SystemSolver
         double y(double, double, double);
         double z(double, double, double);
 
-        double x(point3d p);
-        double y(point3d p);
-        double z(point3d p);
+        double x(Vector3d p);
+        double y(Vector3d p);
+        double z(Vector3d p);
 
         void visualize(std::vector<double>*, bool);
 
