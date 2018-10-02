@@ -16,6 +16,8 @@ SquareJacobiMatrix3d::SquareJacobiMatrix3d(std::function<Vector3d (Vector3d)> f,
         for (std::size_t i = 0; i < 3; i++) matrix[i][k] = (f_eval_1[i] - f_eval_0[i]) / h;
         p1[k] = p[k]; // Undo delta
     }
+
+    show_matix();
 }
 
 SquareJacobiMatrix3d &SquareJacobiMatrix3d::inverse() {
@@ -39,8 +41,7 @@ Vector3d SquareJacobiMatrix3d::operator*(const Vector3d &rhd) {
     return result;
 }
 
-SquareJacobiMatrix3d::Row SquareJacobiMatrix3d::
-        gauss(SquareJacobiMatrix3d::Matrix A, SquareJacobiMatrix3d::Row b) {
+SquareJacobiMatrix3d::Row SquareJacobiMatrix3d::gauss(SquareJacobiMatrix3d::Matrix A, SquareJacobiMatrix3d::Row b) {
     // Solve A * x = b; Return x;
     Matrix R = A;
     Row c = b;
