@@ -12,7 +12,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import ru.shemplo.dm.difschemes.logic.DifSchemeLeapfrog;
+import ru.shemplo.dm.difschemes.logic.DifferenceScheme;
 
 public class RunDifferenceSchemes extends Application {
 
@@ -51,6 +55,8 @@ public class RunDifferenceSchemes extends Application {
 		
 		launch (args);
 	}
+	
+	private static DifferenceScheme scheme = new DifSchemeLeapfrog ();
 
 	@Override
 	public void start (Stage stage) throws Exception {
@@ -67,7 +73,9 @@ public class RunDifferenceSchemes extends Application {
 		
 		Button simulate = View.SIMULATE.get ();
 		simulate.setOnMouseClicked (me -> {
-			System.out.println ("Start new simulation");
+			TextField layer = View.dT.get ();
+			System.out.println ("Start new simulation for layer " + layer.getText ());
+			scheme.getTimeLayer (Integer.parseInt (layer.getText ()));
 		});
 		
 		Button autoPlay = View.AUTO_PLAY.get ();

@@ -35,7 +35,7 @@
 
                 <HBox alignment="BASELINE_RIGHT">
                     <Label text="Δt: " />
-                    <TextField />
+                    <TextField fx:id="paramDT" />
                 </HBox>
                 <HBox alignment="BASELINE_RIGHT">
                     <Label text="Δx: " />
