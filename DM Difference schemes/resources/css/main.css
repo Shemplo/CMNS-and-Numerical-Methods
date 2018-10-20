@@ -1,0 +1,18 @@
+* {
+	-fx-font-family: "Consolas";
+    -fx-font-size: 110%;
+}
+
+TextField {
+    -fx-min-width: 150;
+}
+
+ChoiceBox {
+	-fx-min-width: 75;
+}
+
+#paramLine > * {
+    -fx-border-color: rgb(150,150,150);
+    -fx-border-radius: 3;
+    -fx-border-width: 1;
+}
