@@ -56,7 +56,9 @@ public class RunDifferenceSchemes extends Application {
 		launch (args);
 	}
 	
-	private static DifferenceScheme scheme = new DifSchemeLeapfrog ();
+	private static DifferenceScheme scheme = new DifSchemeLeapfrog (new double [] {
+		0.1, 0.2, 0.4, 0.8, 1, 1, 1, 0.7, 0.5, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0
+	});
 
 	@Override
 	public void start (Stage stage) throws Exception {

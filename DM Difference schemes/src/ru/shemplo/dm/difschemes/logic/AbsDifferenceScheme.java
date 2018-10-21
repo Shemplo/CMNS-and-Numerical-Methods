@@ -9,6 +9,10 @@ public abstract class AbsDifferenceScheme implements DifferenceScheme {
 	
 	private final double [] TIME_BOUNDS = {0.0, 100.0};
 	
+	protected AbsDifferenceScheme (double [] zeroLayer) {
+		this.LAYERS.put (0, zeroLayer);
+	}
+	
 	private final int findPrevious (int layer) {
 		while (!LAYERS.containsKey (layer) && layer >= 0) { layer --; }
 		return layer;
