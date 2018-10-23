@@ -46,7 +46,7 @@
                 <padding><Insets bottom="10" left="12.5" right="12.5" top="10" /></padding>
                 <VBox alignment="CENTER_RIGHT" spacing="5.0">
                     <Label text="Select start:" />
-                    <ChoiceBox />
+                    <ChoiceBox fx:id="profiles" />
                 </VBox>
                 <Canvas height="50" width="100">
                     <HBox.margin><Insets left="10" /></HBox.margin>
@@ -57,7 +57,7 @@
             <VBox.margin><Insets bottom="5" top="5" /></VBox.margin>
             <padding><Insets bottom="10" top="10" /></padding>
 
-            <ChoiceBox>
+            <ChoiceBox fx:id="methods">
                 <HBox.margin><Insets right="5"/></HBox.margin>
             </ChoiceBox>
             <Button fx:id="simulate" text="Simulate" />
