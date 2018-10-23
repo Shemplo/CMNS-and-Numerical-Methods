@@ -1,6 +1,8 @@
 package ru.shemplo.dm.difschemes.logic;
 
+import ru.shemplo.dm.difschemes.annot.Method;
 
+@Method (name = "Чехрда (leapfrog)")
 public class DifSchemeLeapfrog extends AbsDifferenceScheme {
 
 	public DifSchemeLeapfrog (double [] zeroLayer) {
