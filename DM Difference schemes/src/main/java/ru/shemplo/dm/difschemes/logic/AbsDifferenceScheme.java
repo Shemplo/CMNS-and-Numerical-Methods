@@ -10,10 +10,12 @@ public abstract class AbsDifferenceScheme implements DifferenceScheme {
 	private final double [] TIME_BOUNDS = {0.0, 100.0};
 	
 	protected final double U, K, dT, dX;
+	protected final double S, R;
 	
 	protected AbsDifferenceScheme (double [] zeroLayer, 
 			double u, double k, double dt, double dx) {
 		this.U = u; this.K = k; this.dT = dt; this.dX = dx;
+		this.S = U * dT / dX; this.R = K * dT / (dX * dX);
 		this.LAYERS.put (0, zeroLayer);
 	}
 	
