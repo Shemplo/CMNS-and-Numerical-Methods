@@ -26,8 +26,8 @@
                     <TextField fx:id="paramU" />
                 </HBox>
                 <HBox alignment="BASELINE_RIGHT">
-                    <Label text="κ: " />
-                    <TextField />
+                    <Label  text="κ: " />
+                    <TextField fx:id="paramK" />
                 </HBox>
             </VBox>
             <VBox alignment="CENTER_LEFT" spacing="10.0">
@@ -39,7 +39,7 @@
                 </HBox>
                 <HBox alignment="BASELINE_RIGHT">
                     <Label text="Δx: " />
-                    <TextField />
+                    <TextField fx:id="paramDX" />
                 </HBox>
             </VBox>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
@@ -63,17 +63,17 @@
             <Button fx:id="simulate" text="Simulate" />
             <HBox HBox.hgrow="ALWAYS" />
             <Label text="presets: " />
-            <ChoiceBox>
+            <ChoiceBox fx:id="presets">
                 <HBox.margin><Insets left="5"/></HBox.margin>
             </ChoiceBox>
         </HBox>
 
-        <HBox>
+        <HBox fx:id="canvas">
             <Canvas height="200" HBox.hgrow="ALWAYS"></Canvas>
         </HBox>
 
         <HBox alignment="CENTER_LEFT">
-            <VBox.margin><Insets top="10"/></VBox.margin>
+            <VBox.margin><Insets top="10" bottom="5" /></VBox.margin>
 
             <Button fx:id="autoPlay" text="Auto play" />
 
