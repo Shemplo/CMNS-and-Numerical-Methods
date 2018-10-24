@@ -17,4 +17,8 @@ public enum SimulationProfiles {
 		return this.NAME;
 	}
 	
+	public double [] getProfile (int points) {
+		return new double [points];
+	}
+	
 }
