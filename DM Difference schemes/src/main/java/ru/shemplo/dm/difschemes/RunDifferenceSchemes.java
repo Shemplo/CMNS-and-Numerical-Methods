@@ -26,8 +26,8 @@ import javafx.stage.Stage;
 
 import org.reflections.Reflections;
 
-import ru.shemplo.dm.difschemes.annot.Method;
 import ru.shemplo.dm.difschemes.logic.DifferenceScheme;
+import ru.shemplo.dm.difschemes.logic.DifferenceScheme.Scheme;
 
 public class RunDifferenceSchemes extends Application {
 
@@ -64,7 +64,7 @@ public class RunDifferenceSchemes extends Application {
 		// Searching for all classes of methods
 		Package path = DifferenceScheme.class.getPackage ();
 		Reflections reflections = new Reflections (path);
-		methodsSet = reflections.getTypesAnnotatedWith (Method.class);
+		methodsSet = reflections.getTypesAnnotatedWith (Scheme.class);
 		
 		try {
 			Parent root = FXMLLoader.load (getSystemResource ("fxml/main.fxml"));
@@ -109,7 +109,7 @@ public class RunDifferenceSchemes extends Application {
 		// Methods
 		ObservableList <String> methods = FXCollections.observableArrayList (
 			methodsSet.stream ().map (t -> {
-				Method method = t.getAnnotation (Method.class);
+				Scheme method = t.getAnnotation (Scheme.class);
 				methodsMap.put (method.name (), t);
 				return method.name ();
 			}).collect (Collectors.toList ())
