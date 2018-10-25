@@ -7,7 +7,7 @@ import ru.shemplo.dm.difschemes.RunDifferenceSchemes.View;
 
 public enum SimulationPreset {
 	
-	DEFAULT ("just for fun", () -> {
+	DEFAULT ("default", () -> {
 	    View.U.<TextField> get ().setText ("-0.025");
 	    View.K.<TextField> get ().setText ("0.005");
 	    View.dT.<TextField> get ().setText ("1.0");
