@@ -19,6 +19,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -36,13 +38,18 @@ public class RunDifferenceSchemes extends Application {
 	public static enum View {
 		
 		// Text fields
-		U ("paramU"), K ("paramK"), dT ("paramDT"), dX ("paramDX"),
+		U ("paramU"), K ("paramK"), dT ("paramDT"), dX ("paramDX"), 
+		DOTS ("dots"),
 		
 		// Buttons
 		SIMULATE ("simulate"), AUTO_PLAY ("autoPlay"),
 		
 		// Choice boxes
-		PROFILES ("profiles"), METHODS ("methods"), PRESETS ("presets");
+		PROFILES ("profiles"), METHODS ("methods"), 
+		PRESETS ("presets"),
+		
+		// Canvases
+		PROFILE ("profile");
 		
 		private final String ID;
 		
@@ -91,6 +98,11 @@ public class RunDifferenceSchemes extends Application {
 		stage.setScene (scene);
 		stage.show ();
 		
+		TextField dots = View.DOTS.get (); dots.setText ("100");
+		dots.textProperty ().addListener ((list, prev, next) -> {
+		    updateProfileCanvas ();
+		});
+		
 		// INITIALIZATION OF GUI CHOICE BOXES //
 		
 		// Profiles
@@ -101,7 +113,8 @@ public class RunDifferenceSchemes extends Application {
 		
 		profilesBox.getSelectionModel ().selectedItemProperty ()
 				   .addListener ((list, prev, next) -> {
-			selectedProfile = next;
+			selectedProfile = next;		    
+		    updateProfileCanvas ();
 		    stage.sizeToScene ();
 		});
 		profilesBox.getSelectionModel ().select (0);
@@ -168,6 +181,11 @@ public class RunDifferenceSchemes extends Application {
 		return null;
 	}
 	
+	private Integer getIntegerValue (View view) {
+		String value = getValueOrDefault (view, "0");
+		return Integer.parseInt (value);
+	}
+	
 	private Double getDoubleValue (View view) {
 		String value = getValueOrDefault (view, "0.0");
 		return Double.parseDouble (value);
@@ -180,6 +198,34 @@ public class RunDifferenceSchemes extends Application {
 		}
 		
 		return value;
+	}
+	
+	private void updateProfileCanvas () {
+		Canvas canvas = View.PROFILE.get ();
+		double of = 25;
+		
+		GraphicsContext context = canvas.getGraphicsContext2D ();		
+		double w = canvas.getWidth (), h = canvas.getHeight ();
+		context.clearRect (0, 0, w, h);
+		context.setLineWidth (1.25);
+		
+		int dots = getIntegerValue (View.DOTS);
+		double [] dist = selectedProfile.getProfile (dots);
+		
+		double max = 0;
+		for (double d : dist) { max = Math.max (max, d); }
+		
+		///////////////////////////
+		if (max == 0.0) { return; }
+		///////////////////////////
+		
+		double dx = w / dist.length, prevX = 0, 
+			   prevY = of + (1 - dist [0] / max) * (h - of);
+		for (int i = 1; i < dist.length; i++) {
+			double y = of + (1 - dist [i] / max) * (h - of);
+			context.strokeLine (prevX, prevY, dx * i, y);
+			prevX = dx * i; prevY = y;
+		}
 	}
 	
 }

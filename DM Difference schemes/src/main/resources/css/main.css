@@ -8,7 +8,7 @@ TextField {
 }
 
 ChoiceBox {
-	-fx-min-width: 160;
+	-fx-min-width: 180;
 }
 
 #paramLine > * {
