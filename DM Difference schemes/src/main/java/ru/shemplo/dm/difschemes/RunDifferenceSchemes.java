@@ -23,6 +23,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -49,7 +50,10 @@ public class RunDifferenceSchemes extends Application {
 		PRESETS ("presets"),
 		
 		// Canvases
-		PROFILE ("profile");
+		PROFILE ("profile"), CANVAS ("canvas"),
+		
+		// Sliders
+		FRAME ("frame");
 		
 		private final String ID;
 		
@@ -88,8 +92,11 @@ public class RunDifferenceSchemes extends Application {
 		launch (args);
 	}
 	
+	private volatile DifferenceScheme currentScheme = null;
 	private SimulationProfiles selectedProfile = null;
 	private String selectedMethodName = null;
+	
+	private volatile int frame = 0;
 
 	@Override
 	public void start (final Stage stage) throws Exception {
@@ -148,23 +155,52 @@ public class RunDifferenceSchemes extends Application {
         		  .addListener ((list, prev, next) -> {
         	next.renewGUI (); stage.sizeToScene ();
         });
+		presetsBox.getSelectionModel ().select (0);
 		
 		// INITIALIZATION OF GUI HANDLERS //
 		
 		Button simulate = View.SIMULATE.get ();
 		simulate.setOnMouseClicked (me -> {
-			DifferenceScheme scheme = getInstance ();
-			System.out.println (scheme.getClass ().getName ());
+		    View missed = checkInputFields ();
+		    if (missed == null) {		        
+		        currentScheme = getInstance ();
+		        updateMainCanvas ();
+		    } else {
+		        System.out.println (missed);
+		    }
 		});
 		
 		Button autoPlay = View.AUTO_PLAY.get ();
 		autoPlay.setOnMouseClicked (me -> {
 			System.out.println ("Start auto play");
 		});
+		
+		Slider slider = View.FRAME.get ();
+		slider.setShowTickLabels (true);
+		slider.setShowTickMarks (true);
+		slider.valueProperty ()
+		      .addListener ((value, prev, next) -> {
+		    frame = next.intValue ();
+		    updateMainCanvas ();
+		});
+	}
+	
+	public View checkInputFields () {
+	    for (View view : View.values ()) {
+	        if (view.get () instanceof TextField) {
+	            TextField field = view.get ();
+	            String text = field.getText ();
+	            if (text == null || text.length () == 0) {
+	                return view;
+	            }
+	        }
+	    }
+	    
+	    return null;
 	}
 	
 	private DifferenceScheme getInstance () {
-		double [] profile = selectedProfile.getProfile (1000);
+		double [] profile = selectedProfile.getProfile (getIntegerValue (View.DOTS));
 		double dt = getDoubleValue (View.dT), dx = getDoubleValue (View.dX),
 			   u = getDoubleValue (View.U), k = getDoubleValue (View.K);
 		
@@ -226,6 +262,36 @@ public class RunDifferenceSchemes extends Application {
 			context.strokeLine (prevX, prevY, dx * i, y);
 			prevX = dx * i; prevY = y;
 		}
+	}
+	
+	private void updateMainCanvas () {
+	    DifferenceScheme scheme = currentScheme;
+	    if (scheme == null) { return; }
+	    
+	    Canvas canvas = View.CANVAS.get ();
+	    canvas.setWidth (canvas.getParent ().getBoundsInLocal ().getWidth ());
+	    double of = 25;
+        
+        GraphicsContext context = canvas.getGraphicsContext2D ();       
+        double w = canvas.getWidth (), h = canvas.getHeight ();
+        context.clearRect (0, 0, w, h);
+        context.setLineWidth (1.25);
+        
+        double max = 0;
+        double [] dist = currentScheme.getTimeLayer (frame);        
+        for (double d : dist) { max = Math.max (max, d); }
+        
+        ///////////////////////////
+        if (max == 0.0) { return; }
+        ///////////////////////////
+        
+        double dx = w / dist.length, prevX = 0, 
+               prevY = of + (1 - dist [0] / max) * (h - of);
+        for (int i = 1; i < dist.length; i++) {
+            double y = of + (1 - dist [i] / max) * (h - of);
+            context.strokeLine (prevX, prevY, dx * i, y);
+            prevX = dx * i; prevY = y;
+        }
 	}
 	
 }

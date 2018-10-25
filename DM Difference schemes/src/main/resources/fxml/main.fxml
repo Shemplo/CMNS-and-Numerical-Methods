@@ -72,8 +72,8 @@
             </ChoiceBox>
         </HBox>
 
-        <HBox fx:id="canvas">
-            <Canvas height="200" HBox.hgrow="ALWAYS"></Canvas>
+        <HBox>
+            <Canvas fx:id="canvas" height="300" />
         </HBox>
 
         <HBox alignment="CENTER_LEFT">
@@ -81,7 +81,7 @@
 
             <Button fx:id="autoPlay" text="Auto play" />
 
-            <Slider HBox.hgrow="ALWAYS">
+            <Slider fx:id="frame" HBox.hgrow="ALWAYS">
                 <HBox.margin><Insets left="10" right="10" /></HBox.margin>
             </Slider>
 
