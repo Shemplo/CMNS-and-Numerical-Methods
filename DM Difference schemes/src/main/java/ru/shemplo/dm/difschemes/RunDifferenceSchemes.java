@@ -23,6 +23,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -49,7 +50,10 @@ public class RunDifferenceSchemes extends Application {
 		PRESETS ("presets"),
 		
 		// Canvases
-		PROFILE ("profile"), CANVAS ("canvas");
+		PROFILE ("profile"), CANVAS ("canvas"),
+		
+		// Sliders
+		FRAME ("frame");
 		
 		private final String ID;
 		
@@ -92,7 +96,7 @@ public class RunDifferenceSchemes extends Application {
 	private SimulationProfiles selectedProfile = null;
 	private String selectedMethodName = null;
 	
-	private int frame = 0;
+	private volatile int frame = 0;
 
 	@Override
 	public void start (final Stage stage) throws Exception {
@@ -151,19 +155,48 @@ public class RunDifferenceSchemes extends Application {
         		  .addListener ((list, prev, next) -> {
         	next.renewGUI (); stage.sizeToScene ();
         });
+		presetsBox.getSelectionModel ().select (0);
 		
 		// INITIALIZATION OF GUI HANDLERS //
 		
 		Button simulate = View.SIMULATE.get ();
 		simulate.setOnMouseClicked (me -> {
-			currentScheme = getInstance ();
-			updateMainCanvas ();
+		    View missed = checkInputFields ();
+		    if (missed == null) {		        
+		        currentScheme = getInstance ();
+		        updateMainCanvas ();
+		    } else {
+		        System.out.println (missed);
+		    }
 		});
 		
 		Button autoPlay = View.AUTO_PLAY.get ();
 		autoPlay.setOnMouseClicked (me -> {
 			System.out.println ("Start auto play");
 		});
+		
+		Slider slider = View.FRAME.get ();
+		slider.setShowTickLabels (true);
+		slider.setShowTickMarks (true);
+		slider.valueProperty ()
+		      .addListener ((value, prev, next) -> {
+		    frame = next.intValue ();
+		    updateMainCanvas ();
+		});
+	}
+	
+	public View checkInputFields () {
+	    for (View view : View.values ()) {
+	        if (view.get () instanceof TextField) {
+	            TextField field = view.get ();
+	            String text = field.getText ();
+	            if (text == null || text.length () == 0) {
+	                return view;
+	            }
+	        }
+	    }
+	    
+	    return null;
 	}
 	
 	private DifferenceScheme getInstance () {

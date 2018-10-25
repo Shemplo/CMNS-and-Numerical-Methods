@@ -17,7 +17,7 @@ public class DifSchemeLeapfrog extends AbsDifferenceScheme {
 		profile [0] = left; profile [profile.length - 1] = right;
 		
 		if (step == 1) {
-			for (int i = 0; i < profile.length - 1; i++) {
+			for (int i = 1; i < profile.length - 1; i++) {
 				profile [i] = zeroLayaer [i] * (1 - 2 * R)
 							+ (R - S / 2) * zeroLayaer [i + 1]
 							+ (R + S / 2) * zeroLayaer [i - 1];
