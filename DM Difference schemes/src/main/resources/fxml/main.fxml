@@ -47,8 +47,12 @@
                 <VBox alignment="CENTER_RIGHT" spacing="5.0">
                     <Label text="Select start:" />
                     <ChoiceBox fx:id="profiles" />
+                    <HBox alignment="BASELINE_RIGHT" spacing="5.0">
+                    	<Label text="ds:" />
+                    	<TextField fx:id="dots" />
+                    </HBox>
                 </VBox>
-                <Canvas height="50" width="100">
+                <Canvas fx:id="profile" height="75" width="120">
                     <HBox.margin><Insets left="10" /></HBox.margin>
                 </Canvas>
             </HBox>
