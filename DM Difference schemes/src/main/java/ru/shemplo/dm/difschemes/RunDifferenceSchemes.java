@@ -1,6 +1,7 @@
 package ru.shemplo.dm.difschemes;
 
 import static java.lang.ClassLoader.*;
+import static java.lang.Math.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -176,7 +177,8 @@ public class RunDifferenceSchemes extends Application {
 		});
 		
 		Slider slider = View.FRAME.get ();
-		slider.setShowTickLabels (true);
+		slider.setMin (0); slider.setMax (500);
+		slider.setBlockIncrement (1.0);
 		slider.setShowTickMarks (true);
 		slider.valueProperty ()
 		      .addListener ((value, prev, next) -> {
@@ -277,19 +279,26 @@ public class RunDifferenceSchemes extends Application {
         context.clearRect (0, 0, w, h);
         context.setLineWidth (1.25);
         
-        double max = 0;
-        double [] dist = currentScheme.getTimeLayer (frame);        
-        for (double d : dist) { max = Math.max (max, d); }
+        double max = 0.0, min = 0.0, line = 0.0;
+        double [] dist = currentScheme.getTimeLayer (frame);
+        for (double d : dist) { 
+            max = max (max, d); min = min (min, d);
+        }
+        line = max - min;
         
-        ///////////////////////////
-        if (max == 0.0) { return; }
-        ///////////////////////////
+        double bottom = abs (min) / line * (h - of),
+               top = max / line *  (h - of);
         
-        double dx = w / dist.length, prevX = 0, 
-               prevY = of + (1 - dist [0] / max) * (h - of);
-        for (int i = 1; i < dist.length; i++) {
-            double y = of + (1 - dist [i] / max) * (h - of);
-            context.strokeLine (prevX, prevY, dx * i, y);
+        ////////////////////////////////////////////
+        if (top == 0.0 && bottom == 0.0) { return; }
+        ////////////////////////////////////////////
+        
+        double dx = w / dist.length, prevX = 0, part = 0, prevY = 0;
+        for (int i = 0; i < dist.length; i++) {
+            part = abs (dist [i] / line);
+            
+            double y = of + top - (dist [i] > 0 ? top : -bottom) * part;
+            context.strokeLine (prevX, (i == 0 ? y : prevY), dx * i, y);
             prevX = dx * i; prevY = y;
         }
 	}
