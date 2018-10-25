@@ -49,7 +49,7 @@ public class RunDifferenceSchemes extends Application {
 		PRESETS ("presets"),
 		
 		// Canvases
-		PROFILE ("profile");
+		PROFILE ("profile"), CANVAS ("canvas");
 		
 		private final String ID;
 		
@@ -88,8 +88,11 @@ public class RunDifferenceSchemes extends Application {
 		launch (args);
 	}
 	
+	private volatile DifferenceScheme currentScheme = null;
 	private SimulationProfiles selectedProfile = null;
 	private String selectedMethodName = null;
+	
+	private int frame = 0;
 
 	@Override
 	public void start (final Stage stage) throws Exception {
@@ -153,8 +156,8 @@ public class RunDifferenceSchemes extends Application {
 		
 		Button simulate = View.SIMULATE.get ();
 		simulate.setOnMouseClicked (me -> {
-			DifferenceScheme scheme = getInstance ();
-			System.out.println (scheme.getClass ().getName ());
+			currentScheme = getInstance ();
+			updateMainCanvas ();
 		});
 		
 		Button autoPlay = View.AUTO_PLAY.get ();
@@ -164,7 +167,7 @@ public class RunDifferenceSchemes extends Application {
 	}
 	
 	private DifferenceScheme getInstance () {
-		double [] profile = selectedProfile.getProfile (1000);
+		double [] profile = selectedProfile.getProfile (getIntegerValue (View.DOTS));
 		double dt = getDoubleValue (View.dT), dx = getDoubleValue (View.dX),
 			   u = getDoubleValue (View.U), k = getDoubleValue (View.K);
 		
@@ -226,6 +229,36 @@ public class RunDifferenceSchemes extends Application {
 			context.strokeLine (prevX, prevY, dx * i, y);
 			prevX = dx * i; prevY = y;
 		}
+	}
+	
+	private void updateMainCanvas () {
+	    DifferenceScheme scheme = currentScheme;
+	    if (scheme == null) { return; }
+	    
+	    Canvas canvas = View.CANVAS.get ();
+	    canvas.setWidth (canvas.getParent ().getBoundsInLocal ().getWidth ());
+	    double of = 25;
+        
+        GraphicsContext context = canvas.getGraphicsContext2D ();       
+        double w = canvas.getWidth (), h = canvas.getHeight ();
+        context.clearRect (0, 0, w, h);
+        context.setLineWidth (1.25);
+        
+        double max = 0;
+        double [] dist = currentScheme.getTimeLayer (frame);        
+        for (double d : dist) { max = Math.max (max, d); }
+        
+        ///////////////////////////
+        if (max == 0.0) { return; }
+        ///////////////////////////
+        
+        double dx = w / dist.length, prevX = 0, 
+               prevY = of + (1 - dist [0] / max) * (h - of);
+        for (int i = 1; i < dist.length; i++) {
+            double y = of + (1 - dist [i] / max) * (h - of);
+            context.strokeLine (prevX, prevY, dx * i, y);
+            prevX = dx * i; prevY = y;
+        }
 	}
 	
 }

@@ -72,8 +72,8 @@
             </ChoiceBox>
         </HBox>
 
-        <HBox fx:id="canvas">
-            <Canvas height="200" HBox.hgrow="ALWAYS"></Canvas>
+        <HBox>
+            <Canvas fx:id="canvas" height="200" HBox.hgrow="ALWAYS"></Canvas>
         </HBox>
 
         <HBox alignment="CENTER_LEFT">
