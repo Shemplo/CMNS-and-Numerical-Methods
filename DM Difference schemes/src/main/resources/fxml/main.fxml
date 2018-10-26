@@ -76,16 +76,15 @@
             <Canvas fx:id="canvas" height="300" />
         </HBox>
 
-        <HBox alignment="CENTER_LEFT">
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
             <VBox.margin><Insets top="10" bottom="5" /></VBox.margin>
 
-            <Button fx:id="autoPlay" text="Auto play" />
+            <Button fx:id="autoPlay" text="Play / pause" />
+            <Button fx:id="reset" text="Reset" />
 
             <Slider fx:id="frame" HBox.hgrow="ALWAYS">
-                <HBox.margin><Insets left="10" right="10" /></HBox.margin>
+                <HBox.margin><Insets /></HBox.margin>
             </Slider>
-
-            <Label text="0" /><Label text="/" /><Label text="0" />
         </HBox>
     </VBox>
 </StackPane>
