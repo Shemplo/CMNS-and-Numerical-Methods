@@ -1,5 +1,6 @@
 package ru.shemplo.dm.difschemes;
 
+import static javafx.animation.Animation.Status.*;
 import static java.lang.ClassLoader.*;
 import static java.lang.Math.*;
 
@@ -13,9 +14,12 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -27,6 +31,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import org.reflections.Reflections;
 
@@ -44,7 +49,8 @@ public class RunDifferenceSchemes extends Application {
 		DOTS ("dots"),
 		
 		// Buttons
-		SIMULATE ("simulate"), AUTO_PLAY ("autoPlay"),
+		SIMULATE ("simulate"), AUTO_PLAY ("autoPlay"), 
+		RESET ("reset"),
 		
 		// Choice boxes
 		PROFILES ("profiles"), METHODS ("methods"), 
@@ -98,6 +104,7 @@ public class RunDifferenceSchemes extends Application {
 	private String selectedMethodName = null;
 	
 	private volatile int frame = 0;
+	private Timeline animation;
 
 	@Override
 	public void start (final Stage stage) throws Exception {
@@ -110,6 +117,11 @@ public class RunDifferenceSchemes extends Application {
 		dots.textProperty ().addListener ((list, prev, next) -> {
 		    updateProfileCanvas ();
 		});
+		
+		animation = new Timeline (new KeyFrame (Duration.ZERO, this::animateFrame),
+		                          new KeyFrame (Duration.millis (65)));
+		animation.setCycleCount (Timeline.INDEFINITE);
+		animation.setAutoReverse (false);
 		
 		// INITIALIZATION OF GUI CHOICE BOXES //
 		
@@ -165,6 +177,11 @@ public class RunDifferenceSchemes extends Application {
 		    View missed = checkInputFields ();
 		    if (missed == null) {		        
 		        currentScheme = getInstance ();
+		        currentScheme.getTimeLayer (1000); // pre-calculation
+		        frame = 0;
+		        
+		        Slider slider = View.FRAME.get ();
+	            slider.setValue (frame);
 		        updateMainCanvas ();
 		    } else {
 		        System.out.println (missed);
@@ -173,18 +190,41 @@ public class RunDifferenceSchemes extends Application {
 		
 		Button autoPlay = View.AUTO_PLAY.get ();
 		autoPlay.setOnMouseClicked (me -> {
-			System.out.println ("Start auto play");
+		    if (!animation.getStatus ().equals (RUNNING)) {
+		        animation.playFromStart ();
+		    } else { animation.stop (); }
+		});
+		
+		Button reset = View.RESET.get ();
+		reset.setOnMouseClicked (me -> { 
+		    frame = 0; 
+		    
+		    Slider slider = View.FRAME.get ();
+		    slider.setValue (frame);
+		    updateMainCanvas ();
 		});
 		
 		Slider slider = View.FRAME.get ();
 		slider.setMin (0); slider.setMax (500);
 		slider.setBlockIncrement (1.0);
-		slider.setShowTickMarks (true);
+		//slider.setShowTickMarks (true);
 		slider.valueProperty ()
 		      .addListener ((value, prev, next) -> {
 		    frame = next.intValue ();
 		    updateMainCanvas ();
 		});
+	}
+	
+	public void animateFrame (ActionEvent ae) {
+	    Slider slider = View.FRAME.get ();
+	    
+	    if (frame >= 1000) {
+	        animation.stop ();
+	        frame = 0;
+	    } else { frame += 1; }
+	    
+	    slider.setValue (frame);
+	    updateMainCanvas ();
 	}
 	
 	public View checkInputFields () {
