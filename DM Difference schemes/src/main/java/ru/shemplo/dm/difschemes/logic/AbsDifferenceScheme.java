@@ -29,8 +29,14 @@ public abstract class AbsDifferenceScheme implements DifferenceScheme {
 		if (!LAYERS.containsKey (layer)) {
 			int from = findPrevious (layer);
 			
+			double [] zeroLayaer = getTimeLayer (0);
+	        double left = zeroLayaer [0], right = zeroLayaer [zeroLayaer.length - 1];
 			for (int i = from + 1; i <= layer; i++) {
-				LAYERS.put (i, doUnexistingStep (i));
+			    double [] profile = new double [zeroLayaer.length];
+			    profile [profile.length - 1] = right;
+			    profile [0] = left;
+			    
+				LAYERS.put (i, doUnexistingStep (i, profile));
 			}
 		}
 		
@@ -50,6 +56,6 @@ public abstract class AbsDifferenceScheme implements DifferenceScheme {
 	 * @return
 	 * 
 	 */
-	protected abstract double [] doUnexistingStep (int step);
+	protected abstract double [] doUnexistingStep (int step, double [] profile);
 	
 }

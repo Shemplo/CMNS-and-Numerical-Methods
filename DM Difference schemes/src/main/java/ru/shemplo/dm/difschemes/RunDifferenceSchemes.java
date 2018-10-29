@@ -205,7 +205,7 @@ public class RunDifferenceSchemes extends Application {
 		});
 		
 		Slider slider = View.FRAME.get ();
-		slider.setMin (0); slider.setMax (500);
+		slider.setMin (0); slider.setMax (1000);
 		slider.setBlockIncrement (1.0);
 		//slider.setShowTickMarks (true);
 		slider.valueProperty ()
@@ -218,7 +218,7 @@ public class RunDifferenceSchemes extends Application {
 	public void animateFrame (ActionEvent ae) {
 	    Slider slider = View.FRAME.get ();
 	    
-	    if (frame >= 1000) {
+	    if (frame >= slider.getMax ()) {
 	        animation.stop ();
 	        frame = 0;
 	    } else { frame += 1; }

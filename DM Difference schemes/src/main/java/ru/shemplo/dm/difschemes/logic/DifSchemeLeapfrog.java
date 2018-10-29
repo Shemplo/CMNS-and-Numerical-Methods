@@ -11,16 +11,14 @@ public class DifSchemeLeapfrog extends AbsDifferenceScheme {
 	}
 
 	@Override
-	protected double [] doUnexistingStep (int step) {
-		double [] zeroLayaer = getTimeLayer (0), profile = new double [zeroLayaer.length];
-		double left = zeroLayaer [0], right = zeroLayaer [zeroLayaer.length - 1];
-		profile [0] = left; profile [profile.length - 1] = right;
-		
+	protected double [] doUnexistingStep (int step, double [] profile) {
+	    double [] zeroLayer = getTimeLayer (0);
+	    
 		if (step == 1) {
 			for (int i = 1; i < profile.length - 1; i++) {
-				profile [i] = zeroLayaer [i] * (1 - 2 * R)
-							+ (R - S / 2) * zeroLayaer [i + 1]
-							+ (R + S / 2) * zeroLayaer [i - 1];
+				profile [i] = zeroLayer [i] * (1 - 2 * R)
+							+ (R - S / 2) * zeroLayer [i + 1]
+							+ (R + S / 2) * zeroLayer [i - 1];
 			}
 		} else if (step > 1) {			
 			double [][] previous = {getTimeLayer (step - 2), getTimeLayer (step - 1)};
