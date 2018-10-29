@@ -7,16 +7,18 @@ import java.util.Map;
 
 public abstract class AbsDifferenceScheme implements DifferenceScheme {
 	
-	private final Map <Integer, double []> LAYERS = new HashMap <> ();
+	protected final Map <Integer, double []> LAYERS = new HashMap <> ();
 	
 	protected final double U, K, dT, dX;
 	protected final double S, R;
+	protected final int ITERATIONS;
 	
-	protected AbsDifferenceScheme (double [] zeroLayer, 
-			double u, double k, double dt, double dx) {
+	protected AbsDifferenceScheme (double [] zeroLayer, int its, 
+	        double u, double k, double dt, double dx) {
 		this.U = u; this.K = k; this.dT = dt; this.dX = dx;
 		this.S = U * dT / dX; this.R = K * dT / (dX * dX);
 		this.LAYERS.put (0, zeroLayer);
+		this.ITERATIONS = its;
 	}
 	
 	private final int findPrevious (int layer) {
@@ -24,7 +26,7 @@ public abstract class AbsDifferenceScheme implements DifferenceScheme {
 		return layer;
 	}
 	
-	protected final double [] run3DiagonalSolver (double [][] matrix) {
+	protected final void run3DiagonalSolver (double [][] matrix, double [] answer) {
 	    List <Double> as = new ArrayList <> (), bs = new ArrayList <> ();
 	    double a = -matrix [0][1] / matrix [0][2],
 	           b = matrix [0][3] / matrix [0][2];
@@ -37,15 +39,12 @@ public abstract class AbsDifferenceScheme implements DifferenceScheme {
 	        as.add (a); bs.add (b);
 	    }
 	    
-	    double [] x = new double [matrix.length];
-	    int last = x.length - 1;
-	    x [x.length - 1] = (matrix [last][3] - b * matrix [last][0])
+	    int last = answer.length - 1;
+	    answer [answer.length - 1] = (matrix [last][3] - b * matrix [last][0])
 	                     / (matrix [last][2] + a * matrix [last][0]);
 	    for (int i = last - 1; i >= 0; i--) {
-	        x [i] = as.get (i) * x [i + 1] + bs.get (i);
+	        answer [i] = as.get (i) * answer [i + 1] + bs.get (i);
 	    }
-	    
-	    return x;
 	}
 	
 	@Override
@@ -60,7 +59,8 @@ public abstract class AbsDifferenceScheme implements DifferenceScheme {
 			    profile [profile.length - 1] = right;
 			    profile [0] = left;
 			    
-				LAYERS.put (i, doUnexistingStep (i, profile));
+			    doUnexistingStep (i, profile);
+			    LAYERS.put (i, profile);
 			}
 		}
 		
@@ -75,6 +75,6 @@ public abstract class AbsDifferenceScheme implements DifferenceScheme {
 	 * @return
 	 * 
 	 */
-	protected abstract double [] doUnexistingStep (int step, double [] profile);
+	protected abstract void doUnexistingStep (int step, double [] profile);
 	
 }

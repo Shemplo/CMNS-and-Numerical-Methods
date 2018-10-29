@@ -5,13 +5,13 @@ import ru.shemplo.dm.difschemes.logic.DifferenceScheme.Scheme;
 @Scheme (name = "Чехарда (leapfrog)")
 public class DifSchemeLeapfrog extends AbsDifferenceScheme {
 
-	public DifSchemeLeapfrog (double [] zeroLayer, 
+	public DifSchemeLeapfrog (double [] zeroLayer, int its,
 			double u, double k, double dt, double dx) {
-		super (zeroLayer, u, k, dt, dx);
+		super (zeroLayer, its, u, k, dt, dx);
 	}
 
 	@Override
-	protected double [] doUnexistingStep (int step, double [] profile) {
+	protected void doUnexistingStep (int step, double [] profile) {
 	    double [] zeroLayer = getTimeLayer (0);
 	    
 		if (step == 1) {
@@ -29,8 +29,6 @@ public class DifSchemeLeapfrog extends AbsDifferenceScheme {
 							+ previous [1][i - 1] * (2 * R + S);
 			}
 		}
-		
-		return profile;
 	}
 	
 }
