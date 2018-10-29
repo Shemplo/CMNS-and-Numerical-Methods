@@ -1,13 +1,13 @@
 package ru.shemplo.dm.difschemes.logic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbsDifferenceScheme implements DifferenceScheme {
 	
 	private final Map <Integer, double []> LAYERS = new HashMap <> ();
-	
-	private final double [] TIME_BOUNDS = {0.0, 100.0};
 	
 	protected final double U, K, dT, dX;
 	protected final double S, R;
@@ -22,6 +22,30 @@ public abstract class AbsDifferenceScheme implements DifferenceScheme {
 	private final int findPrevious (int layer) {
 		while (!LAYERS.containsKey (layer) && layer >= 0) { layer --; }
 		return layer;
+	}
+	
+	protected final double [] run3DiagonalSolver (double [][] matrix) {
+	    List <Double> as = new ArrayList <> (), bs = new ArrayList <> ();
+	    double a = -matrix [0][1] / matrix [0][2],
+	           b = matrix [0][3] / matrix [0][2];
+	    as.add (a); bs.add (b);
+	    for (int i = 1; i < matrix.length - 1; i++) {
+	        double pA = a, pB = b, denom = (pA * matrix [i][0] + matrix [i][2]);
+	        
+	        b = (matrix [i][3] - pB * matrix [i][0]) / denom;
+	        a = -matrix [i][1] / denom;
+	        as.add (a); bs.add (b);
+	    }
+	    
+	    double [] x = new double [matrix.length];
+	    int last = x.length - 1;
+	    x [x.length - 1] = (matrix [last][3] - b * matrix [last][0])
+	                     / (matrix [last][2] + a * matrix [last][0]);
+	    for (int i = last - 1; i >= 0; i--) {
+	        x [i] = as.get (i) * x [i + 1] + bs.get (i);
+	    }
+	    
+	    return x;
 	}
 	
 	@Override
@@ -41,11 +65,6 @@ public abstract class AbsDifferenceScheme implements DifferenceScheme {
 		}
 		
 		return LAYERS.get (layer);
-	}
-	
-	@Override
-	public double [] getTimeBounds () {
-		return TIME_BOUNDS;
 	}
 	
 	/**
