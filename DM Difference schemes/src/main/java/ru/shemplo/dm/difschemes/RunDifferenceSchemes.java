@@ -1,10 +1,12 @@
 package ru.shemplo.dm.difschemes;
 
-import static javafx.animation.Animation.Status.*;
 import static java.lang.ClassLoader.*;
 import static java.lang.Math.*;
+import static javafx.animation.Animation.Status.*;
+import static org.reflections.util.ClasspathHelper.*;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,6 +32,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -81,7 +86,8 @@ public class RunDifferenceSchemes extends Application {
 	public static void main (String ... args) {
 		// Searching for all classes of methods
 		Package path = DifferenceScheme.class.getPackage ();
-		Reflections reflections = new Reflections (path);
+		Set <URL> urls = forPackage (path.getName (), getSystemClassLoader ());
+		Reflections reflections = new Reflections (urls);
 		methodsSet = reflections.getTypesAnnotatedWith (Scheme.class);
 		
 		try {
@@ -119,7 +125,7 @@ public class RunDifferenceSchemes extends Application {
 		});
 		
 		animation = new Timeline (new KeyFrame (Duration.ZERO, this::animateFrame),
-		                          new KeyFrame (Duration.millis (65)));
+		                          new KeyFrame (Duration.millis (65 - 5)));
 		animation.setCycleCount (Timeline.INDEFINITE);
 		animation.setAutoReverse (false);
 		
@@ -205,7 +211,7 @@ public class RunDifferenceSchemes extends Application {
 		});
 		
 		Slider slider = View.FRAME.get ();
-		slider.setMin (0); slider.setMax (500);
+		slider.setMin (0); slider.setMax (1000);
 		slider.setBlockIncrement (1.0);
 		//slider.setShowTickMarks (true);
 		slider.valueProperty ()
@@ -218,7 +224,7 @@ public class RunDifferenceSchemes extends Application {
 	public void animateFrame (ActionEvent ae) {
 	    Slider slider = View.FRAME.get ();
 	    
-	    if (frame >= 1000) {
+	    if (frame >= slider.getMax ()) {
 	        animation.stop ();
 	        frame = 0;
 	    } else { frame += 1; }
@@ -245,15 +251,16 @@ public class RunDifferenceSchemes extends Application {
 		double [] profile = selectedProfile.getProfile (getIntegerValue (View.DOTS));
 		double dt = getDoubleValue (View.dT), dx = getDoubleValue (View.dX),
 			   u = getDoubleValue (View.U), k = getDoubleValue (View.K);
+		int iterations = (int) View.FRAME.<Slider> get ().getMax ();
 		
 		try {
 			Class <?> methodToken = methodsMap.get (selectedMethodName);
 			
 			@SuppressWarnings ("unchecked")
 			Constructor <DifferenceScheme> constructor = (Constructor <DifferenceScheme>) 
-				methodToken.getConstructor (double [].class, double.class, 
-						double.class, double.class, double.class);
-			return constructor.newInstance (profile, u, k, dt, dx);
+				methodToken.getConstructor (double [].class, int.class, 
+				        double.class, double.class, double.class, double.class);
+			return constructor.newInstance (profile, iterations, u, k, dt, dx);
 		} catch (Exception e) { System.err.println (e); }
 		
 		return null;
@@ -317,6 +324,8 @@ public class RunDifferenceSchemes extends Application {
         GraphicsContext context = canvas.getGraphicsContext2D ();       
         double w = canvas.getWidth (), h = canvas.getHeight ();
         context.clearRect (0, 0, w, h);
+        
+        context.setStroke (Color.BLACK);
         context.setLineWidth (1.25);
         
         double max = 0.0, min = 0.0, line = 0.0;
@@ -341,6 +350,11 @@ public class RunDifferenceSchemes extends Application {
             context.strokeLine (prevX, (i == 0 ? y : prevY), dx * i, y);
             prevX = dx * i; prevY = y;
         }
+        
+        context.setFont (Font.font ("Consolas", FontWeight.BOLD, 14));
+        context.setFill (Color.RED);
+        context.fillText (String.format (Locale.ENGLISH, "Max: %.12f", max), 0, 10);
+        context.fillText (String.format (Locale.ENGLISH, "Min: %.12f", min), 0, 30);
 	}
 	
 }

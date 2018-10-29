@@ -6,7 +6,7 @@ import java.util.function.Function;
 public enum SimulationProfiles {
 	
 	STEP   ("Ступенька",         p -> (p >= 0.35 && p <= 0.65) ? 1.0 : 0.0),
-	SPLASH ("Единичный импульс", p -> (10 * p >= PI / 2 && 10 * p <= 3 * PI / 2) ? abs (cos (10 * p)) : 0);
+	SPLASH ("Единичный импульс", p -> (10 * p >= 3 * PI / 2 && 10 * p <= 5 * PI / 2) ? cos (10 * p) : 0);
 	
 	private final Function <Double, Double> DITRIBUTION;
 	public final String NAME;
