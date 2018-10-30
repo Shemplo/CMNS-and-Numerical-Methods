@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.CheckBox?>
 <StackPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
     <VBox>
         <StackPane.margin><Insets bottom="5" left="15" right="15" top="15" /></StackPane.margin>
@@ -57,19 +58,21 @@
                 </Canvas>
             </HBox>
         </HBox>
-        <HBox alignment="BASELINE_CENTER">
+        <HBox alignment="BASELINE_CENTER" spacing="5.0">
             <VBox.margin><Insets bottom="5" top="5" /></VBox.margin>
             <padding><Insets bottom="10" top="10" /></padding>
 
-            <ChoiceBox fx:id="methods">
-                <HBox.margin><Insets right="5"/></HBox.margin>
-            </ChoiceBox>
+            <Label text="fixed scale:" />
+            <CheckBox fx:id="fixedScale" />
+            <Label text="&amp;" />
+            
+            <ChoiceBox fx:id="methods" />
             <Button fx:id="simulate" text="Simulate" />
+            
             <HBox HBox.hgrow="ALWAYS" />
+            
             <Label text="presets: " />
-            <ChoiceBox fx:id="presets">
-                <HBox.margin><Insets left="5"/></HBox.margin>
-            </ChoiceBox>
+            <ChoiceBox fx:id="presets" />
         </HBox>
 
         <HBox>

@@ -29,6 +29,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -65,7 +66,10 @@ public class RunDifferenceSchemes extends Application {
 		PROFILE ("profile"), CANVAS ("canvas"),
 		
 		// Sliders
-		FRAME ("frame");
+		FRAME ("frame"),
+		
+		// CheckBoxes
+		FIXED_SCALE ("fixedScale");
 		
 		private final String ID;
 		
@@ -181,11 +185,13 @@ public class RunDifferenceSchemes extends Application {
 		Button simulate = View.SIMULATE.get ();
 		simulate.setOnMouseClicked (me -> {
 		    View missed = checkInputFields ();
-		    if (missed == null) {		        
+		    if (missed == null) {
 		        currentScheme = getInstance ();
 		        currentScheme.getTimeLayer (1000); // pre-calculation
-		        frame = 0;
+		        scaleMax = scaleMin = 0; frame = 0;
 		        
+		        CheckBox fixed = View.FIXED_SCALE.get ();
+		        isFixedScale = fixed.isSelected ();
 		        Slider slider = View.FRAME.get ();
 	            slider.setValue (frame);
 		        updateMainCanvas ();
@@ -313,6 +319,9 @@ public class RunDifferenceSchemes extends Application {
 		}
 	}
 	
+	private double scaleMax = 0, scaleMin = 0;
+	private boolean isFixedScale = false;
+	
 	private void updateMainCanvas () {
 	    DifferenceScheme scheme = currentScheme;
 	    if (scheme == null) { return; }
@@ -333,6 +342,14 @@ public class RunDifferenceSchemes extends Application {
         for (double d : dist) { 
             max = max (max, d); min = min (min, d);
         }
+        
+        if (isFixedScale && scaleMax == 0 && scaleMin == 0) {
+            scaleMax = max; scaleMin = min;
+        }
+        
+        if (isFixedScale) {
+            max = scaleMax; min = scaleMin;
+        }
         line = max - min;
         
         double bottom = abs (min) / line * (h - of),
@@ -351,10 +368,14 @@ public class RunDifferenceSchemes extends Application {
             prevX = dx * i; prevY = y;
         }
         
+        Font font = context.getFont ();
         context.setFont (Font.font ("Consolas", FontWeight.BOLD, 14));
         context.setFill (Color.RED);
+        
         context.fillText (String.format (Locale.ENGLISH, "Max: %.12f", max), 0, 10);
         context.fillText (String.format (Locale.ENGLISH, "Min: %.12f", min), 0, 30);
+        
+        context.setFont (font);
 	}
 	
 }
