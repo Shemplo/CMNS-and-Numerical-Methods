@@ -188,7 +188,8 @@ public class RunDifferenceSchemes extends Application {
 		    if (missed == null) {
 		        currentScheme = getInstance ();
 		        currentScheme.getTimeLayer (1000); // pre-calculation
-		        scaleMax = scaleMin = 0; frame = 0;
+		        animation.stop (); frame = 0;
+		        scaleMax = scaleMin = 0;
 		        
 		        CheckBox fixed = View.FIXED_SCALE.get ();
 		        isFixedScale = fixed.isSelected ();
@@ -347,6 +348,7 @@ public class RunDifferenceSchemes extends Application {
             scaleMax = max; scaleMin = min;
         }
         
+        double rmax = max, rmin = min;
         if (isFixedScale) {
             max = scaleMax; min = scaleMin;
         }
@@ -359,6 +361,12 @@ public class RunDifferenceSchemes extends Application {
         if (top == 0.0 && bottom == 0.0) { return; }
         ////////////////////////////////////////////
         
+        context.setStroke (Color.GRAY);
+        context.setLineWidth (0.5);
+        context.strokeLine (0, of + top, w, of + top);
+        
+        context.setStroke (Color.BLACK);
+        context.setLineWidth (1.25);
         double dx = w / dist.length, prevX = 0, part = 0, prevY = 0;
         for (int i = 0; i < dist.length; i++) {
             part = abs (dist [i] / line);
@@ -372,8 +380,8 @@ public class RunDifferenceSchemes extends Application {
         context.setFont (Font.font ("Consolas", FontWeight.BOLD, 14));
         context.setFill (Color.RED);
         
-        context.fillText (String.format (Locale.ENGLISH, "Max: %.12f", max), 0, 10);
-        context.fillText (String.format (Locale.ENGLISH, "Min: %.12f", min), 0, 30);
+        context.fillText (String.format (Locale.ENGLISH, "Max: %.12f", rmax), 0, 10);
+        context.fillText (String.format (Locale.ENGLISH, "Min: %.12f", rmin), 0, 30);
         
         context.setFont (font);
 	}
