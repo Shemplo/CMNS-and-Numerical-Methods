@@ -155,7 +155,7 @@ public class RunDifferenceSchemes extends Application {
 				Scheme method = t.getAnnotation (Scheme.class);
 				methodsMap.put (method.name (), t);
 				return method.name ();
-			}).collect (Collectors.toList ())
+			}).sorted ().collect (Collectors.toList ())
 		);
 		
 		ChoiceBox <String> methodsBox = View.METHODS.get ();
@@ -219,9 +219,9 @@ public class RunDifferenceSchemes extends Application {
 		
 		Slider slider = View.FRAME.get ();
 		int dotsV = getIntegerValue (View.DOTS);
-		slider.setMin (0); slider.setMax (dotsV * sqrt (dotsV) * 10);
+		double propose = dotsV * sqrt (dotsV) * 10;
+		slider.setMin (0); slider.setMax (max (propose, 1000));
 		slider.setBlockIncrement (1.0);
-		//slider.setShowTickMarks (true);
 		slider.valueProperty ()
 		      .addListener ((value, prev, next) -> {
 		    frame = next.intValue ();

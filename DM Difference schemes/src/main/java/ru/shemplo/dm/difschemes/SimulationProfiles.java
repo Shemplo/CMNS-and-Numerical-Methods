@@ -16,6 +16,12 @@ public enum SimulationProfiles {
 	                                            : abs ((p - 0.525) / 0.025) - 1) 
 	                                    : 0d),
 	LINE     ("Полюсы",              p -> p - 0.5),
+	TRAPEZE  ("Трапеция",            p -> (p >= 0.25 && p <= 0.75) 
+	                                    ? (p >= 0.25 && p <= 0.4 
+	                                        ? abs ((p - 0.25) / 0.15) 
+	                                        : (p >= 0.6 && p <= 0.75 ? abs (1 - (p - 0.6) / 0.15) : 1)) 
+	                                    : 0d),
+	ASCIATION ("Асциляция",          p -> 5 * sin (10 * p) * cos (15 * p)),
 	SPLASH   ("Единичный импульс",   p -> (10 * p >= 3 * PI / 2 && 10 * p <= 5 * PI / 2) ? cos (10 * p) : 0);
 	
 	private final Function <Double, Double> DITRIBUTION;
