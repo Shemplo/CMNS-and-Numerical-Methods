@@ -218,7 +218,8 @@ public class RunDifferenceSchemes extends Application {
 		});
 		
 		Slider slider = View.FRAME.get ();
-		slider.setMin (0); slider.setMax (1000);
+		int dotsV = getIntegerValue (View.DOTS);
+		slider.setMin (0); slider.setMax (dotsV * sqrt (dotsV) * 10);
 		slider.setBlockIncrement (1.0);
 		//slider.setShowTickMarks (true);
 		slider.valueProperty ()

@@ -14,6 +14,14 @@ public enum SimulationPreset {
 		View.dX.<TextField> get ().setText ("0.1");
 		View.PROFILES.<ChoiceBox <?>> get ().getSelectionModel ()
 			.select (SimulationProfiles.STEP.ordinal ());
+	}),
+	IMAGINARY_PROFILE ("imaginary profile", () -> {
+	    View.U.<TextField> get ().setText ("0.1");
+        View.K.<TextField> get ().setText ("0.005");
+        View.dT.<TextField> get ().setText ("1.0");
+        View.dX.<TextField> get ().setText ("0.1");
+        View.PROFILES.<ChoiceBox <?>> get ().getSelectionModel ()
+            .select (SimulationProfiles.HEARTBIT.ordinal ());
 	});
 	
 	private final Runnable RENEW;
