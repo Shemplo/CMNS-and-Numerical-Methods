@@ -24,8 +24,8 @@ public class Processor {
     private final int NODES, ITERATIONS;
     
     // TODO: call this method in separate thread from GUI thread
-    public Processor (int nodes, int iteraiton, double dt, double dx, double ti) {
-        this.NODES = nodes; this.ITERATIONS = iteraiton;
+    public Processor (int nodes, int iteration, double dt, double dx, double ti) {
+        this.NODES = nodes; this.ITERATIONS = iteration;
         this.dt = dt; this.dx = dx; this.ti = ti;
         this.dx2 = dx * dx;
         
@@ -50,6 +50,7 @@ public class Processor {
         consumer.accept (listener);
     }
     
+    @SuppressWarnings("PointlessArithmeticExpression")
     public void computeWithListener (ProgressListener listener) {
         safeCallOfListener (listener, ProgressListener::onComputationStarted);
         safeCallOfListener (listener, ProgressListener::onStepComputed); // 0 step
@@ -136,7 +137,7 @@ public class Processor {
         safeCallOfListener (listener, ProgressListener::onComputationFinished);
     }
     
-    public int computredSteps () {
+    public int computedSteps () {
         return Ws.size ();
     }
     
