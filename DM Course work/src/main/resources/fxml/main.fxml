@@ -5,7 +5,7 @@
 <?import java.net.URL?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="ru.shemplo.dm.course.RunCourseWork"
+      fx:controller="ru.shemplo.dm.course.Main"
       spacing="15" minWidth="300">
 
     <stylesheets>

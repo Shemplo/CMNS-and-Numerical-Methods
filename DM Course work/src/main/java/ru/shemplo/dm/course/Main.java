@@ -18,7 +18,7 @@ import javafx.stage.Window;
 
 import java.net.URL;
 
-public class RunCourseWork extends Application {
+public class Main extends Application {
 
     @FXML
     private Button animationButton;
