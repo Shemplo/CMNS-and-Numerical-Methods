@@ -204,7 +204,7 @@ public class Controller implements Initializable {
         double z = 0;
         Double[] ws = p.getWs().get((int) time),
                  ts = p.getTs().get((int) time),
-                 xs = p.getTs().get((int) time);
+                 xs = p.getXs().get((int) time);
         for (int i = 0; i < ws.length; i++, z += model.getStepZ()) {
             //series.getData().add(new XYChart.Data<>(current - time, Math.cos(.25 * current)));
             wSeries.getData().add(new XYChart.Data<>(z, ws[i]));
