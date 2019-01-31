@@ -106,7 +106,7 @@
                 Пуск
             </Button>
 
-            <Slider fx:id="sliderTime" HBox.hgrow="ALWAYS"/>
+            <Slider fx:id="sliderTime" HBox.hgrow="ALWAYS" />
 
             <StackPane minWidth="100">
                 <LatexView fx:id="valueTime">T = 0</LatexView>

@@ -1,9 +1,12 @@
 package ru.shemplo.dm.course;
 
 import io.github.egormkn.LatexView;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,7 +15,10 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.util.Duration;
+import ru.shemplo.dm.course.gfx.ComputationProgressListener;
+import ru.shemplo.dm.course.gfx.ProgressListener;
 import ru.shemplo.dm.course.physics.Model;
+import ru.shemplo.dm.course.physics.Processor;
 
 import java.net.URL;
 import java.util.Random;
@@ -92,6 +98,7 @@ public class Controller implements Initializable {
     private LineChart<Number, Number> chartW;
 
     private Timeline animationTimeline = new Timeline();
+    private Processor p;
 
     private static String format(double value) {
         return String.valueOf(value).replaceFirst("(\\.\\d{6})\\d+", "$1");
@@ -181,29 +188,49 @@ public class Controller implements Initializable {
         valueGamma.setFormula(formatTex(model.getGamma()));
 
         // TODO: Calculate X, T, W
-        draw();
+
+        p = new Processor(50, 1001, model.getStepTime(), model.getStepZ(), 1);
+        new Thread(() -> {
+            p.computeWithListener(null);
+        }).start();
     }
 
-    private void draw() {
+    private void draw(double time) {
         // Chart demo
         // TODO: Implement charts using Observables
         // TODO: Bind charts time to sliderTime.valueProperty() (see initialize method)
-        XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        ObservableList<XYChart.Data<Number, Number>> data = series.getData();
-        Random random = new Random();
-        for (int i = 0; i < 15; i++) {
-            data.add(new XYChart.Data<>(i, i * random.nextInt(20)));
+        XYChart.Series<Number, Number> wSeries = new XYChart.Series<>(), tSeries = new XYChart.Series<>(), xSeries = new XYChart.Series<>();
+
+        double z = 0;
+        Double[] ws = p.getWs().get((int) time),
+                 ts = p.getTs().get((int) time),
+                 xs = p.getTs().get((int) time);
+        for (int i = 0; i < ws.length; i++, z += model.getStepZ()) {
+            //series.getData().add(new XYChart.Data<>(current - time, Math.cos(.25 * current)));
+            wSeries.getData().add(new XYChart.Data<>(z, ws[i]));
+            tSeries.getData().add(new XYChart.Data<>(z, ts[i]));
+            xSeries.getData().add(new XYChart.Data<>(z, xs[i]));
         }
-        series.setData(data);
+
+        chartW.getData().clear();
+        chartW.getData().add(wSeries);
+
+        chartT.getData().clear();
+        chartT.getData().add(tSeries);
+
         chartX.getData().clear();
-        chartX.getData().add(series);
+        chartX.getData().add(xSeries);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         fieldMethod.getItems().addAll("Метод 1", "Метод 2", "Метод 3");
         fieldMethod.setValue("Метод 1");
-        valueTime.formulaProperty().bind(sliderTime.valueProperty().asString("T = %.0f"));
+
+        sliderTime.valueProperty().addListener((ov, oldTime, newTime) -> {
+            draw(newTime.doubleValue());
+            valueTime.setFormula(String.format("T = %.0f", newTime));
+        });
 
         reset(null);
     }
