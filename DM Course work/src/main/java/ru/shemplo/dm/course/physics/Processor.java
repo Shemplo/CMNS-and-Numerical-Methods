@@ -17,7 +17,7 @@ public class Processor {
     @SuppressWarnings("unused")
     private final double dt, dx, dx2, ti;
     private final int NODES, ITERATIONS;
-    private Model model = new Model();
+    public Model model = Model.getInstance();
 
     // TODO: call this method in separate thread from GUI thread
     public Processor(int nodes, int iteration, double dt, double dx, double ti) {

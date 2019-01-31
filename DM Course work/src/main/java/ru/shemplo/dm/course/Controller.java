@@ -1,5 +1,6 @@
 package ru.shemplo.dm.course;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import io.github.egormkn.LatexView;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -126,7 +127,7 @@ public class Controller implements Initializable {
 
     @FXML
     private void reset(ActionEvent event) {
-        model = new Model();
+        model = Model.getInstance();
 
         fieldStepTime.setText(String.valueOf(model.getStepTime()));
         fieldStepZ.setText(String.valueOf(model.getStepZ()));
@@ -200,7 +201,7 @@ public class Controller implements Initializable {
         // TODO: Implement charts using Observables
         // TODO: Bind charts time to sliderTime.valueProperty() (see initialize method)
         XYChart.Series<Number, Number> wSeries = new XYChart.Series<>(), tSeries = new XYChart.Series<>(), xSeries = new XYChart.Series<>();
-
+        
         double z = 0;
         Double[] ws = p.getWs().get((int) time),
                  ts = p.getTs().get((int) time),
