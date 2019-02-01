@@ -17,10 +17,11 @@ public class Processor {
     @SuppressWarnings("unused")
     private final double dt, dx, dx2, ti;
     private final int NODES, ITERATIONS;
-    private Model model = new Model();
+    private final Model model;
 
     // TODO: call this method in separate thread from GUI thread
-    public Processor(int nodes, int iteration, double dt, double dx, double ti) {
+    public Processor(Model model, int nodes, int iteration, double dt, double dx, double ti) {
+        this.model = model;
         this.NODES = nodes;
         this.ITERATIONS = iteration;
         this.dt = dt;
@@ -60,7 +61,7 @@ public class Processor {
             double[][] equations = new double[2 * NODES][2 * NODES];
             double[] y = new double[2 * NODES];
 
-            Double[] previousA = As.get(i - 1), previousT = Ts.get(i);
+            Double[] previousA = As.get(i - 1), previousT = Ts.get(i - 1);
             double fW, fdW_dA, fdW_dT, fdW_dAa, fdW_dTt;
 
             // Left-side border condition
@@ -144,4 +145,15 @@ public class Processor {
         return Ws.size();
     }
 
+    public List<Double[]> getWs() {
+        return Ws;
+    }
+
+    public List<Double[]> getTs() {
+        return Ts;
+    }
+
+    public List<Double[]> getXs() {
+        return As;
+    }
 }
