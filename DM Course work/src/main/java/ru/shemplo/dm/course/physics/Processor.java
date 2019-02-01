@@ -20,12 +20,12 @@ public class Processor {
     private final Model model;
 
     // TODO: call this method in separate thread from GUI thread
-    public Processor(Model model, int nodes, int iteration, double dt, double dx, double ti) {
+    public Processor(Model model, int nodes, int iteration, double ti) {
         this.model = model;
         this.NODES = nodes;
         this.ITERATIONS = iteration;
-        this.dt = dt;
-        this.dx = dx;
+        this.dt = model.getStepTime();
+        this.dx = model.getStepZ();
         this.ti = ti;
         this.dx2 = dx * dx;
 
