@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Locale;
 
 public class Main extends Application {
 
@@ -16,6 +17,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Locale.setDefault(Locale.US);
         URL layout = Main.class.getResource("/fxml/layout.fxml");
         Parent root = FXMLLoader.load(layout);
         Scene scene = new Scene(root, 1280, 720);

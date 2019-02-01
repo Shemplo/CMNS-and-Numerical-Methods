@@ -50,7 +50,7 @@
                    GridPane.vgrow="ALWAYS"
                    GridPane.hgrow="ALWAYS">
             <xAxis>
-                <NumberAxis label="X axis"/>
+                <NumberAxis autoRanging="false" label="Время"/>
             </xAxis>
             <yAxis>
                 <NumberAxis label="Y axis"/>
@@ -67,7 +67,7 @@
                    GridPane.vgrow="ALWAYS"
                    GridPane.hgrow="ALWAYS">
             <xAxis>
-                <NumberAxis label="X axis"/>
+                <NumberAxis autoRanging="false" label="Время"/>
             </xAxis>
             <yAxis>
                 <NumberAxis label="Y axis"/>
@@ -84,7 +84,7 @@
                    GridPane.vgrow="ALWAYS"
                    GridPane.hgrow="ALWAYS">
             <xAxis>
-                <NumberAxis label="X axis"/>
+                <NumberAxis autoRanging="false" label="Время"/>
             </xAxis>
             <yAxis>
                 <NumberAxis label="Y axis"/>
@@ -106,7 +106,10 @@
                 Пуск
             </Button>
 
-            <Slider fx:id="sliderTime" HBox.hgrow="ALWAYS"/>
+            <Slider fx:id="sliderTime"
+                    majorTickUnit="1.0"
+                    snapToTicks="true"
+                    HBox.hgrow="ALWAYS"/>
 
             <StackPane minWidth="100">
                 <LatexView fx:id="valueTime">T = 0</LatexView>
@@ -128,8 +131,8 @@
             <HBox spacing="5">
                 <Label styleClass="header">Параметры</Label>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button onAction="#update" defaultButton="true">Расчёт</Button>
-                <Button onAction="#reset">Сброс</Button>
+                <Button fx:id="updateButton" onAction="#update" defaultButton="true">Расчёт</Button>
+                <Button fx:id="resetButton" onAction="#reset">Сброс</Button>
             </HBox>
 
             <Label>Метод решения</Label>
@@ -232,7 +235,8 @@
 
             <Label>Универсальная газовая постоянная</Label>
             <HBox>
-                <LatexView>R = 8.31</LatexView>
+                <LatexView>R =</LatexView>
+                <LatexView fx:id="valueR">0</LatexView>
             </HBox>
 
             <Label>Числа Зельдовича–Франк-Каменецкого</Label>
