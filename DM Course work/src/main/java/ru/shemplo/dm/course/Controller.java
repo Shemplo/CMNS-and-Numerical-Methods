@@ -242,7 +242,7 @@ public class Controller implements Initializable {
         ));
 
         service.ticksProperty().bind(Bindings.createIntegerBinding(
-                () -> (int) Math.round(model.getMaxTime() / model.getStepTime()),
+                () -> (int) Math.ceil(model.getMaxTime() / model.getStepTime()) + 1,
                 model.maxTimeProperty(),
                 model.stepTimeProperty()
         ));
