@@ -51,6 +51,37 @@ public class ProcessorService extends Service<ProcessorResult> {
 
                 Thread.sleep(10000);
 
+                // TODO: Fix real computations below
+                /*Processor p = new Processor(getModel(), 50, 1001, 1);
+                p.computeWithListener(new ComputationProgressListener());
+
+                List<XYChart.Series<Number, Number>> dataX = new ArrayList<>(),
+                        dataT = new ArrayList<>(),
+                        dataW = new ArrayList<>();
+
+                for (int tick = 0; tick < getTicks(); tick++) {
+                    XYChart.Series<Number, Number> seriesW = new XYChart.Series<>(),
+                            seriesT = new XYChart.Series<>(),
+                            seriesX = new XYChart.Series<>();
+
+                    double z = 0;
+                    Double[] ws = p.getWs().get(tick),
+                            ts = p.getTs().get(tick),
+                            xs = p.getXs().get(tick);
+
+                    for (int i = 0; i < ws.length; i++, z += getModel().getStepZ()) {
+                        //series.getData().add(new XYChart.Data<>(current - time, Math.cos(.25 * current)));
+                        seriesW.getData().add(new XYChart.Data<>(z, ws[i]));
+                        seriesT.getData().add(new XYChart.Data<>(z, ts[i]));
+                        seriesX.getData().add(new XYChart.Data<>(z, xs[i]));
+                    }
+
+                    dataX.add(seriesX);
+                    dataT.add(seriesT);
+                    dataW.add(seriesW);
+                }*/
+
+
                 List<XYChart.Series<Number, Number>> dataX = new ArrayList<>();
                 for (int i = 0; i < getTicks(); i++) {
                     XYChart.Series<Number, Number> series = new XYChart.Series<>();
