@@ -35,13 +35,15 @@ public class ProcessorService extends Service<ProcessorResult> {
 
                 // TODO: Fix real computations below
                 /*Processor p = new Processor(getModel(), 50, 1001, 1);
-                p.computeWithListener(new ComputationProgressListener());
+                System.out.println("Processor created");
+                p.computeWithListener();
+                System.out.println("Processor computed");
 
                 List<XYChart.Series<Number, Number>> dataX = new ArrayList<>(),
                         dataT = new ArrayList<>(),
                         dataW = new ArrayList<>();
 
-                for (int tick = 0; tick < getTicks(); tick++) {
+                for (int tick = 0; tick < model.getTicks(); tick++) {
                     XYChart.Series<Number, Number> seriesW = new XYChart.Series<>(),
                             seriesT = new XYChart.Series<>(),
                             seriesX = new XYChart.Series<>();
@@ -61,8 +63,14 @@ public class ProcessorService extends Service<ProcessorResult> {
                     dataX.add(seriesX);
                     dataT.add(seriesT);
                     dataW.add(seriesW);
+
+                    if (tick % 100 == 0) {
+                        System.out.println(tick);
+                    }
+
                 }*/
 
+                System.out.println("Cycle");
 
                 List<XYChart.Series<Number, Number>> dataX = new ArrayList<>();
                 for (int i = 0; i < model.getTicks(); i++) {

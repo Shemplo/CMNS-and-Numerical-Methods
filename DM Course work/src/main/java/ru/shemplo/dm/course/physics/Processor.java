@@ -1,19 +1,16 @@
 package ru.shemplo.dm.course.physics;
 
-import ru.shemplo.dm.course.gfx.ProgressListener;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
 
 public class Processor {
 
     private final List<Double[]>
             Ts = new ArrayList<>(),
-            As = new ArrayList<>(),
+            Xs = new ArrayList<>(),
             Ws = new ArrayList<>();
+
     @SuppressWarnings("unused")
     private final double dt, dx, dx2, ti;
     private final int NODES, ITERATIONS;
@@ -35,7 +32,7 @@ public class Processor {
 
         Double[] A0s = new Double[nodes];
         Arrays.fill(A0s, 1.0D);
-        As.add(A0s);
+        Xs.add(A0s);
 
         Double[] W0s = new Double[nodes];
         for (int i = 0; i < nodes; i++) {
@@ -44,24 +41,14 @@ public class Processor {
         Ws.add(W0s);
     }
 
-    private final void safeCallOfListener(ProgressListener listener,
-                                          Consumer<ProgressListener> consumer) {
-        if (Objects.isNull(listener)) {
-            return;
-        }
-        consumer.accept(listener);
-    }
-
     @SuppressWarnings("PointlessArithmeticExpression")
-    public void computeWithListener(ProgressListener listener) {
-        safeCallOfListener(listener, ProgressListener::onComputationStarted);
-        safeCallOfListener(listener, ProgressListener::onStepComputed); // 0 step
+    public void computeWithListener() {
 
         for (int i = Ws.size(); i < ITERATIONS; i = Ws.size()) {
             double[][] equations = new double[2 * NODES][2 * NODES];
             double[] y = new double[2 * NODES];
 
-            Double[] previousA = As.get(i - 1), previousT = Ts.get(i - 1);
+            Double[] previousA = Xs.get(i - 1), previousT = Ts.get(i - 1);
             double fW, fdW_dA, fdW_dT, fdW_dAa, fdW_dTt;
 
             // Left-side border condition
@@ -131,14 +118,12 @@ public class Processor {
 
                 rW[x] = Math.abs(model.getW(rA[x], rT[x]));
             }
-            As.add(rA);
+            Xs.add(rA);
             Ts.add(rT);
             Ws.add(rW);
 
-            safeCallOfListener(listener, ProgressListener::onStepComputed);
         }
 
-        safeCallOfListener(listener, ProgressListener::onComputationFinished);
     }
 
     public int computedSteps() {
@@ -154,6 +139,6 @@ public class Processor {
     }
 
     public List<Double[]> getXs() {
-        return As;
+        return Xs;
     }
 }
