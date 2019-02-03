@@ -1,9 +1,5 @@
 package ru.shemplo.dm.course.physics;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.chart.XYChart;
@@ -14,32 +10,16 @@ import java.util.Random;
 
 public class ProcessorService extends Service<ProcessorResult> {
 
-    private final IntegerProperty ticks = new SimpleIntegerProperty();
-    private final ObjectProperty<Model> model = new SimpleObjectProperty<>();
     private Random random = new Random();
 
-    public int getTicks() {
-        return ticks.get();
-    }
-
-    public void setTicks(int ticks) {
-        this.ticks.set(ticks);
-    }
-
-    public IntegerProperty ticksProperty() {
-        return ticks;
-    }
+    private Model model = new Model();
 
     public Model getModel() {
-        return model.get();
+        return model;
     }
 
     public void setModel(Model model) {
-        this.model.set(model);
-    }
-
-    public ObjectProperty<Model> modelProperty() {
-        return model;
+        this.model = model;
     }
 
     @Override
@@ -49,7 +29,9 @@ public class ProcessorService extends Service<ProcessorResult> {
             @Override
             protected ProcessorResult call() throws Exception {
 
-                Thread.sleep(10000);
+                int ticks = model.getTicks();
+
+                updateProgress(0, ticks * 3);
 
                 // TODO: Fix real computations below
                 /*Processor p = new Processor(getModel(), 50, 1001, 1);
@@ -83,30 +65,34 @@ public class ProcessorService extends Service<ProcessorResult> {
 
 
                 List<XYChart.Series<Number, Number>> dataX = new ArrayList<>();
-                for (int i = 0; i < getTicks(); i++) {
+                for (int i = 0; i < model.getTicks(); i++) {
                     XYChart.Series<Number, Number> series = new XYChart.Series<>();
                     for (int z = 0; z < 20; z++) {
                         series.getData().add(new XYChart.Data<>(random.nextInt(10), random.nextInt(10)));
                     }
                     dataX.add(series);
+
+                    updateProgress(i, ticks * 3);
                 }
 
                 List<XYChart.Series<Number, Number>> dataT = new ArrayList<>();
-                for (int i = 0; i < getTicks(); i++) {
+                for (int i = 0; i < model.getTicks(); i++) {
                     XYChart.Series<Number, Number> series = new XYChart.Series<>();
                     for (int z = 0; z < 20; z++) {
                         series.getData().add(new XYChart.Data<>(random.nextInt(10), random.nextInt(10)));
                     }
                     dataT.add(series);
+                    updateProgress(ticks + i, ticks * 3);
                 }
 
                 List<XYChart.Series<Number, Number>> dataW = new ArrayList<>();
-                for (int i = 0; i < getTicks(); i++) {
+                for (int i = 0; i < model.getTicks(); i++) {
                     XYChart.Series<Number, Number> series = new XYChart.Series<>();
                     for (int z = 0; z < 20; z++) {
                         series.getData().add(new XYChart.Data<>(random.nextDouble() * 10, random.nextInt(10)));
                     }
                     dataW.add(series);
+                    updateProgress(2 * ticks + i, ticks * 3);
                 }
 
                 return new ProcessorResult(dataX, dataT, dataW);

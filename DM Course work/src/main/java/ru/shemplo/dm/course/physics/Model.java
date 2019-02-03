@@ -1,5 +1,6 @@
 package ru.shemplo.dm.course.physics;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,6 +8,7 @@ import javafx.scene.chart.XYChart;
 
 /**
  * Reaction model
+ * Модель реакции
  */
 public class Model {
 
@@ -145,6 +147,11 @@ public class Model {
     private ListProperty<XYChart.Series<Number, Number>> dataW
             = new SimpleListProperty<>(FXCollections.observableArrayList());
 
+    /**
+     * Количество рассчитываемых моментов времени
+     */
+    private ReadOnlyIntegerWrapper ticks = new ReadOnlyIntegerWrapper();
+
     public Model() {
         dt.bind(q.divide(c));
         tm.bind(t0.add(dt));
@@ -169,6 +176,12 @@ public class Model {
             double value = time.doubleValue();
             time.setValue(value - value % stepTime.doubleValue());
         });
+
+        ticks.bind(Bindings.createIntegerBinding(
+                () -> (int) Math.ceil(getMaxTime() / getStepTime()) + 1,
+                maxTime,
+                stepTime
+        ));
     }
 
     /**
@@ -194,6 +207,14 @@ public class Model {
     }
 
     /* GENERATED METHODS */
+
+    public int getTicks() {
+        return ticks.get();
+    }
+
+    public ReadOnlyIntegerProperty ticksProperty() {
+        return ticks.getReadOnlyProperty();
+    }
 
     public ObservableList<XYChart.Series<Number, Number>> getDataX() {
         return dataX.get();

@@ -6,7 +6,6 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
@@ -132,10 +131,7 @@ public class Controller implements Initializable {
     private void reset() {
         service.cancel();
 
-        System.out.println("Reset");
-
         model = new Model();
-        service.setModel(model);
 
         valueTime.formulaProperty().bind(model.timeProperty().asString("T = %.2f"));
 
@@ -184,9 +180,16 @@ public class Controller implements Initializable {
                 1
         ));
 
+        resetButton.disableProperty().bind(service.runningProperty());
         updateButton.disableProperty().bind(service.runningProperty());
 
-        resetButton.disableProperty().bind(service.runningProperty());
+        updateButton.textProperty().bind(Bindings.createStringBinding(
+                () -> service.isRunning()
+                        ? String.format("%.0f%%", service.getProgress())
+                        : "Расчёт",
+                service.runningProperty(),
+                service.progressProperty()
+        ));
 
         animationButton.textProperty().bind(Bindings.createStringBinding(
                 () -> animationTimeline.getStatus() != RUNNING ? "Пуск" : "Пауза",
@@ -241,12 +244,7 @@ public class Controller implements Initializable {
                 model.dataWProperty()
         ));
 
-        service.ticksProperty().bind(Bindings.createIntegerBinding(
-                () -> (int) Math.ceil(model.getMaxTime() / model.getStepTime()) + 1,
-                model.maxTimeProperty(),
-                model.stepTimeProperty()
-        ));
-
+        service.setModel(model);
         service.setOnSucceeded(e -> {
             ProcessorResult result = service.getValue();
             model.getDataX().setAll(result.getDataX());
