@@ -1,10 +1,13 @@
 package ru.shemplo.dm.course.physics;
 
+import javafx.concurrent.Task;
+import javafx.scene.chart.XYChart;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Processor {
+public class Processor extends Task<ProcessorResult> {
 
     private final List<Double[]>
             Ts = new ArrayList<>(),
@@ -13,17 +16,16 @@ public class Processor {
 
     @SuppressWarnings("unused")
     private final double dt, dx, dx2, ti;
-    private final int NODES, ITERATIONS;
+    private final int nodes, iterations;
     private final Model model;
 
-    // TODO: call this method in separate thread from GUI thread
-    public Processor(Model model, int nodes, int iteration, double ti) {
+    public Processor(Model model) {
         this.model = model;
-        this.NODES = nodes;
-        this.ITERATIONS = iteration;
+        this.nodes = model.getCoords();
+        this.iterations = model.getTicks();
         this.dt = model.getStepTime();
         this.dx = model.getStepZ();
-        this.ti = ti;
+        this.ti = 1; // FIXME: Это что за покемон?
         this.dx2 = dx * dx;
 
         Double[] T0s = new Double[nodes];
@@ -42,11 +44,12 @@ public class Processor {
     }
 
     @SuppressWarnings("PointlessArithmeticExpression")
-    public void computeWithListener() {
+    @Override
+    protected ProcessorResult call() throws Exception {
 
-        for (int i = Ws.size(); i < ITERATIONS; i = Ws.size()) {
-            double[][] equations = new double[2 * NODES][2 * NODES];
-            double[] y = new double[2 * NODES];
+        for (int i = Ws.size(); i < iterations; i = Ws.size()) {
+            double[][] equations = new double[2 * nodes][2 * nodes];
+            double[] y = new double[2 * nodes];
 
             Double[] previousA = Xs.get(i - 1), previousT = Ts.get(i - 1);
             double fW, fdW_dA, fdW_dT, fdW_dAa, fdW_dTt;
@@ -70,7 +73,7 @@ public class Processor {
             equations[1][3] = -model.getKappa() / dx2;
 
             // Inner cells
-            for (int x = 1; x < NODES - 1; x++) {
+            for (int x = 1; x < nodes - 1; x++) {
                 fW = model.getW(previousA[x], previousT[x]);
                 fdW_dA = model.getdWdA(previousA[x], previousT[x]);
                 fdW_dT = model.getdWdT(previousA[x], previousT[x]);
@@ -91,28 +94,28 @@ public class Processor {
             }
 
             // Right-side border condition
-            fW = model.getW(previousA[NODES - 1], previousT[NODES - 1]);
-            fdW_dA = model.getdWdA(previousA[NODES - 1], previousT[NODES - 1]);
-            fdW_dT = model.getdWdT(previousA[NODES - 1], previousT[NODES - 1]);
-            fdW_dAa = fdW_dA * previousA[NODES - 1];
-            fdW_dTt = fdW_dT * previousT[NODES - 1];
+            fW = model.getW(previousA[nodes - 1], previousT[nodes - 1]);
+            fdW_dA = model.getdWdA(previousA[nodes - 1], previousT[nodes - 1]);
+            fdW_dT = model.getdWdT(previousA[nodes - 1], previousT[nodes - 1]);
+            fdW_dAa = fdW_dA * previousA[nodes - 1];
+            fdW_dTt = fdW_dT * previousT[nodes - 1];
 
-            y[2 * NODES - 2] = previousA[NODES - 1] / dt
+            y[2 * nodes - 2] = previousA[nodes - 1] / dt
                     + fW - fdW_dAa - fdW_dTt;
-            equations[2 * NODES - 2][2 * NODES - 4] = -model.getD() / dx2;
-            equations[2 * NODES - 2][2 * NODES - 2] = 1 / dt + model.getD() / dx2 - fdW_dA;
-            equations[2 * NODES - 2][2 * NODES - 1] = -fdW_dT;
+            equations[2 * nodes - 2][2 * nodes - 4] = -model.getD() / dx2;
+            equations[2 * nodes - 2][2 * nodes - 2] = 1 / dt + model.getD() / dx2 - fdW_dA;
+            equations[2 * nodes - 2][2 * nodes - 1] = -fdW_dT;
 
-            y[2 * NODES - 1] = model.getKappa() * model.getT0() / dx2 + previousT[NODES - 1] / dt
+            y[2 * nodes - 1] = model.getKappa() * model.getT0() / dx2 + previousT[nodes - 1] / dt
                     + model.getDt() * (-fW + fdW_dAa + fdW_dTt);
-            equations[2 * NODES - 1][2 * NODES - 3] = -model.getKappa() / dx2;
-            equations[2 * NODES - 1][2 * NODES - 2] = model.getDt() * fdW_dA;
-            equations[2 * NODES - 1][2 * NODES - 1] = 1 / dt + 2 * model.getKappa() / dx2 + model.getDt() * fdW_dT;
+            equations[2 * nodes - 1][2 * nodes - 3] = -model.getKappa() / dx2;
+            equations[2 * nodes - 1][2 * nodes - 2] = model.getDt() * fdW_dA;
+            equations[2 * nodes - 1][2 * nodes - 1] = 1 / dt + 2 * model.getKappa() / dx2 + model.getDt() * fdW_dT;
 
-            Double[] rA = new Double[NODES], rT = new Double[NODES],
-                    rW = new Double[NODES];
+            Double[] rA = new Double[nodes], rT = new Double[nodes],
+                    rW = new Double[nodes];
             double[] result = MatrixSolver.solve(equations, y);
-            for (int x = 0; x < NODES; x++) {
+            for (int x = 0; x < nodes; x++) {
                 rA[x] = result[2 * x + 0];
                 rT[x] = result[2 * x + 1];
 
@@ -124,6 +127,35 @@ public class Processor {
 
         }
 
+
+        List<XYChart.Series<Number, Number>> dataX = new ArrayList<>(),
+                dataT = new ArrayList<>(),
+                dataW = new ArrayList<>();
+
+        for (int tick = 0; tick < model.getTicks(); tick++) {
+            XYChart.Series<Number, Number> seriesW = new XYChart.Series<>(),
+                    seriesT = new XYChart.Series<>(),
+                    seriesX = new XYChart.Series<>();
+
+            double z = 0;
+            Double[] ws = Ws.get(tick),
+                    ts = Ts.get(tick),
+                    xs = Xs.get(tick);
+
+            for (int i = 0; i < ws.length; i++, z += model.getStepZ()) {
+                //series.getData().add(new XYChart.Data<>(current - time, Math.cos(.25 * current)));
+                seriesW.getData().add(new XYChart.Data<>(z, ws[i]));
+                seriesT.getData().add(new XYChart.Data<>(z, ts[i]));
+                seriesX.getData().add(new XYChart.Data<>(z, xs[i]));
+            }
+
+            dataX.add(seriesX);
+            dataT.add(seriesT);
+            dataW.add(seriesW);
+
+        }
+
+        return new ProcessorResult(dataX, dataT, dataW);
     }
 
     public int computedSteps() {

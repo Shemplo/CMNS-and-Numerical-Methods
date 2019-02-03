@@ -6,6 +6,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Service;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
@@ -38,8 +39,6 @@ public class Controller implements Initializable {
 
     private final Timeline animationTimeline = new Timeline();
 
-    private final ProcessorService service = new ProcessorService();
-
     // TODO: Add methods
     private final List<Method> methods = Arrays.asList(
             new ImplicitEulerMethod(),
@@ -47,6 +46,8 @@ public class Controller implements Initializable {
     );
 
     private Model model;
+
+    private Service<ProcessorResult> service;
 
     @FXML
     private Button animationButton;
@@ -152,9 +153,12 @@ public class Controller implements Initializable {
 
     @FXML
     private void reset() {
-        service.cancel();
+        if (service != null) {
+            service.cancel();
+        }
 
         model = new Model();
+        service = new ProcessorService(model);
 
         valueTime.formulaProperty().bind(model.timeProperty().asString("T = %.2f"));
 
@@ -228,7 +232,7 @@ public class Controller implements Initializable {
 
         updateButton.textProperty().bind(Bindings.createStringBinding(
                 () -> service.isRunning()
-                        ? String.format("%.0f%%", service.getProgress())
+                        ? String.format("%.0f%%", service.getProgress() * 100)
                         : "Расчёт",
                 service.runningProperty(),
                 service.progressProperty()
@@ -287,7 +291,6 @@ public class Controller implements Initializable {
                 model.dataWProperty()
         ));
 
-        service.setModel(model);
         service.setOnSucceeded(e -> {
             ProcessorResult result = service.getValue();
             model.getDataX().setAll(result.getDataX());

@@ -183,6 +183,11 @@ public class Model {
      */
     private ReadOnlyIntegerWrapper ticks = new ReadOnlyIntegerWrapper();
 
+    /**
+     * Количество рассчитываемых координат
+     */
+    private ReadOnlyIntegerWrapper coords = new ReadOnlyIntegerWrapper();
+
     public Model() {
         dt.bind(q.divide(c));
         tm.bind(t0.add(dt));
@@ -212,6 +217,12 @@ public class Model {
                 () -> (int) Math.ceil(getMaxTime() / getStepTime()) + 1,
                 maxTime,
                 stepTime
+        ));
+
+        coords.bind(Bindings.createIntegerBinding(
+                () -> (int) Math.ceil(getMaxCoord() / getStepZ()) + 1,
+                maxCoord,
+                stepZ
         ));
 
         u.bind(Bindings.createDoubleBinding(
@@ -251,6 +262,14 @@ public class Model {
     }
 
     /* GENERATED METHODS */
+
+    public int getCoords() {
+        return coords.get();
+    }
+
+    public ReadOnlyIntegerProperty coordsProperty() {
+        return coords.getReadOnlyProperty();
+    }
 
     public int getMaxCoord() {
         return maxCoord.get();
