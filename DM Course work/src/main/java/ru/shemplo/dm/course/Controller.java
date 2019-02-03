@@ -25,6 +25,8 @@ import ru.shemplo.dm.course.physics.methods.ImplicitEulerMethod;
 import ru.shemplo.dm.course.physics.methods.Method;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static javafx.animation.Animation.Status.RUNNING;
@@ -36,7 +38,13 @@ public class Controller implements Initializable {
 
     private final Timeline animationTimeline = new Timeline();
 
-    private ProcessorService service = new ProcessorService();
+    private final ProcessorService service = new ProcessorService();
+
+    // TODO: Add methods
+    private final List<Method> methods = Arrays.asList(
+            new ImplicitEulerMethod(),
+            new ImplicitEulerMethod()
+    );
 
     private Model model;
 
@@ -110,6 +118,21 @@ public class Controller implements Initializable {
     private LatexView valueGamma;
 
     @FXML
+    private LatexView valueU;
+
+    @FXML
+    private LatexView valueDeltaH;
+
+    @FXML
+    private LatexView valueDeltaR;
+
+    @FXML
+    private LatexView valueDeltaD;
+
+    @FXML
+    private LatexView valueLe;
+
+    @FXML
     private LineChart<Number, Number> chartX;
 
     @FXML
@@ -148,36 +171,56 @@ public class Controller implements Initializable {
         Bindings.bindBidirectional(fieldD.textProperty(), model.dProperty(), converter);
 
         valueDt.formulaProperty().bind(Bindings.createStringBinding(
-                () -> texConverter.toString(model.dtProperty().getValue()),
+                () -> texConverter.toString(model.getDt()),
                 model.dtProperty()
         ));
         valueTm.formulaProperty().bind(Bindings.createStringBinding(
-                () -> texConverter.toString(model.tmProperty().getValue()),
+                () -> texConverter.toString(model.getTm()),
                 model.tmProperty()
         ));
         valueKappa.formulaProperty().bind(Bindings.createStringBinding(
-                () -> texConverter.toString(model.kappaProperty().getValue()),
+                () -> texConverter.toString(model.getKappa()),
                 model.kappaProperty()
         ));
         valueR.formulaProperty().bind(Bindings.createStringBinding(
-                () -> texConverter.toString(model.rProperty().getValue()),
+                () -> texConverter.toString(model.getR()),
                 model.rProperty()
         ));
         valueBeta.formulaProperty().bind(Bindings.createStringBinding(
-                () -> texConverter.toString(model.betaProperty().getValue()),
+                () -> texConverter.toString(model.getBeta()),
                 model.betaProperty()
         ));
         valueGamma.formulaProperty().bind(Bindings.createStringBinding(
-                () -> texConverter.toString(model.gammaProperty().getValue()),
+                () -> texConverter.toString(model.getGamma()),
                 model.gammaProperty()
         ));
+        valueU.formulaProperty().bind(Bindings.createStringBinding(
+                () -> texConverter.toString(model.getU()),
+                model.uProperty()
+        ));
+        valueDeltaH.formulaProperty().bind(Bindings.createStringBinding(
+                () -> texConverter.toString(model.getDeltaH()),
+                model.deltaHProperty()
+        ));
+        valueDeltaR.formulaProperty().bind(Bindings.createStringBinding(
+                () -> texConverter.toString(model.getDeltaR()),
+                model.deltaRProperty()
+        ));
+        valueDeltaD.formulaProperty().bind(Bindings.createStringBinding(
+                () -> texConverter.toString(model.getDeltaD()),
+                model.deltaDProperty()
+        ));
+        valueLe.formulaProperty().bind(Bindings.createStringBinding(
+                () -> texConverter.toString(model.getLe()),
+                model.leProperty()
+        ));
+
 
         sliderTime.maxProperty().bind(model.maxTimeProperty());
         sliderTime.blockIncrementProperty().bind(model.stepTimeProperty());
         sliderTime.valueProperty().bindBidirectional(model.timeProperty());
         sliderTime.minorTickCountProperty().bind(Bindings.subtract(
-                Bindings.divide(1, model.stepTimeProperty()),
-                1
+                Bindings.divide(1, model.stepTimeProperty()), 1
         ));
 
         resetButton.disableProperty().bind(service.runningProperty());
@@ -197,13 +240,13 @@ public class Controller implements Initializable {
         ));
 
         NumberAxis chartXAxisX = (NumberAxis) chartX.getXAxis();
-        chartXAxisX.upperBoundProperty().bind(model.maxTimeProperty());
+        chartXAxisX.upperBoundProperty().bind(model.maxCoordProperty());
 
         NumberAxis chartTAxisX = (NumberAxis) chartT.getXAxis();
-        chartTAxisX.upperBoundProperty().bind(model.maxTimeProperty());
+        chartTAxisX.upperBoundProperty().bind(model.maxCoordProperty());
 
         NumberAxis chartWAxisX = (NumberAxis) chartW.getXAxis();
-        chartWAxisX.upperBoundProperty().bind(model.maxTimeProperty());
+        chartWAxisX.upperBoundProperty().bind(model.maxCoordProperty());
 
         chartX.dataProperty().bind(Bindings.createObjectBinding(
                 () -> {
@@ -250,6 +293,7 @@ public class Controller implements Initializable {
             model.getDataX().setAll(result.getDataX());
             model.getDataT().setAll(result.getDataT());
             model.getDataW().setAll(result.getDataW());
+            System.out.println("Ready");
         });
 
         update();
@@ -271,7 +315,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        fieldMethod.getItems().addAll(new ImplicitEulerMethod(), new ImplicitEulerMethod());
+        fieldMethod.getItems().addAll(methods);
         fieldMethod.getSelectionModel().selectFirst();
 
         reset();

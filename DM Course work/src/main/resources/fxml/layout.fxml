@@ -30,8 +30,8 @@
             <LatexView>
                 \overset{\text{Уравнения, описывающие движение волны}}{
                     \begin{cases}
-                    \frac{\partial X}{\partial t} - D \Delta X = W(X, T) \\
-                    \frac{\partial T}{\partial t} - \varkappa \Delta T = -\frac{Q}{C} W(X, T)
+                    \frac{\partial X}{\partial t} - D \frac{\partial^2 X}{\partial z^2} = W(X, T) \\
+                    \frac{\partial T}{\partial t} - \varkappa \frac{\partial^2 T}{\partial z^2} = -\frac{Q}{C} W(X, T)
                     \end{cases}
                 }
             </LatexView>
@@ -41,7 +41,7 @@
         </VBox>
 
         <LineChart fx:id="chartX"
-                   title="Концентрация исходного реагента: X(z)"
+                   title="X(z)"
                    createSymbols="false"
                    animated="false"
                    legendVisible="false"
@@ -50,15 +50,15 @@
                    GridPane.vgrow="ALWAYS"
                    GridPane.hgrow="ALWAYS">
             <xAxis>
-                <NumberAxis autoRanging="false" label="Время"/>
+                <NumberAxis autoRanging="false" label="Координата"/>
             </xAxis>
             <yAxis>
-                <NumberAxis label="Y axis"/>
+                <NumberAxis label="Концентрация реагента"/>
             </yAxis>
         </LineChart>
 
         <LineChart fx:id="chartW"
-                   title="Скорость реакции: W(z)"
+                   title="W(z)"
                    createSymbols="false"
                    animated="false"
                    legendVisible="false"
@@ -67,15 +67,15 @@
                    GridPane.vgrow="ALWAYS"
                    GridPane.hgrow="ALWAYS">
             <xAxis>
-                <NumberAxis autoRanging="false" label="Время"/>
+                <NumberAxis autoRanging="false" label="Координата"/>
             </xAxis>
             <yAxis>
-                <NumberAxis label="Y axis"/>
+                <NumberAxis label="Скорость реакции"/>
             </yAxis>
         </LineChart>
 
         <LineChart fx:id="chartT"
-                   title="Температура: T(z)"
+                   title="T(z)"
                    createSymbols="false"
                    animated="false"
                    legendVisible="false"
@@ -84,10 +84,10 @@
                    GridPane.vgrow="ALWAYS"
                    GridPane.hgrow="ALWAYS">
             <xAxis>
-                <NumberAxis autoRanging="false" label="Время"/>
+                <NumberAxis autoRanging="false" label="Координата"/>
             </xAxis>
             <yAxis>
-                <NumberAxis label="Y axis"/>
+                <NumberAxis label="Температура"/>
             </yAxis>
         </LineChart>
 
@@ -121,7 +121,7 @@
                 hbarPolicy="NEVER"
                 fitToWidth="true"
                 fitToHeight="true"
-                minWidth="320">
+                minWidth="420">
 
         <VBox styleClass="sidebar">
             <padding>
@@ -247,6 +247,39 @@
             <HBox>
                 <LatexView>\gamma = \frac{R T_m^2}{E \Delta T} =</LatexView>
                 <LatexView fx:id="valueGamma">0</LatexView>
+            </HBox>
+
+            <Label>Скорость распространения волны</Label>
+            <HBox>
+                <LatexView>U \approx \sqrt{\frac{2K\lambda}{Q\rho\Delta T} \left(\frac{R T_m^2}{E}\right) \frac{T_0}{T_m} \exp{\frac{E}{R T_m}}} =</LatexView>
+            </HBox>
+            <HBox>
+                <LatexView>=</LatexView>
+                <LatexView fx:id="valueU">0</LatexView>
+            </HBox>
+
+            <Label>Толщина зоны подогрева</Label>
+            <HBox>
+                <LatexView>\delta_h \approx \varkappa / U =</LatexView>
+                <LatexView fx:id="valueDeltaH">0</LatexView>
+            </HBox>
+
+            <Label>Толщина зоны реакции</Label>
+            <HBox>
+                <LatexView>\delta_r \approx \beta\delta_h =</LatexView>
+                <LatexView fx:id="valueDeltaR">0</LatexView>
+            </HBox>
+
+            <Label>Толщина зоны диффузии</Label>
+            <HBox>
+                <LatexView>\delta_d \approx D/U =</LatexView>
+                <LatexView fx:id="valueDeltaD">0</LatexView>
+            </HBox>
+
+            <Label>Число Льюиса</Label>
+            <HBox>
+                <LatexView>Le \approx \delta_d/\delta_h =</LatexView>
+                <LatexView fx:id="valueLe">0</LatexView>
             </HBox>
         </VBox>
     </ScrollPane>

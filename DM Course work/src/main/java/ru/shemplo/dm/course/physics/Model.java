@@ -31,6 +31,12 @@ public class Model {
     private final DoubleProperty stepTime = new SimpleDoubleProperty(0.01);
 
     /**
+     * Maximum coordinate
+     * Максимальное значение координаты
+     */
+    private final IntegerProperty maxCoord = new SimpleIntegerProperty(20);
+
+    /**
      * Coordinate step size
      * Шаг по координате
      */
@@ -130,6 +136,31 @@ public class Model {
     private final ReadOnlyBooleanWrapper activated = new ReadOnlyBooleanWrapper();
 
     /**
+     * Скорость распространения волны
+     */
+    private final ReadOnlyDoubleWrapper u = new ReadOnlyDoubleWrapper();
+
+    /**
+     * Толщина зоны подогрева
+     */
+    private final ReadOnlyDoubleWrapper deltaH = new ReadOnlyDoubleWrapper();
+
+    /**
+     * Толщина зоны реакции
+     */
+    private final ReadOnlyDoubleWrapper deltaR = new ReadOnlyDoubleWrapper();
+
+    /**
+     * Толщина зоны диффузии
+     */
+    private final ReadOnlyDoubleWrapper deltaD = new ReadOnlyDoubleWrapper();
+
+    /**
+     * Число Льюиса
+     */
+    private final ReadOnlyDoubleWrapper le = new ReadOnlyDoubleWrapper();
+
+    /**
      * Данные для графика X для всех возможных значений времени
      */
     private ListProperty<XYChart.Series<Number, Number>> dataX
@@ -182,6 +213,19 @@ public class Model {
                 maxTime,
                 stepTime
         ));
+
+        u.bind(Bindings.createDoubleBinding(
+                () -> Math.sqrt(2*getK()*getLambda()/(getQ()*getRho()*getDt())
+                        * Math.pow(getR()*getTm()*getTm()/getE(), 2)
+                        * getT0()/getTm()
+                        * Math.exp(getE()/(getR()*getTm()))),
+                k, lambda, q, rho, dt, r, tm, e, t0
+        ));
+
+        deltaH.bind(kappa.divide(u));
+        deltaR.bind(beta.multiply(deltaH));
+        deltaD.bind(d.divide(u));
+        le.bind(deltaD.divide(deltaH));
     }
 
     /**
@@ -207,6 +251,58 @@ public class Model {
     }
 
     /* GENERATED METHODS */
+
+    public int getMaxCoord() {
+        return maxCoord.get();
+    }
+
+    public IntegerProperty maxCoordProperty() {
+        return maxCoord;
+    }
+
+    public void setMaxCoord(int maxCoord) {
+        this.maxCoord.set(maxCoord);
+    }
+
+    public double getLe() {
+        return le.get();
+    }
+
+    public ReadOnlyDoubleProperty leProperty() {
+        return le.getReadOnlyProperty();
+    }
+
+    public double getDeltaD() {
+        return deltaD.get();
+    }
+
+    public ReadOnlyDoubleProperty deltaDProperty() {
+        return deltaD.getReadOnlyProperty();
+    }
+
+    public double getDeltaH() {
+        return deltaH.get();
+    }
+
+    public ReadOnlyDoubleProperty deltaHProperty() {
+        return deltaH.getReadOnlyProperty();
+    }
+
+    public double getDeltaR() {
+        return deltaR.get();
+    }
+
+    public ReadOnlyDoubleProperty deltaRProperty() {
+        return deltaR.getReadOnlyProperty();
+    }
+
+    public double getU() {
+        return u.get();
+    }
+
+    public ReadOnlyDoubleProperty uProperty() {
+        return u.getReadOnlyProperty();
+    }
 
     public int getTicks() {
         return ticks.get();
