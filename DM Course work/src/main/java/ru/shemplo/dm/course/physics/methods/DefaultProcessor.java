@@ -24,7 +24,7 @@ public class DefaultProcessor extends Processor {
         this.nodes = model.getCoords();
         this.iterations = model.getTicks();
         this.dt = model.getStepTime();
-        this.dx = model.getStepZ();
+        this.dx = model.getStepCoord();
         this.ti = 1; // FIXME: Это что за покемон?
         this.dx2 = dx * dx;
 
@@ -46,6 +46,9 @@ public class DefaultProcessor extends Processor {
     @SuppressWarnings("PointlessArithmeticExpression")
     @Override
     protected ProcessorResult call() throws Exception {
+        int ticks = model.getTicks(), coords = model.getCoords();
+
+        System.out.println(ticks + " x " + coords);
 
         for (int i = Ws.size(); i < iterations; i = Ws.size()) {
             double[][] equations = new double[2 * nodes][2 * nodes];
@@ -125,7 +128,13 @@ public class DefaultProcessor extends Processor {
             Ts.add(rT);
             Ws.add(rW);
 
+            updateProgress(i, iterations);
         }
+
+
+        System.out.println("Ws size: " + Ws.size());
+
+        System.out.println("Ws[0] size: " + Ws.get(0).length);
 
 
         List<XYChart.Series<Number, Number>> dataX = new ArrayList<>(),
@@ -142,7 +151,7 @@ public class DefaultProcessor extends Processor {
                     ts = Ts.get(tick),
                     xs = Xs.get(tick);
 
-            for (int i = 0; i < ws.length; i++, z += model.getStepZ()) {
+            for (int i = 0; i < ws.length; i++, z += model.getStepCoord()) {
                 //series.getData().add(new XYChart.Data<>(current - time, Math.cos(.25 * current)));
                 seriesW.getData().add(new XYChart.Data<>(z, ws[i]));
                 seriesT.getData().add(new XYChart.Data<>(z, ts[i]));
@@ -153,6 +162,7 @@ public class DefaultProcessor extends Processor {
             dataT.add(seriesT);
             dataW.add(seriesW);
 
+            updateProgress(tick, ticks);
         }
 
         System.out.println("DefaultProcessor ready");

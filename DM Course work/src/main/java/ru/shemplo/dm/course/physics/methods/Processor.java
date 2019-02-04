@@ -19,8 +19,8 @@ public abstract class Processor extends Task<ProcessorResult> {
     }
 
     public enum Type {
-        RANDOM("Случайный график", RandomProcessor::new),
-        DEFAULT("Процессор Андрея", DefaultProcessor::new);
+        DEFAULT("Процессор Андрея", DefaultProcessor::new),
+        RANDOM("Случайные значения", RandomProcessor::new);
 
         private final String name;
         private final Function<Model, Task<ProcessorResult>> constructor;

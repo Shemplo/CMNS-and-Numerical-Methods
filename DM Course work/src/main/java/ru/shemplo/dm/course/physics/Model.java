@@ -11,6 +11,7 @@ import ru.shemplo.dm.course.physics.methods.Processor;
  * Reaction model
  * Модель реакции
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class Model {
 
     /**
@@ -29,7 +30,7 @@ public class Model {
      * Maximum time
      * Максимальное значение времени
      */
-    private final IntegerProperty maxTime = new SimpleIntegerProperty(10);
+    private final ReadOnlyDoubleWrapper maxTime = new ReadOnlyDoubleWrapper();
 
     /**
      * Time step size
@@ -41,13 +42,13 @@ public class Model {
      * Maximum coordinate
      * Максимальное значение координаты
      */
-    private final IntegerProperty maxCoord = new SimpleIntegerProperty(20);
+    private final ReadOnlyDoubleWrapper maxCoord = new ReadOnlyDoubleWrapper();
 
     /**
      * Coordinate step size
      * Шаг по координате
      */
-    private final DoubleProperty stepZ = new SimpleDoubleProperty(0.0001);
+    private final DoubleProperty stepCoord = new SimpleDoubleProperty(0.0001);
 
     /**
      * Speed of reaction, 1 / sec
@@ -227,9 +228,9 @@ public class Model {
         ));
 
         coords.bind(Bindings.createIntegerBinding(
-                () -> (int) Math.ceil(getMaxCoord() / getStepZ()) + 1,
+                () -> (int) Math.ceil(getMaxCoord() / getStepCoord()) + 1,
                 maxCoord,
-                stepZ
+                stepCoord
         ));
 
         u.bind(Bindings.createDoubleBinding(
@@ -244,6 +245,12 @@ public class Model {
         deltaR.bind(beta.multiply(deltaH));
         deltaD.bind(d.divide(u));
         le.bind(deltaD.divide(deltaH));
+        
+        maxTime.bind(stepTime.multiply(100));
+        maxCoord.bind(Bindings.max(stepCoord.multiply(100), deltaH.multiply(10)));
+
+        stepTime.bind(deltaR.divide(u).divide(5));
+        stepCoord.bind(deltaR.divide(5));
     }
 
     /**
@@ -274,12 +281,12 @@ public class Model {
         return processor.get();
     }
 
-    public void setProcessor(Processor.Type processor) {
-        this.processor.set(processor);
-    }
-
     public ObjectProperty<Processor.Type> processorProperty() {
         return processor;
+    }
+
+    public void setProcessor(Processor.Type processor) {
+        this.processor.set(processor);
     }
 
     public int getCoords() {
@@ -290,16 +297,16 @@ public class Model {
         return coords.getReadOnlyProperty();
     }
 
-    public int getMaxCoord() {
+    public double getMaxCoord() {
         return maxCoord.get();
     }
 
-    public void setMaxCoord(int maxCoord) {
-        this.maxCoord.set(maxCoord);
+    public DoubleProperty maxCoordProperty() {
+        return maxCoord;
     }
 
-    public IntegerProperty maxCoordProperty() {
-        return maxCoord;
+    public void setMaxCoord(double maxCoord) {
+        this.maxCoord.set(maxCoord);
     }
 
     public double getLe() {
@@ -398,16 +405,12 @@ public class Model {
         return time;
     }
 
-    public int getMaxTime() {
+    public double getMaxTime() {
         return maxTime.get();
     }
 
-    public void setMaxTime(int maxTime) {
-        this.maxTime.set(maxTime);
-    }
-
-    public IntegerProperty maxTimeProperty() {
-        return maxTime;
+    public ReadOnlyDoubleProperty maxTimeProperty() {
+        return maxTime.getReadOnlyProperty();
     }
 
     public double getStepTime() {
@@ -422,16 +425,16 @@ public class Model {
         return stepTime;
     }
 
-    public double getStepZ() {
-        return stepZ.get();
+    public double getStepCoord() {
+        return stepCoord.get();
     }
 
-    public void setStepZ(double stepZ) {
-        this.stepZ.set(stepZ);
+    public void setStepCoord(double stepCoord) {
+        this.stepCoord.set(stepCoord);
     }
 
-    public DoubleProperty stepZProperty() {
-        return stepZ;
+    public DoubleProperty stepCoordProperty() {
+        return stepCoord;
     }
 
     public double getK() {

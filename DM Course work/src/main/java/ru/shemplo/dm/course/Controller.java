@@ -67,7 +67,7 @@ public class Controller implements Initializable {
     private TextField fieldStepTime;
 
     @FXML
-    private TextField fieldStepZ;
+    private TextField fieldStepCoord;
 
     @FXML
     private TextField fieldK;
@@ -159,7 +159,7 @@ public class Controller implements Initializable {
         model.processorProperty().bind(fieldMethod.valueProperty());
 
         Bindings.bindBidirectional(fieldStepTime.textProperty(), model.stepTimeProperty(), converter);
-        Bindings.bindBidirectional(fieldStepZ.textProperty(), model.stepZProperty(), converter);
+        Bindings.bindBidirectional(fieldStepCoord.textProperty(), model.stepCoordProperty(), converter);
         Bindings.bindBidirectional(fieldK.textProperty(), model.kProperty(), converter);
         Bindings.bindBidirectional(fieldE.textProperty(), model.eProperty(), converter);
         Bindings.bindBidirectional(fieldAlpha.textProperty(), model.alphaProperty(), converter);

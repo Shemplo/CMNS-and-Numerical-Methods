@@ -167,7 +167,7 @@
             <HBox>
                 <LatexView>\Delta z =</LatexView>
                 <Region HBox.hgrow="ALWAYS"/>
-                <TextField fx:id="fieldStepZ"/>
+                <TextField fx:id="fieldStepCoord"/>
             </HBox>
 
             <Label>Константа скорости реакции</Label>
