@@ -208,7 +208,7 @@ public class Model {
             double value = Math.min(Math.max(time.doubleValue(), 0), maxTime.doubleValue());
             double diff = value % stepTime.doubleValue();
             if (stepTime.doubleValue() - diff < 1e-10) {
-                diff = 0;
+                diff = 0; // Fix precision error
             }
             time.setValue(value - diff);
         });
@@ -247,9 +247,13 @@ public class Model {
         le.bind(deltaD.divide(deltaH));
         
         maxTime.bind(stepTime.multiply(100));
+
+        // Длина расчётной области должна быть больше толщины зоны подогрева
         maxCoord.bind(Bindings.max(stepCoord.multiply(100), deltaH.multiply(10)));
 
+        // На времени продвижения волны на толщину зоны реакции должно укладываться несколько временных шагов
         stepTime.bind(deltaR.divide(u).divide(5));
+        // На толщине зоны реакции должно укладываться несколько пространственных шагов
         stepCoord.bind(deltaR.divide(5));
     }
 
