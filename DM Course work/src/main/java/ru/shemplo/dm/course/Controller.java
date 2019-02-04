@@ -115,6 +115,9 @@ public class Controller implements Initializable {
     private LatexView valueGamma;
 
     @FXML
+    private LatexView valueActivated;
+
+    @FXML
     private LatexView valueU;
 
     @FXML
@@ -193,6 +196,12 @@ public class Controller implements Initializable {
         valueGamma.formulaProperty().bind(Bindings.createStringBinding(
                 () -> texConverter.toString(model.getGamma()),
                 model.gammaProperty()
+        ));
+        valueActivated.formulaProperty().bind(Bindings.createStringBinding(
+                () -> model.isActivated()
+                        ? "\\textcolor{#006600}\\text{Реакция активирована}"
+                        : "\\textcolor{#FF0000}\\text{Реакция не активирована}",
+                model.activatedProperty()
         ));
         valueU.formulaProperty().bind(Bindings.createStringBinding(
                 () -> texConverter.toString(model.getU()),

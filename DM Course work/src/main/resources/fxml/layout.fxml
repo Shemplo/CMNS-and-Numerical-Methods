@@ -259,6 +259,9 @@
 
             <Label>Числа Зельдовича–Франк-Каменецкого</Label>
             <HBox>
+                <LatexView fx:id="valueActivated">\text{Статус реакции}</LatexView>
+            </HBox>
+            <HBox>
                 <LatexView>\beta = \frac{R T_m}{E} =</LatexView>
                 <LatexView fx:id="valueBeta">0</LatexView>
             </HBox>
