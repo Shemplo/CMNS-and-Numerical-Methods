@@ -3,7 +3,6 @@
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <HBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="ru.shemplo.dm.course.Controller"
       stylesheets="/css/style.css"
@@ -29,10 +28,10 @@
 
             <LatexView>
                 \overset{\text{Уравнения, описывающие движение волны}}{
-                    \begin{cases}
-                    \frac{\partial X}{\partial t} - D \frac{\partial^2 X}{\partial z^2} = W(X, T) \\
-                    \frac{\partial T}{\partial t} - \varkappa \frac{\partial^2 T}{\partial z^2} = -\frac{Q}{C} W(X, T)
-                    \end{cases}
+                \begin{cases}
+                \frac{\partial X}{\partial t} - D \frac{\partial^2 X}{\partial z^2} = W(X, T) \\
+                \frac{\partial T}{\partial t} - \varkappa \frac{\partial^2 T}{\partial z^2} = -\frac{Q}{C} W(X, T)
+                \end{cases}
                 }
             </LatexView>
             <LatexView>
@@ -91,30 +90,48 @@
             </yAxis>
         </LineChart>
 
-        <HBox alignment="CENTER"
-              spacing="15"
-              GridPane.rowIndex="2"
-              GridPane.columnIndex="0"
-              GridPane.columnSpan="2"
-              GridPane.vgrow="NEVER"
-              GridPane.hgrow="ALWAYS">
+        <StackPane
+                GridPane.rowIndex="2"
+                GridPane.columnIndex="0"
+                GridPane.columnSpan="2"
+                GridPane.vgrow="NEVER"
+                GridPane.hgrow="ALWAYS">
 
-            <Button minWidth="100"
-                    fx:id="animationButton"
-                    HBox.hgrow="NEVER"
-                    onAction="#toggleAnimation">
-                Пуск
-            </Button>
+            <HBox fx:id="animationPanel"
+                  alignment="CENTER"
+                  spacing="15">
 
-            <Slider fx:id="sliderTime"
-                    majorTickUnit="1.0"
-                    snapToTicks="true"
-                    HBox.hgrow="ALWAYS"/>
+                <Button minWidth="100"
+                        fx:id="animationButton"
+                        HBox.hgrow="NEVER"
+                        onAction="#toggleAnimation">
+                    Пуск
+                </Button>
 
-            <StackPane minWidth="100">
-                <LatexView fx:id="valueTime">T = 0</LatexView>
-            </StackPane>
-        </HBox>
+                <Slider fx:id="sliderTime"
+                        majorTickUnit="1.0"
+                        snapToTicks="true"
+                        HBox.hgrow="ALWAYS"/>
+
+                <StackPane minWidth="100">
+                    <LatexView fx:id="valueTime">T = 0</LatexView>
+                </StackPane>
+            </HBox>
+
+            <HBox fx:id="progressPanel"
+                  alignment="CENTER"
+                  spacing="15">
+
+                <ProgressBar fx:id="progressBar"
+                             HBox.hgrow="ALWAYS"
+                             maxWidth="Infinity"/>
+
+                <Button minWidth="100"
+                        HBox.hgrow="NEVER"
+                        onAction="#stopService"
+                        text="Стоп"/>
+            </HBox>
+        </StackPane>
     </GridPane>
 
     <ScrollPane HBox.hgrow="SOMETIMES"
@@ -123,7 +140,8 @@
                 fitToHeight="true"
                 minWidth="420">
 
-        <VBox styleClass="sidebar">
+        <VBox fx:id="sidebar"
+              styleClass="sidebar">
             <padding>
                 <Insets top="15" right="15" bottom="15" left="15"/>
             </padding>
@@ -131,8 +149,8 @@
             <HBox spacing="5">
                 <Label styleClass="header">Параметры</Label>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="updateButton" onAction="#update" defaultButton="true">Расчёт</Button>
-                <Button fx:id="resetButton" onAction="#reset">Сброс</Button>
+                <Button onAction="#update" defaultButton="true">Расчёт</Button>
+                <Button onAction="#reset">Сброс</Button>
             </HBox>
 
             <Label>Метод решения</Label>
@@ -251,7 +269,9 @@
 
             <Label>Скорость распространения волны</Label>
             <HBox>
-                <LatexView>U \approx \sqrt{\frac{2K\lambda}{Q\rho\Delta T} \left(\frac{R T_m^2}{E}\right) \frac{T_0}{T_m} \exp{\frac{E}{R T_m}}} =</LatexView>
+                <LatexView>U \approx \sqrt{\frac{2K\lambda}{Q\rho\Delta T} \left(\frac{R T_m^2}{E}\right)
+                    \frac{T_0}{T_m} \exp{\frac{E}{R T_m}}} =
+                </LatexView>
             </HBox>
             <HBox>
                 <LatexView>=</LatexView>

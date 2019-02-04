@@ -5,12 +5,19 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
+import ru.shemplo.dm.course.physics.methods.Processor;
 
 /**
  * Reaction model
  * Модель реакции
  */
 public class Model {
+
+    /**
+     * Метод расчёта
+     */
+    private final ObjectProperty<Processor.Type> processor
+            = new SimpleObjectProperty<>();
 
     /**
      * Current time
@@ -226,10 +233,10 @@ public class Model {
         ));
 
         u.bind(Bindings.createDoubleBinding(
-                () -> Math.sqrt(2*getK()*getLambda()/(getQ()*getRho()*getDt())
-                        * Math.pow(getR()*getTm()*getTm()/getE(), 2)
-                        * getT0()/getTm()
-                        * Math.exp(getE()/(getR()*getTm()))),
+                () -> Math.sqrt(2 * getK() * getLambda() / (getQ() * getRho() * getDt())
+                        * Math.pow(getR() * getTm() * getTm() / getE(), 2)
+                        * getT0() / getTm()
+                        * Math.exp(getE() / (getR() * getTm()))),
                 k, lambda, q, rho, dt, r, tm, e, t0
         ));
 
@@ -263,6 +270,18 @@ public class Model {
 
     /* GENERATED METHODS */
 
+    public Processor.Type getProcessor() {
+        return processor.get();
+    }
+
+    public void setProcessor(Processor.Type processor) {
+        this.processor.set(processor);
+    }
+
+    public ObjectProperty<Processor.Type> processorProperty() {
+        return processor;
+    }
+
     public int getCoords() {
         return coords.get();
     }
@@ -275,12 +294,12 @@ public class Model {
         return maxCoord.get();
     }
 
-    public IntegerProperty maxCoordProperty() {
-        return maxCoord;
-    }
-
     public void setMaxCoord(int maxCoord) {
         this.maxCoord.set(maxCoord);
+    }
+
+    public IntegerProperty maxCoordProperty() {
+        return maxCoord;
     }
 
     public double getLe() {

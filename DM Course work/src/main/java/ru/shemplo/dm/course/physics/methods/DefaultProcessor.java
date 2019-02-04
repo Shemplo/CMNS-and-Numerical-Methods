@@ -1,26 +1,26 @@
-package ru.shemplo.dm.course.physics;
+package ru.shemplo.dm.course.physics.methods;
 
-import javafx.concurrent.Task;
 import javafx.scene.chart.XYChart;
+import ru.shemplo.dm.course.physics.MatrixSolver;
+import ru.shemplo.dm.course.physics.Model;
+import ru.shemplo.dm.course.physics.ProcessorResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Processor extends Task<ProcessorResult> {
+public class DefaultProcessor extends Processor {
 
     private final List<Double[]>
             Ts = new ArrayList<>(),
             Xs = new ArrayList<>(),
             Ws = new ArrayList<>();
 
-    @SuppressWarnings("unused")
     private final double dt, dx, dx2, ti;
     private final int nodes, iterations;
-    private final Model model;
 
-    public Processor(Model model) {
-        this.model = model;
+    public DefaultProcessor(Model model) {
+        super(model);
         this.nodes = model.getCoords();
         this.iterations = model.getTicks();
         this.dt = model.getStepTime();
@@ -155,22 +155,8 @@ public class Processor extends Task<ProcessorResult> {
 
         }
 
+        System.out.println("DefaultProcessor ready");
+
         return new ProcessorResult(dataX, dataT, dataW);
-    }
-
-    public int computedSteps() {
-        return Ws.size();
-    }
-
-    public List<Double[]> getWs() {
-        return Ws;
-    }
-
-    public List<Double[]> getTs() {
-        return Ts;
-    }
-
-    public List<Double[]> getXs() {
-        return Xs;
     }
 }

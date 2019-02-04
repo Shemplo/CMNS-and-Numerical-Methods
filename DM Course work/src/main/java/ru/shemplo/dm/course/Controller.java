@@ -12,22 +12,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import ru.shemplo.dm.course.physics.Model;
 import ru.shemplo.dm.course.physics.ProcessorResult;
 import ru.shemplo.dm.course.physics.ProcessorService;
-import ru.shemplo.dm.course.physics.methods.ImplicitEulerMethod;
-import ru.shemplo.dm.course.physics.methods.Method;
+import ru.shemplo.dm.course.physics.methods.Processor;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import static javafx.animation.Animation.Status.RUNNING;
@@ -38,12 +34,6 @@ public class Controller implements Initializable {
     private static final StringConverter<Number> texConverter = new CustomConverter(true);
 
     private final Timeline animationTimeline = new Timeline();
-
-    // TODO: Add methods
-    private final List<Method> methods = Arrays.asList(
-            new ImplicitEulerMethod(),
-            new ImplicitEulerMethod()
-    );
 
     private Model model;
 
@@ -59,13 +49,19 @@ public class Controller implements Initializable {
     private LatexView valueTime;
 
     @FXML
-    private Button updateButton;
+    private HBox animationPanel;
 
     @FXML
-    private Button resetButton;
+    private HBox progressPanel;
 
     @FXML
-    private ChoiceBox<Method> fieldMethod;
+    private ProgressBar progressBar;
+
+    @FXML
+    private VBox sidebar;
+
+    @FXML
+    private ChoiceBox<Processor.Type> fieldMethod;
 
     @FXML
     private TextField fieldStepTime;
@@ -153,14 +149,14 @@ public class Controller implements Initializable {
 
     @FXML
     private void reset() {
-        if (service != null) {
-            service.cancel();
-        }
+        stopService();
 
         model = new Model();
         service = new ProcessorService(model);
 
         valueTime.formulaProperty().bind(model.timeProperty().asString("T = %.2f"));
+
+        model.processorProperty().bind(fieldMethod.valueProperty());
 
         Bindings.bindBidirectional(fieldStepTime.textProperty(), model.stepTimeProperty(), converter);
         Bindings.bindBidirectional(fieldStepZ.textProperty(), model.stepZProperty(), converter);
@@ -227,16 +223,13 @@ public class Controller implements Initializable {
                 Bindings.divide(1, model.stepTimeProperty()), 1
         ));
 
-        resetButton.disableProperty().bind(service.runningProperty());
-        updateButton.disableProperty().bind(service.runningProperty());
+        sidebar.disableProperty().bind(service.runningProperty());
+        animationPanel.disableProperty().bind(service.runningProperty().or(service.valueProperty().isNull()));
 
-        updateButton.textProperty().bind(Bindings.createStringBinding(
-                () -> service.isRunning()
-                        ? String.format("%.0f%%", service.getProgress() * 100)
-                        : "Расчёт",
-                service.runningProperty(),
-                service.progressProperty()
-        ));
+        animationPanel.visibleProperty().bind(Bindings.not(service.runningProperty()));
+        progressPanel.visibleProperty().bind(service.runningProperty());
+
+        progressBar.progressProperty().bind(service.progressProperty());
 
         animationButton.textProperty().bind(Bindings.createStringBinding(
                 () -> animationTimeline.getStatus() != RUNNING ? "Пуск" : "Пауза",
@@ -296,10 +289,13 @@ public class Controller implements Initializable {
             model.getDataX().setAll(result.getDataX());
             model.getDataT().setAll(result.getDataT());
             model.getDataW().setAll(result.getDataW());
+
+            KeyValue keyValue = new KeyValue(model.timeProperty(), model.getMaxTime());
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(10000), event -> model.setTime(0), keyValue);
+            animationTimeline.getKeyFrames().setAll(keyFrame);
+
             System.out.println("Ready");
         });
-
-        update();
     }
 
     @FXML
@@ -307,21 +303,22 @@ public class Controller implements Initializable {
         animationTimeline.stop();
         model.setTime(0);
 
-        System.out.println("Update");
-
-        KeyValue keyValue = new KeyValue(model.timeProperty(), model.getMaxTime());
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(10000), event -> model.setTime(0), keyValue);
-        animationTimeline.getKeyFrames().setAll(keyFrame);
-
         service.restart();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        fieldMethod.getItems().addAll(methods);
+        fieldMethod.getItems().addAll(Processor.Type.values());
         fieldMethod.getSelectionModel().selectFirst();
 
         reset();
+    }
+
+    @FXML
+    public void stopService() {
+        if (service != null) {
+            service.cancel();
+        }
     }
 
     private static class CustomConverter extends NumberStringConverter {
