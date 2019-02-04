@@ -1,6 +1,5 @@
 package ru.shemplo.dm.course.physics.methods;
 
-import javafx.scene.chart.XYChart;
 import ru.shemplo.dm.course.physics.Model;
 import ru.shemplo.dm.course.physics.ProcessorResult;
 
@@ -17,41 +16,34 @@ public class RandomProcessor extends Processor {
     }
 
     @Override
-    protected ProcessorResult call() throws Exception {
-        int ticks = model.getTicks();
-        int coords = model.getCoords();
-        double maxCoord = model.getMaxCoord();
-        double maxTime = model.getMaxTime();
-
-        System.out.println(ticks + " x " + coords);
-
+    protected ProcessorResult call() {
         updateProgress(0, ticks * 3);
 
-        List<XYChart.Series<Number, Number>> dataX = new ArrayList<>();
+        List<double[]> dataX = new ArrayList<>();
         for (int t = 0; t < ticks; t++) {
-            XYChart.Series<Number, Number> series = new XYChart.Series<>();
+            double[] series = new double[coords];
             for (int z = 0; z < coords; z++) {
-                series.getData().add(new XYChart.Data<>(z * model.getStepCoord(), random.nextInt(10)));
+                series[z] = random.nextDouble();
             }
             dataX.add(series);
             updateProgress(t, ticks * 3);
         }
 
-        List<XYChart.Series<Number, Number>> dataT = new ArrayList<>();
+        List<double[]> dataT = new ArrayList<>();
         for (int t = 0; t < ticks; t++) {
-            XYChart.Series<Number, Number> series = new XYChart.Series<>();
-            for (int z = 0; z < 20; z++) {
-                series.getData().add(new XYChart.Data<>(z * model.getStepCoord(), random.nextInt(10)));
+            double[] series = new double[coords];
+            for (int z = 0; z < coords; z++) {
+                series[z] = random.nextDouble();
             }
             dataT.add(series);
             updateProgress(ticks + t, ticks * 3);
         }
 
-        List<XYChart.Series<Number, Number>> dataW = new ArrayList<>();
+        List<double[]> dataW = new ArrayList<>();
         for (int t = 0; t < ticks; t++) {
-            XYChart.Series<Number, Number> series = new XYChart.Series<>();
-            for (int z = 0; z < 20; z++) {
-                series.getData().add(new XYChart.Data<>(z * model.getStepCoord(), random.nextInt(10)));
+            double[] series = new double[coords];
+            for (int z = 0; z < coords; z++) {
+                series[z] = random.nextDouble();
             }
             dataW.add(series);
             updateProgress(2 * ticks + t, ticks * 3);

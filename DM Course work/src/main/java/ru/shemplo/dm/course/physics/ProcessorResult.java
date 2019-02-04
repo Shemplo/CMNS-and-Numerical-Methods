@@ -1,34 +1,32 @@
 package ru.shemplo.dm.course.physics;
 
-import javafx.scene.chart.XYChart;
-
 import java.util.List;
 
 public class ProcessorResult {
 
-    private final List<XYChart.Series<Number, Number>> dataX;
+    private final List<double[]> dataX;
 
-    private final List<XYChart.Series<Number, Number>> dataT;
+    private final List<double[]> dataT;
 
-    private final List<XYChart.Series<Number, Number>> dataW;
+    private final List<double[]> dataW;
 
-    public ProcessorResult(List<XYChart.Series<Number, Number>> dataX,
-                           List<XYChart.Series<Number, Number>> dataT,
-                           List<XYChart.Series<Number, Number>> dataW) {
+    public ProcessorResult(List<double[]> dataX,
+                           List<double[]> dataT,
+                           List<double[]> dataW) {
         this.dataX = dataX;
         this.dataT = dataT;
         this.dataW = dataW;
     }
 
-    public List<XYChart.Series<Number, Number>> getDataX() {
+    public List<double[]> getDataX() {
         return dataX;
     }
 
-    public List<XYChart.Series<Number, Number>> getDataT() {
+    public List<double[]> getDataT() {
         return dataT;
     }
 
-    public List<XYChart.Series<Number, Number>> getDataW() {
+    public List<double[]> getDataW() {
         return dataW;
     }
 }

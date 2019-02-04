@@ -22,6 +22,8 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(layout);
         Scene scene = new Scene(root, 1280, 720);
         stage.setScene(scene);
+        stage.setTitle("Курсовая работа");
+        stage.setIconified(false);
         stage.show();
     }
 }

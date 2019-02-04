@@ -6,6 +6,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -254,42 +255,72 @@ public class Controller implements Initializable {
         NumberAxis chartWAxisX = (NumberAxis) chartW.getXAxis();
         chartWAxisX.upperBoundProperty().bind(model.maxCoordProperty());
 
-        chartX.dataProperty().bind(Bindings.createObjectBinding(
+        XYChart.Series<Number, Number> seriesX = new XYChart.Series<>();
+        chartX.getData().add(seriesX);
+        seriesX.dataProperty().bind(Bindings.createObjectBinding(
                 () -> {
                     int index = (int) Math.round(model.getTime() / model.getStepTime());
-                    XYChart.Series<Number, Number> series = model.getDataX().size() > index
-                            ? model.getDataX().get(index)
-                            : new XYChart.Series<>();
-                    return FXCollections.singletonObservableList(series);
+                    ObservableList<double[]> dataX = model.getDataX();
+                    if (dataX.size() > index) {
+                        double[] values = dataX.get(index);
+                        ObservableList<XYChart.Data<Number, Number>> result = FXCollections.observableArrayList();
+                        for (int i = 0; i < values.length; i++) {
+                            result.add(new XYChart.Data<>(i * model.getStepCoord(), values[i]));
+                        }
+                        return result;
+                    } else {
+                        return FXCollections.emptyObservableList();
+                    }
                 },
                 model.timeProperty(),
                 model.stepTimeProperty(),
+                model.stepCoordProperty(),
                 model.dataXProperty()
         ));
 
-        chartT.dataProperty().bind(Bindings.createObjectBinding(
+        XYChart.Series<Number, Number> seriesT = new XYChart.Series<>();
+        chartT.getData().add(seriesT);
+        seriesT.dataProperty().bind(Bindings.createObjectBinding(
                 () -> {
                     int index = (int) Math.round(model.getTime() / model.getStepTime());
-                    XYChart.Series<Number, Number> series = model.getDataT().size() > index
-                            ? model.getDataT().get(index)
-                            : new XYChart.Series<>();
-                    return FXCollections.singletonObservableList(series);
+                    ObservableList<double[]> dataT = model.getDataT();
+                    if (dataT.size() > index) {
+                        double[] values = dataT.get(index);
+                        ObservableList<XYChart.Data<Number, Number>> result = FXCollections.observableArrayList();
+                        for (int i = 0; i < values.length; i++) {
+                            result.add(new XYChart.Data<>(i * model.getStepCoord(), values[i]));
+                        }
+                        return result;
+                    } else {
+                        return FXCollections.emptyObservableList();
+                    }
                 },
                 model.timeProperty(),
                 model.stepTimeProperty(),
+                model.stepCoordProperty(),
                 model.dataTProperty()
         ));
 
-        chartW.dataProperty().bind(Bindings.createObjectBinding(
+        XYChart.Series<Number, Number> seriesW = new XYChart.Series<>();
+        chartW.getData().add(seriesW);
+        seriesW.dataProperty().bind(Bindings.createObjectBinding(
                 () -> {
                     int index = (int) Math.round(model.getTime() / model.getStepTime());
-                    XYChart.Series<Number, Number> series = model.getDataW().size() > index
-                            ? model.getDataW().get(index)
-                            : new XYChart.Series<>();
-                    return FXCollections.singletonObservableList(series);
+                    ObservableList<double[]> dataW = model.getDataW();
+                    if (dataW.size() > index) {
+                        double[] values = dataW.get(index);
+                        ObservableList<XYChart.Data<Number, Number>> result = FXCollections.observableArrayList();
+                        for (int i = 0; i < values.length; i++) {
+                            result.add(new XYChart.Data<>(i * model.getStepCoord(), values[i]));
+                        }
+                        return result;
+                    } else {
+                        return FXCollections.emptyObservableList();
+                    }
                 },
                 model.timeProperty(),
                 model.stepTimeProperty(),
+                model.stepCoordProperty(),
                 model.dataWProperty()
         ));
 

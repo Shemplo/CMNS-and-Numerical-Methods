@@ -4,7 +4,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.chart.XYChart;
 import ru.shemplo.dm.course.physics.methods.Processor;
 
 /**
@@ -30,7 +29,7 @@ public class Model {
      * Maximum time
      * Максимальное значение времени
      */
-    private final ReadOnlyDoubleWrapper maxTime = new ReadOnlyDoubleWrapper();
+    private final ReadOnlyDoubleWrapper maxTime = new ReadOnlyDoubleWrapper(500);
 
     /**
      * Time step size
@@ -42,7 +41,7 @@ public class Model {
      * Maximum coordinate
      * Максимальное значение координаты
      */
-    private final ReadOnlyDoubleWrapper maxCoord = new ReadOnlyDoubleWrapper();
+    private final ReadOnlyDoubleWrapper maxCoord = new ReadOnlyDoubleWrapper(0.03);
 
     /**
      * Coordinate step size
@@ -171,35 +170,25 @@ public class Model {
     /**
      * Данные для графика X для всех возможных значений времени
      */
-    private ListProperty<XYChart.Series<Number, Number>> dataX
+    private ListProperty<double[]> dataX
             = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     /**
      * Данные для графика T для всех возможных значений времени
      */
-    private ListProperty<XYChart.Series<Number, Number>> dataT
+    private ListProperty<double[]> dataT
             = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     /**
      * Данные для графика W для всех возможных значений времени
      */
-    private ListProperty<XYChart.Series<Number, Number>> dataW
+    private ListProperty<double[]> dataW
             = new SimpleListProperty<>(FXCollections.observableArrayList());
-
-    /**
-     * Количество рассчитываемых моментов времени
-     */
-    private ReadOnlyIntegerWrapper ticks = new ReadOnlyIntegerWrapper();
-
-    /**
-     * Количество рассчитываемых координат
-     */
-    private ReadOnlyIntegerWrapper coords = new ReadOnlyIntegerWrapper();
 
     public Model() {
         dt.bind(q.divide(c));
         tm.bind(t0.add(dt));
-        kappa.bind(lambda.divide(rho).divide(c));
+        kappa.bind(lambda.divide(rho.multiply(c)));
         beta.bind(r.multiply(tm).divide(e));
         gamma.bind(r.multiply(tm).multiply(tm).divide(e).divide(dt));
         activated.bind(beta.lessThan(1).and(gamma.lessThan(1)));
@@ -221,23 +210,11 @@ public class Model {
             time.setValue(value - value % stepTime.doubleValue());
         });
 
-        ticks.bind(Bindings.createIntegerBinding(
-                () -> (int) Math.ceil(getMaxTime() / getStepTime()) + 1,
-                maxTime,
-                stepTime
-        ));
-
-        coords.bind(Bindings.createIntegerBinding(
-                () -> (int) Math.ceil(getMaxCoord() / getStepCoord()) + 1,
-                maxCoord,
-                stepCoord
-        ));
-
         u.bind(Bindings.createDoubleBinding(
                 () -> Math.sqrt(2 * getK() * getLambda() / (getQ() * getRho() * getDt())
                         * Math.pow(getR() * getTm() * getTm() / getE(), 2)
                         * getT0() / getTm()
-                        * Math.exp(getE() / (getR() * getTm()))),
+                        * Math.exp(getE() / (getR() * getTm()))), // FIXME: Возможно, перед E нужен минус
                 k, lambda, q, rho, dt, r, tm, e, t0
         ));
 
@@ -245,16 +222,23 @@ public class Model {
         deltaR.bind(beta.multiply(deltaH));
         deltaD.bind(d.divide(u));
         le.bind(deltaD.divide(deltaH));
-        
-        maxTime.bind(stepTime.multiply(100));
 
         // Длина расчётной области должна быть больше толщины зоны подогрева
-        maxCoord.bind(Bindings.max(stepCoord.multiply(100), deltaH.multiply(10)));
+        /*maxCoord.bind(Bindings.max(
+                stepCoord.multiply(100),
+                deltaH.multiply(10)
+        ));
+
+        maxTime.bind(Bindings.max(
+                stepTime.multiply(100),
+                deltaH.multiply(10).divide(u)
+        ));
+
+        // На толщине зоны реакции должно укладываться несколько пространственных шагов
+        stepCoord.bind(deltaR.divide(5)); // FIXME: Возможно, stepCoord должно быть меньше, но почти равно deltaR
 
         // На времени продвижения волны на толщину зоны реакции должно укладываться несколько временных шагов
-        stepTime.bind(deltaR.divide(u).divide(5));
-        // На толщине зоны реакции должно укладываться несколько пространственных шагов
-        stepCoord.bind(deltaR.divide(5));
+        stepTime.bind(deltaR.divide(u).divide(5));*/
     }
 
     /**
@@ -266,17 +250,17 @@ public class Model {
     }
 
     /**
-     * Unknown code :)
+     * Производная dW/dX
      */
-    public double getdWdA(double a, double t) {
-        return -getAlpha() * getK() * Math.pow(a, getAlpha() - 1) * Math.exp(-getE() / (getR() * t));
+    public double getdWdX(double x, double t) {
+        return -getK() * getAlpha() * Math.pow(x, getAlpha() - 1) * Math.exp(-getE() / (getR() * t));
     }
 
     /**
-     * Unknown code :)
+     * Производная dW/dT
      */
-    public double getdWdT(double a, double t) {
-        return -getE() * getK() * Math.pow(a, getAlpha()) * Math.exp(-getE() / (getR() * t)) / (getR() * Math.pow(t, 2));
+    public double getdWdT(double x, double t) {
+        return -getK() * Math.pow(x, getAlpha()) * Math.exp(-getE() / (getR() * t)) * getE() / (getR() * Math.pow(t, 2));
     }
 
     /* GENERATED METHODS */
@@ -285,32 +269,24 @@ public class Model {
         return processor.get();
     }
 
-    public ObjectProperty<Processor.Type> processorProperty() {
-        return processor;
-    }
-
     public void setProcessor(Processor.Type processor) {
         this.processor.set(processor);
     }
 
-    public int getCoords() {
-        return coords.get();
-    }
-
-    public ReadOnlyIntegerProperty coordsProperty() {
-        return coords.getReadOnlyProperty();
+    public ObjectProperty<Processor.Type> processorProperty() {
+        return processor;
     }
 
     public double getMaxCoord() {
         return maxCoord.get();
     }
 
-    public DoubleProperty maxCoordProperty() {
-        return maxCoord;
-    }
-
     public void setMaxCoord(double maxCoord) {
         this.maxCoord.set(maxCoord);
+    }
+
+    public DoubleProperty maxCoordProperty() {
+        return maxCoord;
     }
 
     public double getLe() {
@@ -353,47 +329,39 @@ public class Model {
         return u.getReadOnlyProperty();
     }
 
-    public int getTicks() {
-        return ticks.get();
-    }
-
-    public ReadOnlyIntegerProperty ticksProperty() {
-        return ticks.getReadOnlyProperty();
-    }
-
-    public ObservableList<XYChart.Series<Number, Number>> getDataX() {
+    public ObservableList<double[]> getDataX() {
         return dataX.get();
     }
 
-    public void setDataX(ObservableList<XYChart.Series<Number, Number>> dataX) {
+    public void setDataX(ObservableList<double[]> dataX) {
         this.dataX.set(dataX);
     }
 
-    public ListProperty<XYChart.Series<Number, Number>> dataXProperty() {
+    public ListProperty<double[]> dataXProperty() {
         return dataX;
     }
 
-    public ObservableList<XYChart.Series<Number, Number>> getDataT() {
+    public ObservableList<double[]> getDataT() {
         return dataT.get();
     }
 
-    public void setDataT(ObservableList<XYChart.Series<Number, Number>> dataT) {
+    public void setDataT(ObservableList<double[]> dataT) {
         this.dataT.set(dataT);
     }
 
-    public ListProperty<XYChart.Series<Number, Number>> dataTProperty() {
+    public ListProperty<double[]> dataTProperty() {
         return dataT;
     }
 
-    public ObservableList<XYChart.Series<Number, Number>> getDataW() {
+    public ObservableList<double[]> getDataW() {
         return dataW.get();
     }
 
-    public void setDataW(ObservableList<XYChart.Series<Number, Number>> dataW) {
+    public void setDataW(ObservableList<double[]> dataW) {
         this.dataW.set(dataW);
     }
 
-    public ListProperty<XYChart.Series<Number, Number>> dataWProperty() {
+    public ListProperty<double[]> dataWProperty() {
         return dataW;
     }
 
