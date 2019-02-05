@@ -330,6 +330,21 @@ public class Controller implements Initializable {
             model.getDataT().setAll(result.getDataT());
             model.getDataW().setAll(result.getDataW());
 
+            ProcessorResult.Bounds boundsX = result.getBoundsX();
+            NumberAxis chartXAxisY = (NumberAxis) chartX.getYAxis();
+            chartXAxisY.setLowerBound(boundsX.getMin());
+            chartXAxisY.setUpperBound(boundsX.getMax());
+
+            ProcessorResult.Bounds boundsT = result.getBoundsT();
+            NumberAxis chartTAxisY = (NumberAxis) chartT.getYAxis();
+            chartTAxisY.setLowerBound(boundsT.getMin());
+            chartTAxisY.setUpperBound(boundsT.getMax());
+
+            ProcessorResult.Bounds boundsW = result.getBoundsW();
+            NumberAxis chartWAxisY = (NumberAxis) chartW.getYAxis();
+            chartWAxisY.setLowerBound(boundsW.getMin());
+            chartWAxisY.setUpperBound(boundsW.getMax());
+
             KeyValue keyValue = new KeyValue(model.timeProperty(), model.getMaxTime());
             KeyFrame keyFrame = new KeyFrame(Duration.millis(10000), event -> model.setTime(0), keyValue);
             animationTimeline.getKeyFrames().setAll(keyFrame);

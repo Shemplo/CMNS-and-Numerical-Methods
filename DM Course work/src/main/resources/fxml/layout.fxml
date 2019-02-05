@@ -52,7 +52,7 @@
                 <NumberAxis autoRanging="false" label="Координата"/>
             </xAxis>
             <yAxis>
-                <NumberAxis label="Концентрация реагента"/>
+                <NumberAxis autoRanging="false" label="Концентрация реагента"/>
             </yAxis>
         </LineChart>
 
@@ -69,7 +69,7 @@
                 <NumberAxis autoRanging="false" label="Координата"/>
             </xAxis>
             <yAxis>
-                <NumberAxis label="Скорость реакции"/>
+                <NumberAxis autoRanging="false" label="Скорость реакции"/>
             </yAxis>
         </LineChart>
 
@@ -86,7 +86,7 @@
                 <NumberAxis autoRanging="false" label="Координата"/>
             </xAxis>
             <yAxis>
-                <NumberAxis label="Температура"/>
+                <NumberAxis autoRanging="false" label="Температура"/>
             </yAxis>
         </LineChart>
 
