@@ -71,6 +71,12 @@ public class Controller implements Initializable {
     private TextField fieldStepCoord;
 
     @FXML
+    private TextField fieldMaxTime;
+
+    @FXML
+    private TextField fieldMaxCoord;
+
+    @FXML
     private TextField fieldK;
 
     @FXML
@@ -164,6 +170,8 @@ public class Controller implements Initializable {
 
         Bindings.bindBidirectional(fieldStepTime.textProperty(), model.stepTimeProperty(), converter);
         Bindings.bindBidirectional(fieldStepCoord.textProperty(), model.stepCoordProperty(), converter);
+        Bindings.bindBidirectional(fieldMaxTime.textProperty(), model.maxTimeProperty(), converter);
+        Bindings.bindBidirectional(fieldMaxCoord.textProperty(), model.maxCoordProperty(), converter);
         Bindings.bindBidirectional(fieldK.textProperty(), model.kProperty(), converter);
         Bindings.bindBidirectional(fieldE.textProperty(), model.eProperty(), converter);
         Bindings.bindBidirectional(fieldAlpha.textProperty(), model.alphaProperty(), converter);

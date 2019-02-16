@@ -167,7 +167,21 @@
             <HBox>
                 <LatexView>\Delta z =</LatexView>
                 <Region HBox.hgrow="ALWAYS"/>
-                <TextField fx:id="fieldStepCoord"/>
+                <TextField disable="true" fx:id="fieldStepCoord"/>
+            </HBox>
+
+            <Label>Максимальное время</Label>
+            <HBox>
+                <LatexView>t_{max} =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField disable="true" fx:id="fieldMaxTime"/>
+            </HBox>
+
+            <Label>Максимальная координата</Label>
+            <HBox>
+                <LatexView>z_{max} =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField disable="true" fx:id="fieldMaxCoord"/>
             </HBox>
 
             <Label>Константа скорости реакции</Label>
@@ -272,8 +286,7 @@
 
             <Label>Скорость распространения волны</Label>
             <HBox>
-                <LatexView>U \approx \sqrt{\frac{2K\lambda}{Q\rho\Delta T} \left(\frac{R T_m^2}{E}\right)
-                    \frac{T_0}{T_m} \exp{\frac{E}{R T_m}}} =
+                <LatexView>U \approx \sqrt{\frac{2K\lambda}{Q\rho\Delta T} \left(\frac{R T_m^2}{E}\right) \exp\left(-\frac{E}{R T_m}\right)} =
                 </LatexView>
             </HBox>
             <HBox>

@@ -24,24 +24,23 @@ public class DefaultProcessor extends Processor {
         this.ti = 1000; // FIXME: Это что за покемон?
         this.dx2 = dx * dx;
 
-        double[] T0s = new double[coords];
-        Arrays.fill(T0s, model.getT0());
-        Ts.add(T0s);
-
-        double[] A0s = new double[coords];
-        Arrays.fill(A0s, 1.0D);
-        Xs.add(A0s);
-
-        double[] W0s = new double[coords];
-        for (int i = 0; i < coords; i++) {
-            W0s[i] = Math.abs(model.getW(A0s[i], T0s[i]));
-        }
-        Ws.add(W0s);
     }
 
     @SuppressWarnings("PointlessArithmeticExpression")
     @Override
     protected ProcessorResult call() {
+
+        double[] X0s = getInitialStepX();
+        Xs.add(X0s);
+
+        double[] T0s = getInitialStepT();
+        Ts.add(T0s);
+
+        double[] W0s = new double[coords];
+        for (int i = 0; i < coords; i++) {
+            W0s[i] = model.getW(X0s[i], T0s[i]);
+        }
+        Ws.add(W0s);
 
         for (int i = Ws.size(); i < ticks; i = Ws.size()) {
             double[][] equations = new double[2 * coords][2 * coords];
@@ -117,7 +116,7 @@ public class DefaultProcessor extends Processor {
             for (int x = 0; x < coords; x++) {
                 rX[x] = result[2 * x + 0];
                 rT[x] = result[2 * x + 1];
-                rW[x] = Math.abs(model.getW(rX[x], rT[x]));
+                rW[x] = model.getW(rX[x], rT[x]);
             }
             Xs.add(rX);
             Ts.add(rT);
@@ -127,5 +126,15 @@ public class DefaultProcessor extends Processor {
         }
 
         return new ProcessorResult(Xs, Ts, Ws);
+    }
+
+    @Override
+    public double[] getStepX(double[] oldX, double[] oldT) {
+        return new double[0];
+    }
+
+    @Override
+    public double[] getStepT(double[] oldX, double[] oldT) {
+        return new double[0];
     }
 }

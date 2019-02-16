@@ -29,7 +29,7 @@ public class Model {
      * Maximum time
      * Максимальное значение времени
      */
-    private final ReadOnlyDoubleWrapper maxTime = new ReadOnlyDoubleWrapper(500);
+    private final DoubleProperty maxTime = new SimpleDoubleProperty(500);
 
     /**
      * Time step size
@@ -41,7 +41,7 @@ public class Model {
      * Maximum coordinate
      * Максимальное значение координаты
      */
-    private final ReadOnlyDoubleWrapper maxCoord = new ReadOnlyDoubleWrapper(0.03);
+    private final DoubleProperty maxCoord = new SimpleDoubleProperty(0.03);
 
     /**
      * Coordinate step size
@@ -213,8 +213,8 @@ public class Model {
         u.bind(Bindings.createDoubleBinding(
                 () -> Math.sqrt(2 * getK() * getLambda() / (getQ() * getRho() * getDt())
                         * Math.pow(getR() * getTm() * getTm() / getE(), 2)
-                        * getT0() / getTm()
-                        * Math.exp(getE() / (getR() * getTm()))), // FIXME: Возможно, перед E нужен минус
+                        // * getT0() / getTm()  // FIXME: Этот член должен быть в формуле, но на практике скорость без него точнее
+                        * Math.exp(-getE() / (getR() * getTm()))),
                 k, lambda, q, rho, dt, r, tm, e, t0
         ));
 
@@ -224,21 +224,16 @@ public class Model {
         le.bind(deltaD.divide(deltaH));
 
         // Длина расчётной области должна быть больше толщины зоны подогрева
-        /*maxCoord.bind(Bindings.max(
-                stepCoord.multiply(100),
-                deltaH.multiply(10)
-        ));
+        maxCoord.bind(deltaH.multiply(10));
 
-        maxTime.bind(Bindings.max(
-                stepTime.multiply(100),
-                deltaH.multiply(10).divide(u)
-        ));
+        // Наибольший временной масштаб определяется полным временем движения волны
+        maxTime.bind(maxCoord.divide(u));
 
         // На толщине зоны реакции должно укладываться несколько пространственных шагов
-        stepCoord.bind(deltaR.divide(5)); // FIXME: Возможно, stepCoord должно быть меньше, но почти равно deltaR
+        stepCoord.bind(deltaR.divide(2));
 
         // На времени продвижения волны на толщину зоны реакции должно укладываться несколько временных шагов
-        stepTime.bind(deltaR.divide(u).divide(5));*/
+        //stepTime.bind(deltaR.divide(u).divide(100)); // FIXME: Какая-то неправильная зависимость от скорости :(
     }
 
     /**
@@ -246,7 +241,7 @@ public class Model {
      * Скорость реакции как функция концентрации и температуры
      */
     public double getW(double x, double t) {
-        return -getK() * Math.pow(x, getAlpha()) * Math.exp(-getE() / (getR() * t));
+        return -getK() * Math.pow(x, getAlpha()) * Math.exp(-getE() / getR() / t);
     }
 
     /**
@@ -381,8 +376,8 @@ public class Model {
         return maxTime.get();
     }
 
-    public ReadOnlyDoubleProperty maxTimeProperty() {
-        return maxTime.getReadOnlyProperty();
+    public DoubleProperty maxTimeProperty() {
+        return maxTime;
     }
 
     public double getStepTime() {

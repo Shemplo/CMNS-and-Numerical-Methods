@@ -29,9 +29,8 @@ public class ProcessorResult {
 
     private Bounds getBounds(List<double[]> list) {
         double max = Double.NEGATIVE_INFINITY, min = Double.POSITIVE_INFINITY;
-        for (int i = 5; i < list.size() - 5; i++) {
-            double[] array = list.get(i);
-            for (int j = 5; j < array.length - 5; j++) {
+        for (double[] array : list) {
+            for (int j = 0; j < array.length / 2; j++) {
                 max = Math.max(max, array[j]);
                 min = Math.min(min, array[j]);
             }

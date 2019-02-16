@@ -4,14 +4,14 @@ import ru.shemplo.dm.course.physics.Model;
 
 import java.util.function.BiFunction;
 
-public class SomeLatyshevProcessor extends LatyshevProcessor {
+public class ImplicitLatyshevProcessor extends Processor {
 
-    public SomeLatyshevProcessor(Model model) {
+    public ImplicitLatyshevProcessor(Model model) {
         super(model);
     }
 
     @Override
-    public double[] stepT(double[] solT, double[] solX) {
+    public double[] getStepT(double[] oldX, double[] oldT) {
         double lambda = model.getLambda(),
                 dz = 1.0E-4,
                 rho = model.getRho(),
@@ -32,13 +32,13 @@ public class SomeLatyshevProcessor extends LatyshevProcessor {
         freeT[0] = Tm;
         freeT[coords - 1] = 0;
         for (int i = 1; i < coords - 1; i++) {
-            freeT[i] = -rho * Q * W.apply(solX[i], solT[i]) + rho * C / dt * solT[i];
+            freeT[i] = -rho * Q * W.apply(oldX[i], oldT[i]) + rho * C / dt * oldT[i];
         }
         return TridiagonalSolver.solve(matrixT, freeT);
     }
 
     @Override
-    public double[] stepX(double[] solT, double[] solX) {
+    public double[] getStepX(double[] oldX, double[] oldT) {
         double lambda = model.getLambda(),
                 dz = 1.0E-4,
                 rho = model.getRho(),
@@ -55,10 +55,10 @@ public class SomeLatyshevProcessor extends LatyshevProcessor {
                 -D / (dz * dz)
         );
         double[] freeX = new double[coords];
-        freeX[0] = 1;
+        freeX[0] = 0;
         freeX[coords - 1] = 0;
         for (int i = 1; i < coords - 1; i++) {
-            freeX[i] = W.apply(solX[i], solT[i]) + solX[i] / dt;
+            freeX[i] = W.apply(oldX[i], oldT[i]) + oldX[i] / dt;
         }
         return TridiagonalSolver.solve(matrixX, freeX);
     }
