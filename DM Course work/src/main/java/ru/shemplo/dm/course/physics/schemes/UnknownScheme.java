@@ -6,7 +6,7 @@ import ru.shemplo.dm.course.physics.ProcessorResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultScheme extends Scheme {
+public class UnknownScheme extends Scheme {
 
     private final List<double[]>
             Ts = new ArrayList<>(),
@@ -15,7 +15,7 @@ public class DefaultScheme extends Scheme {
 
     private final double dt, dx, dx2, ti;
 
-    public DefaultScheme(Model model) {
+    public UnknownScheme(Model model) {
         super(model);
         this.dt = model.getStepTime();
         this.dx = model.getStepCoord();

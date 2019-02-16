@@ -98,9 +98,9 @@ public abstract class Scheme extends Task<ProcessorResult> {
     }
 
     public enum Type {
-        DEFAULT("Процессор Андрея", DefaultScheme::new),
-        EXPLICIT("Explicit процессор", ExplicitScheme::new),
-        IMPLICIT_LAT("Implicit процессор Латышева", ImplicitLatyshevScheme::new);
+        EXPLICIT("Явная схема", ExplicitScheme::new),
+        IMPLICIT_LAT("Неявная схема Латышева", ImplicitLatyshevScheme::new),
+        UNKNOWN("Непонятная схема Андрея", UnknownScheme::new);
 
         private final String name;
         private final Function<Model, Task<ProcessorResult>> constructor;
