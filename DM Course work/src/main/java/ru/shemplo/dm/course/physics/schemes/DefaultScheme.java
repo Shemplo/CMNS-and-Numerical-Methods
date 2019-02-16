@@ -1,14 +1,12 @@
-package ru.shemplo.dm.course.physics.methods;
+package ru.shemplo.dm.course.physics.schemes;
 
-import ru.shemplo.dm.course.physics.MatrixSolver;
 import ru.shemplo.dm.course.physics.Model;
 import ru.shemplo.dm.course.physics.ProcessorResult;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class DefaultProcessor extends Processor {
+public class DefaultScheme extends Scheme {
 
     private final List<double[]>
             Ts = new ArrayList<>(),
@@ -17,7 +15,7 @@ public class DefaultProcessor extends Processor {
 
     private final double dt, dx, dx2, ti;
 
-    public DefaultProcessor(Model model) {
+    public DefaultScheme(Model model) {
         super(model);
         this.dt = model.getStepTime();
         this.dx = model.getStepCoord();

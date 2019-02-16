@@ -1,12 +1,12 @@
-package ru.shemplo.dm.course.physics.methods;
+package ru.shemplo.dm.course.physics.schemes;
 
 import ru.shemplo.dm.course.physics.Model;
 
 import java.util.function.BiFunction;
 
-public class ImplicitLatyshevProcessor extends Processor {
+public class ImplicitLatyshevScheme extends Scheme {
 
-    public ImplicitLatyshevProcessor(Model model) {
+    public ImplicitLatyshevScheme(Model model) {
         super(model);
     }
 

@@ -4,7 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import ru.shemplo.dm.course.physics.methods.Processor;
+import ru.shemplo.dm.course.physics.schemes.Scheme;
 
 /**
  * Reaction model
@@ -16,7 +16,7 @@ public class Model {
     /**
      * Метод расчёта
      */
-    private final ObjectProperty<Processor.Type> processor
+    private final ObjectProperty<Scheme.Type> processor
             = new SimpleObjectProperty<>();
 
     /**
@@ -260,15 +260,15 @@ public class Model {
 
     /* GENERATED METHODS */
 
-    public Processor.Type getProcessor() {
+    public Scheme.Type getProcessor() {
         return processor.get();
     }
 
-    public void setProcessor(Processor.Type processor) {
+    public void setProcessor(Scheme.Type processor) {
         this.processor.set(processor);
     }
 
-    public ObjectProperty<Processor.Type> processorProperty() {
+    public ObjectProperty<Scheme.Type> processorProperty() {
         return processor;
     }
 

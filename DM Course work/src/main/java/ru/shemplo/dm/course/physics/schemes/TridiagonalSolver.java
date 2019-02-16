@@ -1,4 +1,4 @@
-package ru.shemplo.dm.course.physics.methods;
+package ru.shemplo.dm.course.physics.schemes;
 
 /**
  * Created by Aleksei Latyshev on 03.11.2016.

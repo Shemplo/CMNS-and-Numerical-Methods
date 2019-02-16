@@ -1,4 +1,4 @@
-package ru.shemplo.dm.course.physics;
+package ru.shemplo.dm.course.physics.schemes;
 
 import static java.lang.Math.min;
 

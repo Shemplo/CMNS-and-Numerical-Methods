@@ -1,4 +1,4 @@
-package ru.shemplo.dm.course.physics.methods;
+package ru.shemplo.dm.course.physics.schemes;
 
 import javafx.concurrent.Task;
 import ru.shemplo.dm.course.physics.Model;
@@ -9,13 +9,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-public abstract class Processor extends Task<ProcessorResult> {
+public abstract class Scheme extends Task<ProcessorResult> {
 
     protected final Model model;
 
     protected final int ticks, coords;
 
-    public Processor(Model model) {
+    public Scheme(Model model) {
         this.model = model;
         this.ticks = (int) (Math.ceil(model.getMaxTime() / model.getStepTime()) + 1);
         this.coords = (int) (Math.ceil(model.getMaxCoord() / model.getStepCoord()) + 1);
@@ -98,9 +98,9 @@ public abstract class Processor extends Task<ProcessorResult> {
     }
 
     public enum Type {
-        DEFAULT("Процессор Андрея", DefaultProcessor::new),
-        EXPLICIT("Explicit процессор", ExplicitProcessor::new),
-        IMPLICIT_LAT("Implicit процессор Латышева", ImplicitLatyshevProcessor::new);
+        DEFAULT("Процессор Андрея", DefaultScheme::new),
+        EXPLICIT("Explicit процессор", ExplicitScheme::new),
+        IMPLICIT_LAT("Implicit процессор Латышева", ImplicitLatyshevScheme::new);
 
         private final String name;
         private final Function<Model, Task<ProcessorResult>> constructor;

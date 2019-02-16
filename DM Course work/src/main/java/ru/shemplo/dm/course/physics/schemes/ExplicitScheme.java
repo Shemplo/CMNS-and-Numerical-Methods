@@ -1,12 +1,12 @@
-package ru.shemplo.dm.course.physics.methods;
+package ru.shemplo.dm.course.physics.schemes;
 
 import ru.shemplo.dm.course.physics.Model;
 
 import java.util.function.BiFunction;
 
-public class ExplicitProcessor extends Processor {
+public class ExplicitScheme extends Scheme {
 
-    public ExplicitProcessor(Model model) {
+    public ExplicitScheme(Model model) {
         super(model);
     }
 

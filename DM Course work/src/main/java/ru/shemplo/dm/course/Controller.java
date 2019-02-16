@@ -22,7 +22,7 @@ import javafx.util.converter.NumberStringConverter;
 import ru.shemplo.dm.course.physics.Model;
 import ru.shemplo.dm.course.physics.ProcessorResult;
 import ru.shemplo.dm.course.physics.ProcessorService;
-import ru.shemplo.dm.course.physics.methods.Processor;
+import ru.shemplo.dm.course.physics.schemes.Scheme;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -62,7 +62,7 @@ public class Controller implements Initializable {
     private VBox sidebar;
 
     @FXML
-    private ChoiceBox<Processor.Type> fieldMethod;
+    private ChoiceBox<Scheme.Type> fieldMethod;
 
     @FXML
     private TextField fieldStepTime;
@@ -371,7 +371,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        fieldMethod.getItems().addAll(Processor.Type.values());
+        fieldMethod.getItems().addAll(Scheme.Type.values());
         fieldMethod.getSelectionModel().selectFirst();
 
         reset();
