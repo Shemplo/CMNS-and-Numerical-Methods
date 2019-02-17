@@ -213,7 +213,7 @@ public class Model {
         u.bind(Bindings.createDoubleBinding(
                 () -> Math.sqrt(2 * getK() * getLambda() / (getQ() * getRho() * getDt())
                         * Math.pow(getR() * getTm() * getTm() / getE(), 2)
-                        // * getT0() / getTm()  // FIXME: Этот член должен быть в формуле, но на практике скорость без него точнее
+                        * getT0() / getTm()
                         * Math.exp(-getE() / (getR() * getTm()))),
                 k, lambda, q, rho, dt, r, tm, e, t0
         ));
@@ -226,14 +226,14 @@ public class Model {
         // Длина расчётной области должна быть больше толщины зоны подогрева
         maxCoord.bind(deltaH.multiply(10));
 
-        // Наибольший временной масштаб определяется полным временем движения волны
-        maxTime.bind(maxCoord.divide(u));
-
         // На толщине зоны реакции должно укладываться несколько пространственных шагов
         stepCoord.bind(deltaR.divide(2));
 
+        // Наибольший временной масштаб определяется полным временем движения волны
+        // maxTime.bind(maxCoord.divide(u));
+
         // На времени продвижения волны на толщину зоны реакции должно укладываться несколько временных шагов
-        //stepTime.bind(deltaR.divide(u).divide(100)); // FIXME: Какая-то неправильная зависимость от скорости :(
+        // stepTime.bind(stepCoord.divide(u)); // FIXME: Какая-то неправильная зависимость от скорости :(
     }
 
     /**

@@ -25,6 +25,7 @@ import ru.shemplo.dm.course.physics.ProcessorService;
 import ru.shemplo.dm.course.physics.schemes.Scheme;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
 import static javafx.animation.Animation.Status.RUNNING;
@@ -148,6 +149,12 @@ public class Controller implements Initializable {
     @FXML
     private LineChart<Number, Number> chartW;
 
+    private XYChart.Series<Number, Number> seriesX = new XYChart.Series<>();
+
+    private XYChart.Series<Number, Number> seriesT = new XYChart.Series<>();
+
+    private XYChart.Series<Number, Number> seriesW = new XYChart.Series<>();
+
     @FXML
     private void toggleAnimation() {
         if (animationTimeline.getStatus() == RUNNING) {
@@ -256,15 +263,16 @@ public class Controller implements Initializable {
 
         NumberAxis chartXAxisX = (NumberAxis) chartX.getXAxis();
         chartXAxisX.upperBoundProperty().bind(model.maxCoordProperty());
+        chartXAxisX.tickUnitProperty().bind(model.deltaHProperty());
 
         NumberAxis chartTAxisX = (NumberAxis) chartT.getXAxis();
         chartTAxisX.upperBoundProperty().bind(model.maxCoordProperty());
+        chartTAxisX.tickUnitProperty().bind(model.deltaHProperty());
 
         NumberAxis chartWAxisX = (NumberAxis) chartW.getXAxis();
         chartWAxisX.upperBoundProperty().bind(model.maxCoordProperty());
+        chartWAxisX.tickUnitProperty().bind(model.deltaHProperty());
 
-        XYChart.Series<Number, Number> seriesX = new XYChart.Series<>();
-        chartX.getData().add(seriesX);
         seriesX.dataProperty().bind(Bindings.createObjectBinding(
                 () -> {
                     int index = (int) Math.round(model.getTime() / model.getStepTime());
@@ -286,8 +294,6 @@ public class Controller implements Initializable {
                 model.dataXProperty()
         ));
 
-        XYChart.Series<Number, Number> seriesT = new XYChart.Series<>();
-        chartT.getData().add(seriesT);
         seriesT.dataProperty().bind(Bindings.createObjectBinding(
                 () -> {
                     int index = (int) Math.round(model.getTime() / model.getStepTime());
@@ -309,8 +315,6 @@ public class Controller implements Initializable {
                 model.dataTProperty()
         ));
 
-        XYChart.Series<Number, Number> seriesW = new XYChart.Series<>();
-        chartW.getData().add(seriesW);
         seriesW.dataProperty().bind(Bindings.createObjectBinding(
                 () -> {
                     int index = (int) Math.round(model.getTime() / model.getStepTime());
@@ -338,20 +342,59 @@ public class Controller implements Initializable {
             model.getDataT().setAll(result.getDataT());
             model.getDataW().setAll(result.getDataW());
 
+            chartX.getData().setAll(Collections.singleton(seriesX));
+            chartT.getData().setAll(Collections.singleton(seriesT));
+            chartW.getData().setAll(Collections.singleton(seriesW));
+
+            double ticks = result.getDataX().size();
+
+            for (int i = 0; i < ticks; i += ticks / 10) {
+                double[] values = result.getDataX().get(i);
+                ObservableList<XYChart.Data<Number, Number>> list = FXCollections.observableArrayList();
+                for (int j = 0; j < values.length; j++) {
+                    list.add(new XYChart.Data<>(j * model.getStepCoord(), values[j]));
+                }
+                XYChart.Series<Number, Number> series = new XYChart.Series<>(list);
+                chartX.getData().add(series);
+            }
+
+            for (int i = 0; i < ticks; i += ticks / 10) {
+                double[] values = result.getDataT().get(i);
+                ObservableList<XYChart.Data<Number, Number>> list = FXCollections.observableArrayList();
+                for (int j = 0; j < values.length; j++) {
+                    list.add(new XYChart.Data<>(j * model.getStepCoord(), values[j]));
+                }
+                XYChart.Series<Number, Number> series = new XYChart.Series<>(list);
+                chartT.getData().add(series);
+            }
+
+            for (int i = 0; i < ticks; i += ticks / 10) {
+                double[] values = result.getDataW().get(i);
+                ObservableList<XYChart.Data<Number, Number>> list = FXCollections.observableArrayList();
+                for (int j = 0; j < values.length; j++) {
+                    list.add(new XYChart.Data<>(j * model.getStepCoord(), values[j]));
+                }
+                XYChart.Series<Number, Number> series = new XYChart.Series<>(list);
+                chartW.getData().add(series);
+            }
+
             ProcessorResult.Bounds boundsX = result.getBoundsX();
             NumberAxis chartXAxisY = (NumberAxis) chartX.getYAxis();
             chartXAxisY.setLowerBound(boundsX.getMin());
             chartXAxisY.setUpperBound(boundsX.getMax());
+            chartXAxisY.setTickUnit((boundsX.getMax() - boundsX.getMin()) / 10);
 
             ProcessorResult.Bounds boundsT = result.getBoundsT();
             NumberAxis chartTAxisY = (NumberAxis) chartT.getYAxis();
             chartTAxisY.setLowerBound(boundsT.getMin());
             chartTAxisY.setUpperBound(boundsT.getMax());
+            chartTAxisY.setTickUnit((boundsT.getMax() - boundsT.getMin()) / 10);
 
             ProcessorResult.Bounds boundsW = result.getBoundsW();
             NumberAxis chartWAxisY = (NumberAxis) chartW.getYAxis();
             chartWAxisY.setLowerBound(boundsW.getMin());
             chartWAxisY.setUpperBound(boundsW.getMax());
+            chartWAxisY.setTickUnit((boundsW.getMax() - boundsW.getMin()) / 10);
 
             KeyValue keyValue = new KeyValue(model.timeProperty(), model.getMaxTime());
             KeyFrame keyFrame = new KeyFrame(Duration.millis(10000), event -> model.setTime(0), keyValue);
@@ -395,7 +438,11 @@ public class Controller implements Initializable {
 
         @Override
         public Number fromString(String value) {
-            return Double.parseDouble(value.trim());
+            try {
+                return Double.parseDouble(value.trim());
+            } catch (NumberFormatException e) {
+                return 0.0;
+            }
         }
 
         @Override

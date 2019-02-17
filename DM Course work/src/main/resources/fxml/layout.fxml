@@ -138,7 +138,7 @@
                 hbarPolicy="NEVER"
                 fitToWidth="true"
                 fitToHeight="true"
-                minWidth="420">
+                minWidth="440">
 
         <VBox fx:id="sidebar"
               styleClass="sidebar">
@@ -174,7 +174,7 @@
             <HBox>
                 <LatexView>t_{max} =</LatexView>
                 <Region HBox.hgrow="ALWAYS"/>
-                <TextField disable="true" fx:id="fieldMaxTime"/>
+                <TextField fx:id="fieldMaxTime"/>
             </HBox>
 
             <Label>Максимальная координата</Label>
@@ -286,7 +286,7 @@
 
             <Label>Скорость распространения волны</Label>
             <HBox>
-                <LatexView>U \approx \sqrt{\frac{2K\lambda}{Q\rho\Delta T} \left(\frac{R T_m^2}{E}\right) \exp\left(-\frac{E}{R T_m}\right)} =
+                <LatexView>U \approx \sqrt{\frac{2K\lambda}{Q\rho\Delta T} \left(\frac{R T_m^2}{E}\right)^2 \frac{T_0}{T_m} \exp\left(-\frac{E}{R T_m}\right)} =
                 </LatexView>
             </HBox>
             <HBox>

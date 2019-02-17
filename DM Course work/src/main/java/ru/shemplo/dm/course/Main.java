@@ -24,6 +24,7 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setTitle("Курсовая работа");
         stage.setIconified(false);
+        stage.setMaximized(true);
         stage.show();
     }
 }
