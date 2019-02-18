@@ -1,0 +1,322 @@
+<?import io.github.egormkn.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<HBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ru.shemplo.dm.course.Controller"
+      stylesheets="/css/style.css"
+      styleClass="root"
+      minWidth="640"
+      minHeight="480">
+
+    <GridPane HBox.hgrow="ALWAYS">
+
+        <padding>
+            <Insets top="15" right="15" bottom="15" left="15"/>
+        </padding>
+
+        <VBox alignment="CENTER"
+              GridPane.rowIndex="0"
+              GridPane.columnIndex="0"
+              GridPane.hgrow="ALWAYS"
+              GridPane.vgrow="ALWAYS">
+
+            <Label styleClass="header">Курсовая работа</Label>
+
+            <Region minHeight="25"/>
+
+            <LatexView>
+                \overset{\text{Уравнения, описывающие движение волны}}{
+                \begin{cases}
+                \frac{\partial X}{\partial t} - D \frac{\partial^2 X}{\partial z^2} = W(X, T) \\
+                \frac{\partial T}{\partial t} - \varkappa \frac{\partial^2 T}{\partial z^2} = -\frac{Q}{C} W(X, T)
+                \end{cases}
+                }
+            </LatexView>
+            <LatexView>
+                \text{где } W(X, T) = -K X^\alpha \exp\left(-\frac{E}{R T}\right)
+            </LatexView>
+        </VBox>
+
+        <LineChart fx:id="chartX"
+                   title="X(z)"
+                   createSymbols="false"
+                   animated="false"
+                   legendVisible="false"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="1"
+                   GridPane.vgrow="ALWAYS"
+                   GridPane.hgrow="ALWAYS">
+            <xAxis>
+                <NumberAxis autoRanging="false" label="Координата"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis autoRanging="false" label="Концентрация реагента"/>
+            </yAxis>
+        </LineChart>
+
+        <LineChart fx:id="chartW"
+                   title="W(z)"
+                   createSymbols="false"
+                   animated="false"
+                   legendVisible="false"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="0"
+                   GridPane.vgrow="ALWAYS"
+                   GridPane.hgrow="ALWAYS">
+            <xAxis>
+                <NumberAxis autoRanging="false" label="Координата"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis autoRanging="false" label="Скорость реакции"/>
+            </yAxis>
+        </LineChart>
+
+        <LineChart fx:id="chartT"
+                   title="T(z)"
+                   createSymbols="false"
+                   animated="false"
+                   legendVisible="false"
+                   GridPane.rowIndex="1"
+                   GridPane.columnIndex="1"
+                   GridPane.vgrow="ALWAYS"
+                   GridPane.hgrow="ALWAYS">
+            <xAxis>
+                <NumberAxis autoRanging="false" label="Координата"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis autoRanging="false" label="Температура"/>
+            </yAxis>
+        </LineChart>
+
+        <StackPane
+                GridPane.rowIndex="2"
+                GridPane.columnIndex="0"
+                GridPane.columnSpan="2"
+                GridPane.vgrow="NEVER"
+                GridPane.hgrow="ALWAYS">
+
+            <HBox fx:id="animationPanel"
+                  alignment="CENTER"
+                  spacing="15">
+
+                <Button minWidth="100"
+                        fx:id="animationButton"
+                        HBox.hgrow="NEVER"
+                        onAction="#toggleAnimation">
+                    Пуск
+                </Button>
+
+                <Slider fx:id="sliderTime"
+                        majorTickUnit="1.0"
+                        snapToTicks="true"
+                        HBox.hgrow="ALWAYS"/>
+
+                <StackPane minWidth="100">
+                    <LatexView fx:id="valueTime">T = 0</LatexView>
+                </StackPane>
+            </HBox>
+
+            <HBox fx:id="progressPanel"
+                  alignment="CENTER"
+                  spacing="15">
+
+                <ProgressBar fx:id="progressBar"
+                             HBox.hgrow="ALWAYS"
+                             maxWidth="Infinity"/>
+
+                <Button minWidth="100"
+                        HBox.hgrow="NEVER"
+                        onAction="#stopService"
+                        text="Стоп"/>
+            </HBox>
+        </StackPane>
+    </GridPane>
+
+    <ScrollPane HBox.hgrow="SOMETIMES"
+                hbarPolicy="NEVER"
+                fitToWidth="true"
+                fitToHeight="true"
+                minWidth="440">
+
+        <VBox fx:id="sidebar"
+              styleClass="sidebar">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <HBox spacing="5">
+                <Label styleClass="header">Параметры</Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button onAction="#update" defaultButton="true">Расчёт</Button>
+                <Button onAction="#reset">Сброс</Button>
+            </HBox>
+
+            <Label>Метод решения</Label>
+            <ChoiceBox fx:id="fieldMethod" maxWidth="Infinity"/>
+
+            <Label>Шаг по времени</Label>
+            <HBox>
+                <LatexView>\Delta t =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldStepTime"/>
+            </HBox>
+
+            <Label>Шаг по координате</Label>
+            <HBox>
+                <LatexView>\Delta z =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField disable="true" fx:id="fieldStepCoord"/>
+            </HBox>
+
+            <Label>Максимальное время</Label>
+            <HBox>
+                <LatexView>t_{max} =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldMaxTime"/>
+            </HBox>
+
+            <Label>Максимальная координата</Label>
+            <HBox>
+                <LatexView>z_{max} =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField disable="true" fx:id="fieldMaxCoord"/>
+            </HBox>
+
+            <Label>Константа скорости реакции</Label>
+            <HBox>
+                <LatexView>K =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldK"/>
+            </HBox>
+
+            <Label>Энергия активации реакции</Label>
+            <HBox>
+                <LatexView>E =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldE"/>
+            </HBox>
+
+            <Label>Порядок реакции</Label>
+            <HBox>
+                <LatexView>\alpha =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldAlpha"/>
+            </HBox>
+
+            <Label>Тепловой эффект реакции</Label>
+            <HBox>
+                <LatexView>Q =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldQ"/>
+            </HBox>
+
+            <Label>Начальная температура среды</Label>
+            <HBox>
+                <LatexView>T_0 =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldT0"/>
+            </HBox>
+
+            <Label>Плотность среды</Label>
+            <HBox>
+                <LatexView>\rho =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldRho"/>
+            </HBox>
+
+            <Label>Удельная теплоёмкость среды</Label>
+            <HBox>
+                <LatexView>С =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldC"/>
+            </HBox>
+
+            <Label>Коэффициент теплопроводности среды</Label>
+            <HBox>
+                <LatexView>\lambda =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldLambda"/>
+            </HBox>
+
+            <Label>Коэффициент диффузии реагента</Label>
+            <HBox>
+                <LatexView>D =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldD"/>
+            </HBox>
+
+            <Label>Повышение температуры среды</Label>
+            <HBox>
+                <LatexView>\Delta T = \frac{Q}{C} =</LatexView>
+                <LatexView fx:id="valueDt">0</LatexView>
+            </HBox>
+
+            <Label>Температура адиабатического прохождения реакции</Label>
+            <HBox>
+                <LatexView>T_m = T_0 + \Delta T =</LatexView>
+                <LatexView fx:id="valueTm">0</LatexView>
+            </HBox>
+
+            <Label>Коэффициент температуропроводности</Label>
+            <HBox>
+                <LatexView>\varkappa = \frac{\lambda}{\rho C} =</LatexView>
+                <LatexView fx:id="valueKappa">0</LatexView>
+            </HBox>
+
+            <Label>Универсальная газовая постоянная</Label>
+            <HBox>
+                <LatexView>R =</LatexView>
+                <LatexView fx:id="valueR">0</LatexView>
+            </HBox>
+
+            <Label>Числа Зельдовича–Франк-Каменецкого</Label>
+            <HBox>
+                <LatexView fx:id="valueActivated">\text{Статус реакции}</LatexView>
+            </HBox>
+            <HBox>
+                <LatexView>\beta = \frac{R T_m}{E} =</LatexView>
+                <LatexView fx:id="valueBeta">0</LatexView>
+            </HBox>
+            <HBox>
+                <LatexView>\gamma = \frac{R T_m^2}{E \Delta T} =</LatexView>
+                <LatexView fx:id="valueGamma">0</LatexView>
+            </HBox>
+
+            <Label>Скорость распространения волны</Label>
+            <HBox>
+                <LatexView>U \approx \sqrt{\frac{2K\lambda}{Q\rho\Delta T} \left(\frac{R T_m^2}{E}\right)^2 \frac{T_0}{T_m} \exp\left(-\frac{E}{R T_m}\right)} =
+                </LatexView>
+            </HBox>
+            <HBox>
+                <LatexView>=</LatexView>
+                <LatexView fx:id="valueU">0</LatexView>
+            </HBox>
+
+            <Label>Толщина зоны подогрева</Label>
+            <HBox>
+                <LatexView>\delta_h \approx \varkappa / U =</LatexView>
+                <LatexView fx:id="valueDeltaH">0</LatexView>
+            </HBox>
+
+            <Label>Толщина зоны реакции</Label>
+            <HBox>
+                <LatexView>\delta_r \approx \beta\delta_h =</LatexView>
+                <LatexView fx:id="valueDeltaR">0</LatexView>
+            </HBox>
+
+            <Label>Толщина зоны диффузии</Label>
+            <HBox>
+                <LatexView>\delta_d \approx D/U =</LatexView>
+                <LatexView fx:id="valueDeltaD">0</LatexView>
+            </HBox>
+
+            <Label>Число Льюиса</Label>
+            <HBox>
+                <LatexView>Le \approx \delta_d/\delta_h =</LatexView>
+                <LatexView fx:id="valueLe">0</LatexView>
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</HBox>
