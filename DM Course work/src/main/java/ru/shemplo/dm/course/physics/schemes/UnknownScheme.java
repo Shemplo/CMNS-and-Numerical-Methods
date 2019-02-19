@@ -123,7 +123,7 @@ public class UnknownScheme extends Scheme {
             updateProgress(i, ticks);
         }
 
-        return new ProcessorResult(Xs, Ts, Ws);
+        return new ProcessorResult(Xs, Ts, Ws, new double[coords]);
     }
 
     @Override

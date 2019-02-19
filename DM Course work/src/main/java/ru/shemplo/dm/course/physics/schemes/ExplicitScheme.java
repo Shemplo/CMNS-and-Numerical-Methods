@@ -21,8 +21,12 @@ public class ExplicitScheme extends Scheme {
         answer[0] = model.getTm();
         for (int i = 1; i < coords - 1; i++) {
             answer[i] = oldT[i] + dt * (kappa * (oldT[i + 1] - 2 * oldT[i] + oldT[i - 1]) / dz / dz - Q / C * W.apply(oldX[i], oldT[i]));
-            if (Math.abs(answer[i]) < 1E-40) {
+            if (Math.abs(answer[i]) < 1E-80) {
+                answer[i] = 1E-80;
+            }
+            if (Double.isNaN(answer[i])) {
                 answer[i] = 0;
+                System.err.println("NaN");
             }
         }
         answer[answer.length - 1] = answer[answer.length - 2];
@@ -40,8 +44,12 @@ public class ExplicitScheme extends Scheme {
         answer[0] = 0;
         for (int i = 1; i < coords - 1; i++) {
             answer[i] = oldX[i] + dt * (D * (oldX[i + 1] - 2 * oldX[i] + oldX[i - 1]) / dz / dz + W.apply(oldX[i], oldT[i]));
-            if (Math.abs(answer[i]) < 1E-40) {
+            if (Math.abs(answer[i]) < 1E-80) {
+                answer[i] = 1E-80;
+            }
+            if (Double.isNaN(answer[i])) {
                 answer[i] = 0;
+                System.err.println("NaN");
             }
         }
         answer[answer.length - 1] = answer[answer.length - 2];

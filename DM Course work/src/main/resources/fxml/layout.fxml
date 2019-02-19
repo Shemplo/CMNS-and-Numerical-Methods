@@ -156,34 +156,6 @@
             <Label>Метод решения</Label>
             <ChoiceBox fx:id="fieldMethod" maxWidth="Infinity"/>
 
-            <Label>Шаг по времени</Label>
-            <HBox>
-                <LatexView>\Delta t =</LatexView>
-                <Region HBox.hgrow="ALWAYS"/>
-                <TextField fx:id="fieldStepTime"/>
-            </HBox>
-
-            <Label>Шаг по координате</Label>
-            <HBox>
-                <LatexView>\Delta z =</LatexView>
-                <Region HBox.hgrow="ALWAYS"/>
-                <TextField disable="true" fx:id="fieldStepCoord"/>
-            </HBox>
-
-            <Label>Максимальное время</Label>
-            <HBox>
-                <LatexView>t_{max} =</LatexView>
-                <Region HBox.hgrow="ALWAYS"/>
-                <TextField fx:id="fieldMaxTime"/>
-            </HBox>
-
-            <Label>Максимальная координата</Label>
-            <HBox>
-                <LatexView>z_{max} =</LatexView>
-                <Region HBox.hgrow="ALWAYS"/>
-                <TextField disable="true" fx:id="fieldMaxCoord"/>
-            </HBox>
-
             <Label>Константа скорости реакции</Label>
             <HBox>
                 <LatexView>K =</LatexView>
@@ -245,6 +217,32 @@
                 <LatexView>D =</LatexView>
                 <Region HBox.hgrow="ALWAYS"/>
                 <TextField fx:id="fieldD"/>
+            </HBox>
+
+            <Label>Шаг по времени</Label>
+            <HBox>
+                <LatexView>\Delta t =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldStepTime"/>
+            </HBox>
+
+            <Label>Максимальное время</Label>
+            <HBox>
+                <LatexView>t_{max} =</LatexView>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="fieldMaxTime"/>
+            </HBox>
+
+            <Label>Шаг по координате</Label>
+            <HBox>
+                <LatexView>\Delta z = \delta_r / 2 =</LatexView>
+                <LatexView fx:id="valueStepCoord">0</LatexView>
+            </HBox>
+
+            <Label>Максимальная координата</Label>
+            <HBox>
+                <LatexView>z_{max} = \delta_h * 10 =</LatexView>
+                <LatexView fx:id="valueMaxCoord">0</LatexView>
             </HBox>
 
             <Label>Повышение температуры среды</Label>

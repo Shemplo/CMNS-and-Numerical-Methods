@@ -41,6 +41,9 @@ public abstract class Scheme extends Task<ProcessorResult> {
                 dataT = new ArrayList<>(),
                 dataW = new ArrayList<>();
 
+        double[] trendW = new double[coords];
+        Arrays.fill(trendW, Double.MAX_VALUE);
+
         try {
             double[] stepX = getInitialStepX();
             double[] stepT = getInitialStepT();
@@ -49,6 +52,9 @@ public abstract class Scheme extends Task<ProcessorResult> {
                 double[] stepW = new double[coords];
                 for (int i = 0; i < coords; i++) {
                     stepW[i] = model.getW(stepX[i], stepT[i]);
+                    if (stepW[i] < trendW[i]) {
+                        trendW[i] = stepW[i];
+                    }
                 }
 
                 if (time % (ticks / 30) == 0) {
@@ -76,7 +82,7 @@ public abstract class Scheme extends Task<ProcessorResult> {
             e.printStackTrace();
         }
 
-        return new ProcessorResult(dataX, dataT, dataW);
+        return new ProcessorResult(dataX, dataT, dataW, trendW);
     }
 
     public abstract double[] getStepX(double[] oldX, double[] oldT);
@@ -99,8 +105,8 @@ public abstract class Scheme extends Task<ProcessorResult> {
 
     public enum Type {
         EXPLICIT("Явная схема", ExplicitScheme::new),
-        IMPLICIT_LAT("Неявная схема Латышева", ImplicitLatyshevScheme::new),
-        UNKNOWN("Непонятная схема Андрея", UnknownScheme::new);
+        // UNKNOWN("Непонятная схема Андрея", UnknownScheme::new)
+        IMPLICIT("Неявная схема"/* Латышева*/, ImplicitLatyshevScheme::new);
 
         private final String name;
         private final Function<Model, Task<ProcessorResult>> constructor;
