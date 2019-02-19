@@ -16,12 +16,16 @@ public class ProcessorResult {
 
     private final Bounds boundsW;
 
+    private final double[] trendW;
+
     public ProcessorResult(List<double[]> dataX,
                            List<double[]> dataT,
-                           List<double[]> dataW) {
+                           List<double[]> dataW,
+                           double[] trendW) {
         this.dataX = dataX;
         this.dataT = dataT;
         this.dataW = dataW;
+        this.trendW = trendW;
         this.boundsX = getBounds(dataX);
         this.boundsT = getBounds(dataT);
         this.boundsW = getBounds(dataW);
@@ -60,6 +64,10 @@ public class ProcessorResult {
 
     public Bounds getBoundsW() {
         return boundsW;
+    }
+
+    public double[] getTrendW() {
+        return trendW;
     }
 
     public static class Bounds {

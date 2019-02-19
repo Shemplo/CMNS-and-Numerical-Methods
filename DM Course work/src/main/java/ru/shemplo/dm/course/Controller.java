@@ -25,7 +25,9 @@ import ru.shemplo.dm.course.physics.ProcessorService;
 import ru.shemplo.dm.course.physics.schemes.Scheme;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static javafx.animation.Animation.Status.RUNNING;
@@ -69,13 +71,7 @@ public class Controller implements Initializable {
     private TextField fieldStepTime;
 
     @FXML
-    private TextField fieldStepCoord;
-
-    @FXML
     private TextField fieldMaxTime;
-
-    @FXML
-    private TextField fieldMaxCoord;
 
     @FXML
     private TextField fieldK;
@@ -103,6 +99,12 @@ public class Controller implements Initializable {
 
     @FXML
     private TextField fieldD;
+
+    @FXML
+    private LatexView valueStepCoord;
+
+    @FXML
+    private LatexView valueMaxCoord;
 
     @FXML
     private LatexView valueDt;
@@ -176,9 +178,7 @@ public class Controller implements Initializable {
         model.processorProperty().bind(fieldMethod.valueProperty());
 
         Bindings.bindBidirectional(fieldStepTime.textProperty(), model.stepTimeProperty(), converter);
-        Bindings.bindBidirectional(fieldStepCoord.textProperty(), model.stepCoordProperty(), converter);
         Bindings.bindBidirectional(fieldMaxTime.textProperty(), model.maxTimeProperty(), converter);
-        Bindings.bindBidirectional(fieldMaxCoord.textProperty(), model.maxCoordProperty(), converter);
         Bindings.bindBidirectional(fieldK.textProperty(), model.kProperty(), converter);
         Bindings.bindBidirectional(fieldE.textProperty(), model.eProperty(), converter);
         Bindings.bindBidirectional(fieldAlpha.textProperty(), model.alphaProperty(), converter);
@@ -189,6 +189,14 @@ public class Controller implements Initializable {
         Bindings.bindBidirectional(fieldLambda.textProperty(), model.lambdaProperty(), converter);
         Bindings.bindBidirectional(fieldD.textProperty(), model.dProperty(), converter);
 
+        valueStepCoord.formulaProperty().bind(Bindings.createStringBinding(
+                () -> texConverter.toString(model.getStepCoord()),
+                model.stepCoordProperty()
+        ));
+        valueMaxCoord.formulaProperty().bind(Bindings.createStringBinding(
+                () -> texConverter.toString(model.getMaxCoord()),
+                model.maxCoordProperty()
+        ));
         valueDt.formulaProperty().bind(Bindings.createStringBinding(
                 () -> texConverter.toString(model.getDt()),
                 model.dtProperty()
@@ -346,9 +354,18 @@ public class Controller implements Initializable {
             chartT.getData().setAll(Collections.singleton(seriesT));
             chartW.getData().setAll(Collections.singleton(seriesW));
 
+
+            ObservableList<XYChart.Data<Number, Number>> trendList = FXCollections.observableArrayList();
+            for (int z = 0; z < result.getTrendW().length; z++) {
+                trendList.add(new XYChart.Data<>(z * model.getStepCoord(), result.getTrendW()[z]));
+            }
+            XYChart.Series<Number, Number> trend = new XYChart.Series<>(trendList);
+            chartW.getData().add(trend);
+            trend.getNode().setStyle("-fx-stroke-dash-array: 3 3;-fx-stroke: #000000;");
+
             double ticks = result.getDataX().size();
 
-            for (int i = 0; i < ticks; i += ticks / 10) {
+            for (int i = 0; i < ticks; i += ticks / 20) {
                 double[] values = result.getDataX().get(i);
                 ObservableList<XYChart.Data<Number, Number>> list = FXCollections.observableArrayList();
                 for (int j = 0; j < values.length; j++) {
@@ -358,7 +375,7 @@ public class Controller implements Initializable {
                 chartX.getData().add(series);
             }
 
-            for (int i = 0; i < ticks; i += ticks / 10) {
+            for (int i = 0; i < ticks; i += ticks / 20) {
                 double[] values = result.getDataT().get(i);
                 ObservableList<XYChart.Data<Number, Number>> list = FXCollections.observableArrayList();
                 for (int j = 0; j < values.length; j++) {
@@ -368,7 +385,7 @@ public class Controller implements Initializable {
                 chartT.getData().add(series);
             }
 
-            for (int i = 0; i < ticks; i += ticks / 10) {
+            for (int i = 0; i < ticks; i += ticks / 20) {
                 double[] values = result.getDataW().get(i);
                 ObservableList<XYChart.Data<Number, Number>> list = FXCollections.observableArrayList();
                 for (int j = 0; j < values.length; j++) {
@@ -376,6 +393,7 @@ public class Controller implements Initializable {
                 }
                 XYChart.Series<Number, Number> series = new XYChart.Series<>(list);
                 chartW.getData().add(series);
+                //series.getNode().setStyle("-fx-stroke-dash-array: 5 5;");
             }
 
             ProcessorResult.Bounds boundsX = result.getBoundsX();
@@ -408,6 +426,12 @@ public class Controller implements Initializable {
     private void update() {
         animationTimeline.stop();
         model.setTime(0);
+        model.getDataX().clear();
+        model.getDataT().clear();
+        model.getDataW().clear();
+        chartX.getData().clear();
+        chartT.getData().clear();
+        chartW.getData().clear();
 
         service.restart();
     }

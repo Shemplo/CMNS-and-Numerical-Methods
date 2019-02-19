@@ -224,7 +224,7 @@ public class Model {
         le.bind(deltaD.divide(deltaH));
 
         // Длина расчётной области должна быть больше толщины зоны подогрева
-        maxCoord.bind(deltaH.multiply(10));
+        maxCoord.bind(deltaH.multiply(15));
 
         // На толщине зоны реакции должно укладываться несколько пространственных шагов
         stepCoord.bind(deltaR.divide(2));
