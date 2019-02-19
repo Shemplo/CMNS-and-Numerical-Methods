@@ -29,7 +29,7 @@ public class Model {
      * Maximum time
      * Максимальное значение времени
      */
-    private final DoubleProperty maxTime = new SimpleDoubleProperty(500);
+    private final DoubleProperty maxTime = new SimpleDoubleProperty(600);
 
     /**
      * Time step size
